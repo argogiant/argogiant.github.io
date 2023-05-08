@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArgoBasicSeo</title>
+</head>
+<body>
+  <main>
+    <h1>ArgoBasicSeo</h1>
+    <form>
+      <label for="url">Voer de URL van de website in:</label>
+      <input type="url" id="url" name="url" placeholder="https://www.example.com" required>
+      <button type="submit">Zoeken</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Titel</th>
+          <th>Meta-titel</th>
+          <th>Meta-description</th>
+          <th>H1</th>
+          <th>H2</th>
+          <th>H3</th>
+          <th>Bold text</th>
+          <th>Italic text</th>
+        </tr>
+      </thead>
+      <tbody id="search-results">
+      </tbody>
+    </table>
+  </main>
+  <script>
+    // Zoek het formulier op
+    const form = document.querySelector('form');
+
+    // Voeg een eventlistener toe voor het indienen van het formulier
+    form.addEventListener('submit', (event) => {
+      // Voorkom dat de pagina herladen wordt bij het indienen van het formulier
+      event.preventDefault();
+
+      // Haal de waarde van het URL-veld op
+      const url = document.getElementById('url').value;
+
+      // Bouw de URL voor het ophalen van de gegevens van de website
+      const apiUrl = `https://argogiant.github.io/ArgoBasicSeo/get-website-data.php?url=${url}`;
+
+      // Maak een XMLHttpRequest object
+      const xhr = new XMLHttpRequest();
+
+      // Open de verbinding met de API
+      xhr.open('GET', apiUrl, true);
+
+      // Stel het type van de response in op JSON
+      xhr.responseType = 'json';
+
+      // Voeg een eventlistener toe om de resultaten te verwerken
+      xhr.onload = function () {
+        // Controleer of de statuscode OK is
+        if (xhr.status === 200) {
+          // Haal de gegevens op uit de response
+          const websiteData = xhr.response;
+
+          // Voeg de gegevens toe aan de tabel
+          const tableRow = `
+            <tr>
+              <td>${websiteData.url}</td>
+              <td>${websiteData.title}</td>
+              <td>${websiteData.meta_title}</td>
+              <td>${websiteData.meta_description}</td>
+              <td>${websiteData.h1}</td>
+              <td>${websiteData.h2}</td>
+              <td>${websiteData.h3}</td>
+              <td>${websiteData.bold_text}</td>
+              <td>${websiteData.italic_text}</td>
+            </tr>
+          `;
+          document.querySelector('#search-results').innerHTML = tableRow;
+        }
+      };
+
+      // Stuur het verzoek naar de API
+      xhr.send();
+    });
+  </script>
+</body>
+</html>
