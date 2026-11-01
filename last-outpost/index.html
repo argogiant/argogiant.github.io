@@ -1,0 +1,438 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07131e"><title>LAST OUTPOST | Real-world RTS Tech Demo</title><style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#d9e5e8;background:#07141b;font-size:13px;font-synthesis:none}*{box-sizing:border-box}html,body,#app{height:100%;width:100%;margin:0;overflow:hidden}button,input{font:inherit}button{cursor:pointer}#viewport,#render{position:absolute;inset:0}#render canvas{display:block;width:100%;height:100%;touch-action:none}#viewport{background:radial-gradient(ellipse at 50% 55%,#16383c,#08141d 68%)}.topbar{position:absolute;left:0;top:0;right:0;z-index:4;height:67px;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;background:linear-gradient(180deg,#07131cf9,#0a1925ef);border-bottom:1px solid #28434b;gap:16px}.brand{display:flex;align-items:center;gap:13px;white-space:nowrap}.brandmark{border:2px solid #5cdef0;border-radius:7px;transform:rotate(20deg);color:#5cdef0;font-size:30px;width:38px;height:38px;display:grid;place-items:center;line-height:1;box-shadow:0 0 20px #37cbd827}.brand strong{font-size:20px;letter-spacing:2px;color:#f2f8f8;font-weight:850}.brand strong span{color:#6ee4f0}.brand small{display:block;font-size:9px;letter-spacing:2.3px;margin-top:2px;color:#88adb7}.resourcebar{display:flex;align-items:center;gap:12px}.resource{padding:7px 15px;background:#0f2530;border:1px solid #223e49;border-radius:5px;min-width:108px}.resource span,.resource b{display:block}.resource span{font-size:9px;font-weight:700;letter-spacing:1.1px;color:#83a6b0}.resource b{font-size:18px;line-height:1.25;font-variant-numeric:tabular-nums;color:#e4ffff}.panel{position:absolute;z-index:3;top:80px;bottom:60px;width:245px;overflow:auto;background:linear-gradient(155deg,#0b1f29f5,#071620f0);border:1px solid #284a54;box-shadow:0 15px 55px #0007;padding:17px;scrollbar-width:thin;scrollbar-color:#36535b transparent;backdrop-filter:blur(12px)}.panel.left{left:15px}.panel.right{right:15px;width:257px}.sectionlabel{font-size:10px;font-weight:900;color:#50d6de;letter-spacing:1.6px;text-transform:uppercase}.sectionlabel.space{margin-top:20px}.panel h2,.dialog h2{font-size:18px;margin:9px 0 6px;color:#fff;font-weight:800;letter-spacing:.2px}.muted{color:#7e9ea8}.tiny{font-size:11px;line-height:1.45}.buildlist{display:grid;gap:7px;margin-top:14px}.build{display:flex;text-align:left;align-items:center;width:100%;padding:8px 8px;border:1px solid #24404b;background:#0a1b24;color:#e6f5fa;border-radius:7px;gap:9px;transition:.12s}.build:hover{background:#15333d;border-color:#4a9ba6}.build.active{border-color:#58d9e5;background:#153942;box-shadow:inset 3px 0 #69f0fd}.build i{font-size:25px;font-style:normal;width:32px;text-align:center;color:#55d9e2}.build span{display:grid;gap:4px;flex:1}.build b{font-size:12px}.build small{font-size:10px;color:#8ca9b1}.build em{font-style:normal;color:#61818b;font-size:10px}.actions{display:grid;gap:7px;margin-top:12px}.action{width:100%;padding:10px 9px;background:#112b35;border:1px solid #32606a;border-radius:6px;color:#c9e8eb;font-weight:800;font-size:10px;letter-spacing:.8px}.action:hover{background:#1c424b}.action.primary{background:#187b83;color:white;border-color:#48d6dc}.action.subtle{background:transparent;color:#8da5aa;border-color:#2b4148}.note{font-size:11px;color:#9bb4bc;line-height:1.55;background:#102b31;border-left:3px solid #328e95;border-radius:3px;padding:12px;margin-top:16px}.note b,.note span{display:block}.note b{color:#d3f5f6;margin-bottom:5px}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:14px 0 8px}.metrics>div{background:#071923;border:1px solid #28434b;border-radius:5px;padding:10px}.metrics small{display:block;color:#8ab2b9;font-weight:750;font-size:9px;letter-spacing:1.1px;min-height:21px}.metrics b{font-size:22px;color:#6feaf1;font-variant-numeric:tabular-nums}.divider{height:1px;background:#28424b;margin:15px 0}.rangeLabel{display:flex;align-items:center;justify-content:space-between;margin-top:12px}.rangeLabel b{font-size:12px}.rangeLabel strong{color:#82edf2}.bench input{width:100%;accent-color:#69e4eb;margin:10px 0 4px;cursor:pointer}.scalelabels{display:flex;justify-content:space-between;color:#678994;font-size:10px}.statline{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1a333b;color:#94b0b8;font-size:12px}.statline b{color:#d9f4f3;font-variant-numeric:tabular-nums}.bottombar{position:absolute;left:0;bottom:0;right:0;height:47px;z-index:5;background:#081823f2;border-top:1px solid #274650;display:flex;align-items:center;gap:12px;padding:0 19px}.controls{display:flex;gap:15px;color:#769ba3;font-size:10px;letter-spacing:.5px}.controls b{color:#65d3dd}#message{margin-left:auto;max-width:48%;display:flex;align-items:center;gap:8px;color:#bce6e7;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#messageText{overflow:hidden;text-overflow:ellipsis}.pulse{width:7px;height:7px;border-radius:100%;background:#68df9c;box-shadow:0 0 12px #6ee5a6;flex:none}#pauseBtn{background:#0e2f3a;border:1px solid #33606b;color:#c2eff3;border-radius:5px;padding:8px 13px;font-weight:800;font-size:10px;white-space:nowrap}.mapbadge{position:absolute;z-index:2;top:84px;left:50%;transform:translateX(-50%);border:1px solid #437881;background:#102b36e8;color:#a5f1f1;font-weight:800;letter-spacing:1.3px;font-size:10px;padding:7px 15px;border-radius:25px;pointer-events:none}.mapbadge.osm{color:#c8fa99;border-color:#63844c}#attribution{position:absolute;bottom:53px;right:280px;z-index:2;background:#061721ce;padding:5px 9px;border-radius:5px;font-size:10px;color:#9ab4bd}#attribution a{color:#89e9e9}#minimap{position:absolute;bottom:56px;left:278px;z-index:2;border:1px solid #397680;background:#0a1e28d9;box-shadow:0 3px 16px #0008;border-radius:5px;width:144px;height:144px}#loader{position:absolute;inset:0;z-index:7;background:#06131a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;letter-spacing:2px;color:#d6f9ff}.loader-icon{color:#55e2ed;font-size:70px;text-shadow:0 0 40px #38dddf}.loader-icon+strong{font-size:22px}.loader-icon~span{font-size:12px;color:#7da7b1;letter-spacing:1px}#toast{position:absolute;z-index:10;left:50%;bottom:65px;transform:translateX(-50%);max-width:90%;pointer-events:none;background:#163c44;border:1px solid #58c6cb;color:#e3ffff;padding:10px 18px;border-radius:7px;opacity:0;transition:opacity .2s;font-size:12px;box-shadow:0 12px 40px #0006;text-align:center}#toast.show{opacity:1}.dialog{position:absolute;z-index:20;inset:0;display:grid;place-items:center;background:#020d14c9;padding:18px}.dialog.hidden{display:none}.dialog-card{width:min(440px,100%);border:1px solid #43828b;background:#0c2430;padding:25px;border-radius:13px;box-shadow:0 25px 70px #000c}.dialog-card p{line-height:1.55;color:#a8c7cf}.dialog-card label{display:grid;gap:6px;margin:12px 0;color:#a6cbd0;font-size:12px}.dialog-card input{background:#081b25;color:#e9fbfb;padding:10px;border:1px solid #38636d;border-radius:6px;width:100%}.dialog-actions{display:grid;gap:8px;margin-top:19px}.mobileToggle{display:none}@media(max-width:1020px){.resource{min-width:85px;padding:6px 8px}.panel.right{width:214px}.panel.left{width:214px}#minimap{left:236px;width:110px;height:110px}#attribution{right:233px}.controls{gap:7px}}@media(max-width:720px){.topbar{height:64px;padding:7px 12px}.brand strong{font-size:16px}.brand small{font-size:8px;letter-spacing:1px}.brandmark{width:30px;height:30px;font-size:23px}.resourcebar{margin-left:auto;gap:5px}.resource{min-width:0;padding:5px 7px}.resource span{font-size:8px}.resource b{font-size:13px}.resource:nth-child(2),.resource:nth-child(3){display:none}.mobileToggle{display:block;background:#153641;border:1px solid #427880;color:#c8f5fa;border-radius:5px;font-size:18px;padding:4px 10px}.panel{top:auto;bottom:51px;left:7px!important;right:auto!important;width:min(85vw,340px)!important;max-height:54vh;padding:11px;display:none}.panel.open{display:block}.panel.right{display:block;top:71px;bottom:auto;right:7px!important;left:auto!important;width:174px!important;height:auto;max-height:40vh;padding:9px}.panel.right h2{display:none}.panel.right .metrics{gap:3px;margin:5px 0}.panel.right .metrics>div{padding:6px}.panel.right .metrics small{font-size:7px;min-height:17px}.panel.right .metrics b{font-size:17px}.panel.right .divider,.panel.right .statline,.panel.right .sectionlabel:not(:first-child),.panel.right .note,.panel.right .bench p{display:none}.panel.right .bench{margin-top:5px}.panel.right .rangeLabel{margin-top:6px;font-size:10px}.panel.right .bench input{margin:3px 0}.mapbadge{top:72px;left:11px;transform:none;font-size:8px;padding:6px 9px;max-width:calc(100vw - 200px)}#attribution{bottom:54px;right:8px;font-size:8px;max-width:220px}#minimap{left:10px;bottom:56px;width:105px;height:105px}.bottombar{padding:0 8px;gap:6px}.controls{display:none}#message{margin-left:0;max-width:100%;flex:1;font-size:10px}#pauseBtn{padding:7px;font-size:9px}}
+
+</style></head>
+<body>
+<div id="app">
+ <main id="viewport"><div id="render"></div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
+ <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // TECH DEMO 0.1</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
+ <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Selecteer een gebouw en klik daarna op de 3D-kaart.</p><div id="buildList" class="buildlist"><button data-build="turret" class="build active"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ UPGRADE CONVOY</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LOAD REAL OSM MAP</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET SECTOR</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers.</span></div></aside>
+ <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>RENDER FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>3D DRAW CALLS</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">Dit meet je echte FPS op jouw apparaat. Verhoog het aantal voor een stresstest.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
+ <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>OpenStreetMap laden</h2><p>Laad de wegen, gebouwen, parken en wateren in een gebied van ongeveer 800 × 800 meter. De game gebruikt deze geometrie echt voor routing en obstakels. Beperkte publieke Overpass-API, alleen handmatig laden.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="confirmOsm" class="action primary">LAAD KAART</button></div><p class="tiny muted">OSM-kaartdata vereist internet. Je actuele GPS-locatie wordt alleen verwerkt nadat je toestemming geeft.</p></div></div>
+</div><script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+// LAST OUTPOST - deterministic, renderer-independent prototype simulation.
+// Coordinates: x east, z south, metres. Play area: 800m x 800m.
+const SIZE=800, HALF=SIZE/2, CELL=8, N=SIZE/CELL;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
+function randomSeeded(seed=42){let s=seed>>>0; return()=>((s=(1664525*s+1013904223)>>>0)/4294967296);}
+const rect=(x,z,w,h)=>[{x:x-w/2,z:z-h/2},{x:x+w/2,z:z-h/2},{x:x+w/2,z:z+h/2},{x:x-w/2,z:z+h/2}];
+function demoMap(){
+  const rnd=randomSeeded(17), roads=[], buildings=[], parks=[],water=[];
+  const xs=[-350,-235,-110,25,165,310],zs=[-320,-200,-70,75,210,340];
+  // All-waypoint grid is connected, including two bridges over the canal.
+  zs.forEach((z,i)=>{const bridge=z===-200||z===210;const width=i===2?13:9;if(bridge)roads.push({points:xs.map(x=>({x,z})),width,vehicle:true,bridge:true});else{roads.push({points:[{x:-350,z},{x:-315,z}],width,vehicle:true});roads.push({points:[{x:-265,z},...xs.slice(1).map(x=>({x,z}))],width,vehicle:true});}});
+  xs.forEach((x,i)=>roads.push({points:zs.map(z=>({x,z})),width:i===3?13:9,vehicle:true}));
+  // A waterway crosses the city: only two bridges connect its banks.
+  water.push(rect(-290,0,37,810));
+  parks.push(rect(230,-145,135,90),rect(-140,250,130,100),rect(220,285,125,55));
+  for(let i=0;i<135;i++){
+    const ix=Math.floor(rnd()*(xs.length-1)),iz=Math.floor(rnd()*(zs.length-1));
+    const x=xs[ix]+23+rnd()*Math.max(9,xs[ix+1]-xs[ix]-46);
+    const z=zs[iz]+21+rnd()*Math.max(9,zs[iz+1]-zs[iz]-42);
+    const w=14+rnd()*25,h=12+rnd()*22;
+    if(x>-313&&x<-261) continue;
+    if(Math.abs(x-65)<65&&Math.abs(z-75)<60) continue;
+    if(Math.abs(x+160)<50&&Math.abs(z+180)<40) continue;
+    if(parks.some(p=>pointInPolygon({x,z},p))) continue;
+    buildings.push({poly:rect(x,z,w,h),height:7+rnd()*24});
+  }
+  return {label:'DEMO · fictieve testwijk',kind:'demo',center:{lat:52.1562,lon:5.3878},roads,buildings,parks,water,bridges:[{x:-290,z:-200,radius:12},{x:-290,z:210,radius:12}]};
+}
+function pointInPolygon(p,poly){let inside=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+ const a=poly[i],b=poly[j];if((a.z>p.z)!==(b.z>p.z)&&p.x<(b.x-a.x)*(p.z-a.z)/(b.z-a.z)+a.x)inside=!inside;
+ }return inside;}
+function toWorld(lat,lon,center){return {x:(lon-center.lon)*111320*Math.cos(center.lat*Math.PI/180),z:-(lat-center.lat)*111320};}
+function toGeo(x,z,center){return {lat:center.lat-z/111320,lon:center.lon+x/(111320*Math.cos(center.lat*Math.PI/180))};}
+function fromOverpass(osm,center){
+ if(!osm?.elements?.length)throw Error('Geen bruikbare OpenStreetMap-data ontvangen');
+ const roads=[],buildings=[],parks=[],water=[];
+ const gpsGeom=e=>(e.geometry||[]).map(p=>toWorld(p.lat,p.lon,center));
+ for(const e of osm.elements){if(e.type!=='way'||!e.geometry||e.geometry.length<2)continue;
+   const t=e.tags||{},pts=gpsGeom(e);
+   if(t.highway){
+     if(['motorway','motorway_link','trunk','trunk_link','construction','proposed'].includes(t.highway))continue;
+     const vehicle=!['footway','path','steps','pedestrian','cycleway','bridleway'].includes(t.highway);
+     roads.push({points:pts,width:['primary','secondary','tertiary'].includes(t.highway)?12:vehicle?8:3.5,vehicle,bridge:t.bridge==='yes'});
+   }
+   if(t.building&&pts.length>=3)buildings.push({poly:pts,height:clamp(Number(t['building:levels']||2)*3.5,4,36)});
+   if((t.natural==='water'||t.waterway==='riverbank'||t.landuse==='reservoir')&&pts.length>=3)water.push(pts);
+   if((['grass','meadow','forest','recreation_ground'].includes(t.landuse)||['park','garden','pitch'].includes(t.leisure)||['wood','scrub','grassland'].includes(t.natural))&&pts.length>=3)parks.push(pts);
+ }
+ if(!roads.length)throw Error('Geen wegen gevonden op deze locatie');
+ return {label:'OSM · echte kaart',kind:'osm',center,roads,buildings,parks,water,bridges:[]};
+}
+const gridIndex=(x,z)=>{const c=Math.floor((x+HALF)/CELL),r=Math.floor((z+HALF)/CELL);return (c<0||c>=N||r<0||r>=N)?-1:r*N+c;};
+const gridWorld=(index)=>({x:(index%N+0.5)*CELL-HALF,z:(Math.floor(index/N)+0.5)*CELL-HALF});
+function createOccupancy(map){
+ const blocked=new Uint8Array(N*N);
+ const paint=(poly,value)=>{
+  let minx=Infinity,maxx=-Infinity,minz=Infinity,maxz=-Infinity;
+  for(const p of poly){minx=Math.min(minx,p.x);maxx=Math.max(maxx,p.x);minz=Math.min(minz,p.z);maxz=Math.max(maxz,p.z);}
+  let x0=clamp(Math.floor((minx+HALF)/CELL),0,N-1),x1=clamp(Math.ceil((maxx+HALF)/CELL),0,N-1);
+  let z0=clamp(Math.floor((minz+HALF)/CELL),0,N-1),z1=clamp(Math.ceil((maxz+HALF)/CELL),0,N-1);
+  for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++)if(pointInPolygon(gridWorld(z*N+x),poly))blocked[z*N+x]=value;
+ };
+ for(const p of map.water)paint(p,1);
+ for(const b of map.buildings)paint(b.poly,1);
+ // DEMO bridge decks are explicit navigable cuts through water.
+ for(const b of map.bridges||[]){for(let dz=-12;dz<=12;dz+=CELL/2)for(let dx=-29;dx<=29;dx+=CELL/2){const i=gridIndex(b.x+dx,b.z+dz);if(i>=0)blocked[i]=0;}}
+ return blocked;
+}
+function flowField(blocked,target){
+ const flow=new Int32Array(N*N);flow.fill(-1);
+ const start=gridIndex(target.x,target.z);if(start<0)return flow;
+ // If target is obstructed, find nearby open cell.
+ let anchor=start;
+ if(blocked[anchor]){let best=Infinity;for(let i=0;i<blocked.length;i++)if(!blocked[i]){const p=gridWorld(i),d=distance(target,p);if(d<best){best=d;anchor=i;}}}
+ const queue=new Int32Array(N*N);let head=0,tail=0;queue[tail++]=anchor;flow[anchor]=0;
+ while(head<tail){const i=queue[head++],r=Math.floor(i/N),c=i%N,d=flow[i]+1;
+  if(c>0&&flow[i-1]===-1&&!blocked[i-1]){flow[i-1]=d;queue[tail++]=i-1;}
+  if(c<N-1&&flow[i+1]===-1&&!blocked[i+1]){flow[i+1]=d;queue[tail++]=i+1;}
+  if(r>0&&flow[i-N]===-1&&!blocked[i-N]){flow[i-N]=d;queue[tail++]=i-N;}
+  if(r<N-1&&flow[i+N]===-1&&!blocked[i+N]){flow[i+N]=d;queue[tail++]=i+N;}
+ }
+ return flow;
+}
+function nextFlowStep(index,flow){if(index<0)return -1;const r=Math.floor(index/N),c=index%N;let best=index,bv=flow[index];if(bv<0)return -1;
+ for(const n of [c>0?index-1:-1,c<N-1?index+1:-1,r>0?index-N:-1,r<N-1?index+N:-1])if(n>=0&&flow[n]>=0&&flow[n]<bv){bv=flow[n];best=n;}
+ return best;
+}
+function safePlacement(x,z,blocked,objects=[],radius=16){
+ if(Math.abs(x)>HALF-20||Math.abs(z)>HALF-20)return false;
+ const pts=[[0,0],[radius,0],[-radius,0],[0,radius],[0,-radius]];
+ if(pts.some(([dx,dz])=>{const i=gridIndex(x+dx,z+dz);return i<0||blocked[i];}))return false;
+ return !objects.some(o=>Math.hypot(o.x-x,o.z-z)<(o.radius||15)+radius+3);
+}
+function closestPassable(x,z,blocked){for(let rad=0;rad<HALF;rad+=CELL){for(let a=0;a<24;a++){let p={x:x+Math.cos(a*Math.PI/12)*rad,z:z+Math.sin(a*Math.PI/12)*rad};let i=gridIndex(p.x,p.z);if(i>=0&&!blocked[i])return gridWorld(i);}}return {x:0,z:0};}
+function buildRoadGraph(map){
+ const nodes=[],lookup=new Map();const key=p=>Math.round(p.x*2)/2+','+Math.round(p.z*2)/2;
+ const get=p=>{const k=key(p);if(lookup.has(k))return lookup.get(k);const n=nodes.length;nodes.push({x:p.x,z:p.z,adj:[]});lookup.set(k,n);return n;};
+ for(const road of map.roads){if(!road.vehicle)continue;for(let j=1;j<road.points.length;j++){
+  const a=road.points[j-1],b=road.points[j];if(distance(a,b)>180)continue;
+  const ia=get(a),ib=get(b),d=distance(a,b);if(d<0.3)continue;
+  nodes[ia].adj.push({id:ib,d});nodes[ib].adj.push({id:ia,d});
+ }}
+ return nodes;
+}
+function nearestRoadNode(nodes,p){let best=-1,bd=Infinity;for(let i=0;i<nodes.length;i++){const d=distance(nodes[i],p);if(d<bd){bd=d;best=i;}}return best;}
+function roadPath(nodes,start,end){if(!nodes.length)return[];
+ const s=nearestRoadNode(nodes,start),t=nearestRoadNode(nodes,end);
+ if(s<0||t<0)return[];const d=new Float64Array(nodes.length);d.fill(Infinity);d[s]=0;const prev=new Int32Array(nodes.length);prev.fill(-1);
+ // Binary heap allows geographic street graphs with many intersections.
+ const heap=[[0,s]];const push=item=>{heap.push(item);let j=heap.length-1;while(j>0){const p=(j-1)>>1;if(heap[p][0]<=heap[j][0])break;[heap[p],heap[j]]=[heap[j],heap[p]];j=p;}};
+ const pop=()=>{let top=heap[0],last=heap.pop();if(heap.length){heap[0]=last;let j=0;while(true){let l=j*2+1,r=l+1,b=j;if(l<heap.length&&heap[l][0]<heap[b][0])b=l;if(r<heap.length&&heap[r][0]<heap[b][0])b=r;if(b===j)break;[heap[j],heap[b]]=[heap[b],heap[j]];j=b;}}return top;};
+ while(heap.length){const [cost,u]=pop();if(cost>d[u])continue;if(u===t)break;for(const v of nodes[u].adj){let nd=cost+v.d;if(nd<d[v.id]){d[v.id]=nd;prev[v.id]=u;push([nd,v.id]);}}}
+ if(!Number.isFinite(d[t]))return[];const path=[];for(let p=t;p>=0;p=prev[p]){path.push({x:nodes[p].x,z:nodes[p].z});if(p===s)break;}return path.reverse();
+}
+class Enemies {
+ constructor(max=6000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];}
+ setSpawnSites(flow,blocked){this.spawnSites=[];for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){
+  if(x>4&&x<N-5&&z>4&&z<N-5)continue;let i=z*N+x;if(!blocked[i]&&flow[i]>=0)this.spawnSites.push(gridWorld(i));
+ }}
+ spawn(i){const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};this.x[i]=p.x+(this.rnd()-.5)*2;this.z[i]=p.z+(this.rnd()-.5)*2;this.hp[i]=35+this.rnd()*25;this.speed[i]=3.8+this.rnd()*3;this.state[i]=1;}
+ resize(n){n=clamp(n|0,0,this.max);if(n>this.count)for(let i=this.count;i<n;i++)this.spawn(i);this.count=n;}
+ damage(i,amount){if(this.hp[i]<=0)return false;this.hp[i]-=amount;if(this.hp[i]<=0){this.kills++;this.spawn(i);return true;}return false;}
+ tick(dt,flow,target){let hits=0;for(let i=0;i<this.count;i++){
+  const x=this.x[i],z=this.z[i];if(Math.hypot(x-target.x,z-target.z)<22){hits++;this.breaches++;this.spawn(i);continue;}
+  const g=gridIndex(x,z),j=nextFlowStep(g,flow);if(j<0){this.spawn(i);continue;}
+  const p=gridWorld(j),dx=p.x-x,dz=p.z-z,dd=Math.hypot(dx,dz)||1;
+  const step=Math.min(this.speed[i]*dt,dd);this.x[i]+=dx/dd*step;this.z[i]+=dz/dd*step;
+ }return hits;
+ }
+}
+function consumePathPosition(path,progress){if(path.length<2)return {x:path[0]?.x||0,z:path[0]?.z||0,heading:0};let p=progress;
+ for(let i=1;i<path.length;i++){const a=path[i-1],b=path[i],d=distance(a,b);if(p<=d){const t=p/Math.max(d,.001);return{x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,heading:Math.atan2(b.x-a.x,b.z-a.z)};}p-=d;}
+ const b=path[path.length-1],a=path[path.length-2];return {x:b.x,z:b.z,heading:Math.atan2(b.x-a.x,b.z-a.z)};}
+const pathLength=path=>path.slice(1).reduce((s,p,i)=>s+distance(path[i],p),0);
+
+
+
+
+window.__outpostBooted=true;
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const $render=$('#render');
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setSize(innerWidth,innerHeight);renderer.setClearColor(0x0a1923);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+$render.append(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#071b23');scene.fog=new THREE.FogExp2('#071b23',0.00175);
+scene.add(new THREE.HemisphereLight(0xa2eaff,0x18352e,2.3));
+const sun=new THREE.DirectionalLight(0xb6eafc,2.0);sun.position.set(-200,430,180);scene.add(sun);
+const camera=new THREE.OrthographicCamera(-350,350,250,-250,1,2500);
+const raycaster=new THREE.Raycaster(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+const tmp=new THREE.Vector3(),dummy=new THREE.Object3D();
+const terrainRoot=new THREE.Group(), buildingRoot=new THREE.Group(),unitRoot=new THREE.Group(),effectRoot=new THREE.Group();scene.add(terrainRoot,buildingRoot,unitRoot,effectRoot);
+let currentMap,grid,flow,graph,enemies,zombieMesh,zombieHeads,truck,truckMesh,truckRoute=[],truckProgress=0,truckDir=1,truckHealth=100,truckShipment=0;
+let general,escortMeshes=[],generalProgress=0,walking=false,gpsActive=false,gpsWatch=null,gpsUpdated=0,liveGPS=false,patrolPath=[],patrolLen=0;
+let resources={scrap:1200,energy:250,alloy:160,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=500,base,initialMine;
+let selected='turret',displayFPS=0,frames=0,frameSum=0,simMS=0,last=performance.now(),lastHUD=0;
+let camTarget=new THREE.Vector3(0,0,0),azimuth=0.65,zoom=370,camPitch=0.88,toastTimer;
+let visibleTracers=[],buildingMarkers=[],earthPulse=0;
+let deliveries=0,scorePulse=0,commandDiscounts=0,convoyLevel=1;
+const unitSteps=[50,150,500,1000,2000,5000];
+const blue=new THREE.MeshStandardMaterial({color:0x1ba5b5,metalness:.55,roughness:.37}),blueBright=new THREE.MeshStandardMaterial({color:0x5be7f0,metalness:.25,roughness:.25,emissive:0x0f5b60,emissiveIntensity:.45}),metal=new THREE.MeshStandardMaterial({color:0x304753,metalness:.7,roughness:.35}),dark=new THREE.MeshStandardMaterial({color:0x132c39,metalness:.42,roughness:.65}),orange=new THREE.MeshStandardMaterial({color:0xffb453,metalness:.25,roughness:.4,emissive:0x4e270c,emissiveIntensity:.3}),red=new THREE.MeshStandardMaterial({color:0xff5366,roughness:.6,emissive:0x86222d,emissiveIntensity:.3}),green=new THREE.MeshStandardMaterial({color:0x78e9a7,roughness:.5,emissive:0x103921,emissiveIntensity:.4});
+const costs={turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
+const names={turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
+const halfMap=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));halfMap.rotation.x=-Math.PI/2;halfMap.position.y=-.7;terrainRoot.add(halfMap);
+const gridHelper=new THREE.GridHelper(SIZE,50,0x35646a,0x25434a);gridHelper.material.transparent=true;gridHelper.material.opacity=.21;gridHelper.position.y=-.49;terrainRoot.add(gridHelper);
+const boundary=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(SIZE,1,SIZE)),new THREE.LineBasicMaterial({color:0x5acdd0,transparent:true,opacity:.32}));boundary.position.y=0;terrainRoot.add(boundary);
+const buildRing=new THREE.Mesh(new THREE.RingGeometry(14,17,48),new THREE.MeshBasicMaterial({color:0x69eddc,side:THREE.DoubleSide,transparent:true,opacity:.65,depthWrite:false}));buildRing.rotation.x=-Math.PI/2;buildRing.position.y=.5;scene.add(buildRing);
+const ringPulse=new THREE.Mesh(new THREE.RingGeometry(51,53,64),new THREE.MeshBasicMaterial({color:0x3ecad3,side:THREE.DoubleSide,transparent:true,opacity:.14,depthWrite:false}));ringPulse.rotation.x=-Math.PI/2;ringPulse.position.y=.5;ringPulse.visible=false;scene.add(ringPulse);
+const now=()=>performance.now();
+function showMessage(msg){$('#messageText').textContent=msg;}
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500);showMessage(msg);}
+const clearGroup=g=>{while(g.children.length){const ch=g.children[0];g.remove(ch);ch.traverse(obj=>{if(obj.geometry)obj.geometry.dispose();if(obj.material&&!Object.values({blue,blueBright,metal,dark,orange,red,green}).includes(obj.material))Array.isArray(obj.material)?obj.material.forEach(m=>m.dispose()):obj.material.dispose();});}};
+const box=(w,h,d,mat)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+const cylinder=(r1,r2,h,mat,sides=8)=>new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,sides),mat);
+function part(g,mesh,x,y,z,ry=0){mesh.position.set(x,y,z);mesh.rotation.y=ry;g.add(mesh);return mesh;}
+function makeBuilding(b){
+ const g=new THREE.Group();g.position.set(b.x,0,b.z);g.userData.structure=b;
+ if(b.type==='hq'){
+  part(g,cylinder(21,24,3,metal,8),0,2,0);part(g,box(29,9,25,dark),0,7,0);part(g,box(25,2,21,blue),0,12,0);
+  part(g,cylinder(7,9,16,metal,8),0,20,0);part(g,cylinder(9,8,2,blueBright,8),0,28,0);
+  part(g,cylinder(.7,.7,14,metal),0,36,0);part(g,cylinder(2.4,2.4,3,blueBright),0,43,0);
+  for(const i of [-1,1])part(g,box(2,8,4,blueBright),i*11,7,0);
+ }else if(b.type==='turret'){
+  part(g,cylinder(10,12,4,metal,8),0,2,0);part(g,cylinder(5,6,7,blue,8),0,8,0);part(g,box(2.9,3,17,blueBright),0,12,7);
+  part(g,cylinder(2.2,2.2,3,orange),0,13,-2);
+ }else if(b.type==='bunker'){
+  part(g,cylinder(17,19,5,metal,6),0,3,0);part(g,cylinder(13,15,9,dark,6),0,10,0);
+  part(g,cylinder(14,13,2,blueBright,6),0,15,0);part(g,cylinder(2,2,18,metal,6),2,24,0);part(g,box(11,2,7,blue),0,13,0);
+ }else if(b.type==='tower'){
+  part(g,cylinder(12,13,3,metal,8),0,2,0);part(g,cylinder(2.4,3.5,31,metal,6),0,19,0);part(g,cylinder(9,8,4,blue,8),0,35,0);
+  part(g,cylinder(6,6,1,blueBright),0,38,0);part(g,box(2,9,2,orange),0,43,0);part(g,box(14,1,2,blueBright),0,45,0);
+ }else if(b.type==='mine'){
+  part(g,box(19,3,18,metal),0,2,0);part(g,box(13,13,11,dark),0,10,-3);part(g,box(9,4,9,orange),0,17,-3);
+  part(g,cylinder(3,4,15,blue,7),7,13,5);part(g,box(4,4,12,metal),-4,7,10);
+ }else if(b.type==='factory'){
+  part(g,box(27,4,23,metal),0,2,0);part(g,box(19,15,17,dark),0,11,0);part(g,box(23,2,19,blue),0,19,0);
+  for(const x of [-8,8])part(g,cylinder(2,2,15,metal,7),x,24,-6);
+  part(g,box(12,9,2,orange),0,9,9);
+ }
+ g.traverse(c=>{if(c.isMesh){c.castShadow=false;c.receiveShadow=false;}});
+ b.mesh=g;buildingRoot.add(g);return g;
+}
+function makeTruck(){const g=new THREE.Group();part(g,box(11,4,20,metal),0,5,0);part(g,box(10,6,9,blue),0,9,5);part(g,box(10,5,10,orange),0,9,-5);
+ for(const sx of [-1,1])for(const sz of [-1,1]){const wheel=cylinder(2.7,2.7,2.2,dark,10);wheel.rotation.z=Math.PI/2;part(g,wheel,sx*5.8,3,sz*6);}
+ part(g,box(9,1,2,blueBright),0,9,10);unitRoot.add(g);return g;}
+function makeGeneral(){
+ const g=new THREE.Group();part(g,cylinder(3.5,3.5,4,blue,8),0,3,0);part(g,cylinder(1.8,2,13,blueBright,8),0,12,0);
+ const tip=cylinder(0,5,11,orange,4);tip.position.y=25;g.add(tip);
+ const beacon=new THREE.Mesh(new THREE.RingGeometry(9.5,11,32),new THREE.MeshBasicMaterial({color:0x7bffff,transparent:true,opacity:.7,side:THREE.DoubleSide}));beacon.rotation.x=-Math.PI/2;beacon.position.y=.9;g.add(beacon);unitRoot.add(g);return g;
+}
+function makeEscort(){const g=new THREE.Group();part(g,cylinder(5,6,4,metal,8),0,3,0);part(g,box(9,4,11,blue),0,6,0);part(g,box(3,2.3,13,orange),0,8,4);unitRoot.add(g);return g;}
+function polygonGeometry(points){const path=new THREE.Shape();points.forEach((p,i)=>i?path.lineTo(p.x,-p.z):path.moveTo(p.x,-p.z));path.closePath();return path;}
+function drawPolygon(points,mat,y=0.04){try{let g=new THREE.ShapeGeometry(polygonGeometry(points));let m=new THREE.Mesh(g,mat);m.rotation.x=-Math.PI/2;m.position.y=y;terrainRoot.add(m);}catch(e){/* malformed OSM feature */}}
+function drawStreet(a,b,width,material){const dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz);if(d<.5)return;const m=box(width,.12,d,material);m.position.set((a.x+b.x)/2,.16,(a.z+b.z)/2);m.rotation.y=Math.atan2(dx,dz);terrainRoot.add(m);}
+function drawMap(map){
+ const parkMat=new THREE.MeshBasicMaterial({color:0x2a5740,side:THREE.DoubleSide});
+ const waterMat=new THREE.MeshStandardMaterial({color:0x12516a,metalness:.3,roughness:.4,side:THREE.DoubleSide,emissive:0x0a3649,emissiveIntensity:.18});
+ const streetMat=new THREE.MeshStandardMaterial({color:0x52636a,roughness:.98});
+ const footMat=new THREE.MeshStandardMaterial({color:0x6b756d,roughness:1});
+ const brMat=new THREE.MeshStandardMaterial({color:0x8f9c98,roughness:1});
+ map.parks.forEach(p=>drawPolygon(p,parkMat,.02));map.water.forEach(p=>drawPolygon(p,waterMat,.08));
+ for(const r of map.roads)for(let i=1;i<r.points.length;i++)drawStreet(r.points[i-1],r.points[i],r.width,r.bridge?brMat:r.vehicle?streetMat:footMat);
+ if(map.kind==='demo')for(const b of map.bridges||[]){part(terrainRoot,box(65,.4,18,brMat),b.x,.5,b.z);}
+ const facade=[0x223b4a,0x2b4850,0x3a535d,0x27434f,0x38515a];
+ for(let i=0;i<map.buildings.length;i++){
+  const b=map.buildings[i],pts=b.poly;if(pts.length<3)continue;
+  try{
+   const s=polygonGeometry(pts),geo=new THREE.ExtrudeGeometry(s,{depth:Math.max(5,b.height),bevelEnabled:false,curveSegments:1,steps:1});
+   geo.rotateX(-Math.PI/2);
+   const mat=new THREE.MeshStandardMaterial({color:facade[i%facade.length],roughness:.93,metalness:.12});
+   terrainRoot.add(new THREE.Mesh(geo,mat));
+  }catch(e){/* Ignore invalid, self-intersecting OSM footprints. */}
+ }
+ // Dimensional edge lines provide an orientation grid without any raster tiles.
+}
+function makeDangerMesh(){
+ const max=6000;
+ zombieMesh=new THREE.InstancedMesh(new THREE.ConeGeometry(2.3,6.4,5),new THREE.MeshStandardMaterial({color:0xff6071,emissive:0x79222c,emissiveIntensity:.45,roughness:.8}),max);
+ zombieMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);zombieMesh.frustumCulled=false;unitRoot.add(zombieMesh);
+ zombieHeads=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1.6,0),new THREE.MeshStandardMaterial({color:0xffa7aa,emissive:0x631d2b,roughness:.7}),max);
+ zombieHeads.instanceMatrix.setUsage(THREE.DynamicDrawUsage);zombieHeads.frustumCulled=false;unitRoot.add(zombieHeads);
+}
+function renderEnemies(){if(!enemies||!zombieMesh)return;zombieMesh.count=enemies.count;zombieHeads.count=enemies.count;
+ for(let i=0;i<enemies.count;i++){dummy.position.set(enemies.x[i],3.8,enemies.z[i]);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();zombieMesh.setMatrixAt(i,dummy.matrix);
+ dummy.position.y=8;dummy.updateMatrix();zombieHeads.setMatrixAt(i,dummy.matrix);}
+ zombieMesh.instanceMatrix.needsUpdate=true;zombieHeads.instanceMatrix.needsUpdate=true;
+}
+function refreshPath(){if(!base||!initialMine)return;
+ truckRoute=roadPath(graph,initialMine,base);truckProgress=0;truckDir=1;
+ if(truckRoute.length<2){$('#routeStatus').textContent='NO ROUTE';showMessage('Geen verbonden vrachtwagenroute gevonden. Kies andere locaties.');}
+ else{$('#routeStatus').textContent=Math.round(pathLength(truckRoute))+' m';}
+ if(window.routeLine){unitRoot.remove(window.routeLine);window.routeLine.geometry.dispose();window.routeLine.material.dispose();window.routeLine=null;}
+ if(truckRoute.length>1){const vertices=truckRoute.map(p=>new THREE.Vector3(p.x,1.1,p.z));window.routeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(vertices),new THREE.LineDashedMaterial({color:0x50dbf5,dashSize:9,gapSize:7,transparent:true,opacity:.8}));window.routeLine.computeLineDistances();unitRoot.add(window.routeLine);}
+ patrolPath=truckRoute.length>1?[...truckRoute].reverse():[];patrolLen=pathLength(patrolPath);generalProgress=0;
+}
+function credits(){/* Keep fractional energy regeneration; only round display values. */}
+function sessionKey(){return 'lastoutpost:v1:'+currentMap.kind+':'+currentMap.center.lat.toFixed(4)+':'+currentMap.center.lon.toFixed(4);}
+function save(){if(!currentMap)return;try{localStorage.setItem(sessionKey(),JSON.stringify({resources,buildings:buildings.map(({type,x,z})=>({type,x,z})),deliveries,convoyLevel}));}catch{}}
+function loadSave(){try{let data=JSON.parse(localStorage.getItem(sessionKey()));if(data?.buildings?.length){resources={...resources,...data.resources};deliveries=data.deliveries||0;convoyLevel=data.convoyLevel||1;return data.buildings;}}catch{}return null;}
+function reset(){if(!currentMap)return;const map=currentMap;localStorage.removeItem(sessionKey());currentMap=null;newWorld(map);toast('Sector gereset. Nieuwe game gestart.');}
+function newWorld(map){
+ save();currentMap=map;clearGroup(terrainRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);visibleTracers=[];buildings=[];initialMine=null;base=null;truck=null;truckMesh=null;
+ // Static world geometry is rebuilt, but no raster tiles or external textures are used.
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.7;terrainRoot.add(ground);
+ const gridLine=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);gridLine.material.transparent=true;gridLine.material.opacity=.27;gridLine.position.y=-.49;terrainRoot.add(gridLine);
+ drawMap(map);grid=createOccupancy(map);graph=buildRoadGraph(map);
+ enemies=new Enemies();let stored=loadSave();if(!stored){resources={scrap:1200,energy:250,alloy:160,hp:100};deliveries=0;convoyLevel=1;}
+ const preferredBase=closestPassable(map.kind==='demo'?45:0,map.kind==='demo'?70:0,grid);
+ const chosenMine=closestPassable(map.kind==='demo'?-165:-110,map.kind==='demo'?-175:-90,grid);
+ const starter=stored||[{type:'hq',...preferredBase},{type:'mine',...chosenMine},{type:'turret',x:preferredBase.x+52,z:preferredBase.z+15},{type:'turret',x:preferredBase.x-44,z:preferredBase.z-35},{type:'tower',x:preferredBase.x+54,z:preferredBase.z+60}];
+ for(const b of starter){if(!['hq','mine','turret','tower','bunker','factory'].includes(b.type))continue;const item={...b,radius:b.type==='hq'?22:b.type==='bunker'?18:13,fire:0};buildings.push(item);makeBuilding(item);if(item.type==='hq'&&!base)base=item;if(item.type==='mine'&&!initialMine)initialMine=item;}
+ if(!base){base={type:'hq',...preferredBase,radius:22,fire:0};buildings.unshift(base);makeBuilding(base);}
+ if(!initialMine){initialMine={type:'mine',...chosenMine,radius:13,fire:0};buildings.push(initialMine);makeBuilding(initialMine);}
+ flow=flowField(grid,base);enemies.setSpawnSites(flow,grid);enemies.resize(unitCount);makeDangerMesh();
+ truck=makeTruck();refreshPath();general=makeGeneral();escortMeshes=Array.from({length:3+(convoyLevel-1)*2},()=>makeEscort());walking=false;gpsActive=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
+ camTarget.set(base.x,0,base.z);zoom=370;updateCamera();
+ $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='osm'?'REAL OSM':'DEMO';
+ $('#mapbadge').textContent=(map.kind==='osm'?'LIVE OSM GEOMETRY':'DEMO MAP')+' · 800 × 800 M';$('#mapbadge').classList.toggle('osm',map.kind==='osm');
+ $('#attribution').innerHTML=map.kind==='osm'?'3D op OSM-geometrie · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>':'Demo-wereld is fictief · echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>';
+ updateHUD();save();toast(map.kind==='osm'?'Echte OpenStreetMap-geometrie geladen.':'Testsector actief. Turrets en bunkers kunnen gebouwd worden.');
+}
+function updateCamera(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();
+ const offset=new THREE.Vector3(Math.sin(azimuth)*zoom,Math.sin(camPitch)*zoom*1.55,Math.cos(azimuth)*zoom);camera.position.copy(camTarget).add(offset);camera.lookAt(camTarget);
+}
+function nearestCommand(x,z){let d=Infinity;for(const b of buildings)if(['hq','bunker','tower'].includes(b.type)){let dist=distance(b,{x,z});d=Math.min(d,dist);}return d;}
+function canBuild(type,x,z,quiet=false){
+ if(!safePlacement(x,z,grid,buildings,type==='bunker'?18:12))return 'Geblokkeerd door gebouw, water of bestaande structuur';
+ const d=nearestCommand(x,z);
+ const max=type==='bunker'?315:type==='tower'?245:type==='mine'?275:185;
+ if(d>max)return 'Te ver van commandonetwerk. Bouw eerst een subbase of control tower.';
+ const discount=(liveGPS&&Date.now()-gpsUpdated<60000&&distance(general.position,{x,z})<=60)?0.75:1;
+ const cost=costs[type];if(resources.scrap<Math.ceil(cost.scrap*discount)||resources.energy<Math.ceil(cost.energy*discount))return 'Niet genoeg grondstoffen. Wacht op je vrachtwagen.';
+ return null;
+}
+function buildAt(x,z){if(!costs[selected])return;const msg=canBuild(selected,x,z);if(msg){toast(msg);return;}
+ const price=costs[selected];const discount=(liveGPS&&Date.now()-gpsUpdated<60000&&distance(general.position,{x,z})<=60)?0.75:1;
+ resources.scrap-=Math.ceil(price.scrap*discount);resources.energy-=Math.ceil(price.energy*discount);
+ const item={type:selected,x,z,radius:selected==='bunker'?18:13,fire:0};buildings.push(item);makeBuilding(item);
+ if(selected==='mine'&&!initialMine){initialMine=item;refreshPath();}
+ if(selected==='bunker'||selected==='tower')commandDiscounts++;
+ updateHUD();save();toast(names[selected]+' geplaatst'+(discount<1?' · GPS-korting actief!':'')+'!');
+}
+function fire(from,to,color=0x69f3ff){
+ if(visibleTracers.length>45)return;
+ const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(from.x,13,from.z),new THREE.Vector3(to.x,5,to.z)]);
+ const mat=new THREE.LineBasicMaterial({color,transparent:true,opacity:.95});const line=new THREE.Line(geo,mat);effectRoot.add(line);visibleTracers.push({line,life:.13});
+}
+function turretCombat(dt){
+ for(const b of buildings){if(!['turret','bunker'].includes(b.type))continue;b.fire=(b.fire||0)-dt;if(b.fire>0)continue;b.fire=b.type==='turret'?.33:.7;
+ const boosted=b.type==='turret'&&buildings.some(t=>t.type==='tower'&&distance(t,b)<145);const range=b.type==='turret'?(boosted?108:83):68;let best=-1,bd=range*range;
+ // Spatial partitioning will replace the linear scan in the multiplayer phase.
+ for(let i=0;i<enemies.count;i++){const dx=enemies.x[i]-b.x,dz=enemies.z[i]-b.z;const d=dx*dx+dz*dz;if(d<bd){bd=d;best=i;}}
+ if(best>=0){fire(b,{x:enemies.x[best],z:enemies.z[best]},b.type==='turret'?0x7be9ff:0xfcb369);enemies.damage(best,b.type==='turret'?42:56);}
+ }
+}
+function updateTruck(dt){if(!truck||truckRoute.length<2)return;
+ const total=pathLength(truckRoute);truckProgress+=dt*15.5*truckDir;
+ if(truckProgress>=total){truckProgress=total;truckDir=-1;deliveries++;resources.scrap+=75+(buildings.filter(b=>b.type==='mine').length-1)*15;resources.alloy+=9;showMessage('Vrachtwagen heeft scrap en alloy afgeleverd.');save();}
+ if(truckProgress<=0){truckProgress=0;truckDir=1;}
+ const p=consumePathPosition(truckRoute,truckProgress);truck.position.set(p.x,0,p.z);truck.rotation.y=p.heading+(truckDir<0?Math.PI:0);
+ // Enemy raids on unprotected supply lines.
+ let enemyNearby=false;for(let i=0;i<enemies.count;i++){if(Math.abs(enemies.x[i]-p.x)<12&&Math.abs(enemies.z[i]-p.z)<12){enemyNearby=true;break;}}
+ if(enemyNearby)truckHealth-=dt*1.4;else truckHealth=Math.min(100,truckHealth+dt*.5);
+ if(truckHealth<=0){truckHealth=100;truckProgress=0;truckDir=1;resources.scrap=Math.max(0,resources.scrap-30);toast('Konvooi geplunderd! 30 scrap verloren.');}
+}
+function updateGeneral(dt){if(!general)return;
+ if(walking&&patrolPath.length>1&&!liveGPS){generalProgress=(generalProgress+dt*17)%Math.max(1,patrolLen*2);const f=generalProgress>patrolLen?patrolLen*2-generalProgress:generalProgress;
+ const p=consumePathPosition(patrolPath,f);general.position.set(p.x,0,p.z);
+ }else if(!liveGPS){general.position.set(base.x+35,0,base.z-24);}
+ for(let i=0;i<escortMeshes.length;i++){
+  const ang=(i/escortMeshes.length)*Math.PI*2+simTime*.75;
+  const mesh=escortMeshes[i];const x=general.position.x+Math.sin(ang)*17,z=general.position.z+Math.cos(ang)*17;
+  mesh.position.lerp(new THREE.Vector3(x,0,z),Math.min(1,dt*3.5));mesh.rotation.y=ang;
+ }
+ if((walking||liveGPS)&&Math.floor(simTime*3)!==Math.floor((simTime-dt)*3)){
+  let target=-1,dd=30*30;
+  for(let i=0;i<enemies.count;i++){const dx=enemies.x[i]-general.position.x,dz=enemies.z[i]-general.position.z,d=dx*dx+dz*dz;if(d<dd){dd=d;target=i;}}
+  if(target>=0){enemies.damage(target,16+escortMeshes.length*6);fire(general.position,{x:enemies.x[target],z:enemies.z[target]},0xffdf89);scorePulse=simTime+1.2;showMessage('CONTACT! Jouw mobiele escorte bestrijdt vijanden.');}
+ }
+ $('#convoy').textContent=(liveGPS?'GPS':walking?'PATROL':scorePulse>simTime?'COMBAT':'READY')+' · LVL '+convoyLevel;
+}
+function simulation(dt){const start=performance.now();simTime+=dt;resources.energy=Math.min(500,resources.energy+dt*.6);
+ const hits=enemies.tick(dt,flow,base);resources.hp=Math.max(10,resources.hp-Math.min(hits*.18,dt*3));
+ turretCombat(dt);updateTruck(dt);updateGeneral(dt);
+ for(let i=visibleTracers.length-1;i>=0;i--){const t=visibleTracers[i];t.life-=dt;t.line.material.opacity=Math.max(0,t.life/.13);if(t.life<=0){effectRoot.remove(t.line);t.line.geometry.dispose();t.line.material.dispose();visibleTracers.splice(i,1);}}
+ ringPulse.visible=true;ringPulse.position.x=base.x;ringPulse.position.z=base.z;
+ ringPulse.material.opacity=.07+.04*Math.sin(simTime*1.7);ringPulse.scale.setScalar(1+.04*Math.sin(simTime));
+ simMS=simMS*.85+(performance.now()-start)*.15;
+}
+function updateHUD(){if(!currentMap)return;credits();$('#scrap').textContent=resources.scrap.toLocaleString('nl-NL');$('#energy').textContent=Math.floor(resources.energy).toLocaleString('nl-NL');$('#alloy').textContent=resources.alloy.toLocaleString('nl-NL');$('#hp').textContent=resources.hp.toFixed(0)+'%';$('#units').textContent=enemies.count.toLocaleString('nl-NL');$('#kills').textContent=enemies.kills.toLocaleString('nl-NL');$('#breaches').textContent=enemies.breaches.toLocaleString('nl-NL');$('#turrets').textContent=buildings.filter(x=>x.type==='turret').length;$('#outposts').textContent=buildings.filter(x=>['hq','tower','bunker'].includes(x.type)).length;$('#deliveries').textContent=deliveries;$('#fps').textContent=displayFPS?displayFPS.toFixed(0):'--';$('#simms').textContent=simMS.toFixed(2)+' ms';$('#draws').textContent=renderer.info.render.calls.toLocaleString('nl-NL');}
+function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.width,h=c.height,k=w/SIZE;const px=x=>(x+HALF)*k,pz=z=>(z+HALF)*k;
+ ctx.fillStyle='#0c2b2e';ctx.fillRect(0,0,w,h);
+ const fill=(p,color)=>{ctx.beginPath();p.forEach((v,i)=>i?ctx.lineTo(px(v.x),pz(v.z)):ctx.moveTo(px(v.x),pz(v.z)));ctx.closePath();ctx.fillStyle=color;ctx.fill();};
+ currentMap.parks.forEach(p=>fill(p,'#35704b'));currentMap.water.forEach(p=>fill(p,'#1b648a'));
+ ctx.strokeStyle='#809397';for(const r of currentMap.roads){ctx.beginPath();r.points.forEach((p,i)=>i?ctx.lineTo(px(p.x),pz(p.z)):ctx.moveTo(px(p.x),pz(p.z)));ctx.lineWidth=r.vehicle?1.5:.8;ctx.stroke();}
+ currentMap.buildings.forEach(b=>fill(b.poly,'#3d5a65'));
+ for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/500))){ctx.fillStyle='#f17780';ctx.fillRect(px(enemies.x[i]),pz(enemies.z[i]),1.3,1.3);}
+ for(const b of buildings){ctx.fillStyle=b.type==='hq'?'#fff6ab':b.type==='turret'?'#75e9f1':b.type==='mine'?'#ffc66d':'#68cfdf';ctx.beginPath();ctx.arc(px(b.x),pz(b.z),b.type==='hq'?4:2.5,0,Math.PI*2);ctx.fill();}
+ if(general){ctx.fillStyle='#fffff9';ctx.beginPath();ctx.arc(px(general.position.x),pz(general.position.z),3.5,0,Math.PI*2);ctx.fill();}
+ if(truck){ctx.fillStyle='#ffc665';ctx.fillRect(px(truck.position.x)-2,pz(truck.position.z)-2,4,4);}
+}
+function animate(time){requestAnimationFrame(animate);let dt=Math.min(.05,(time-last)/1000||.016);last=time;
+ if(!gamePaused&&enemies){simulation(dt);}if(enemies)renderEnemies();
+ frames++;frameSum+=dt;if(frameSum>=.5){displayFPS=frames/frameSum;frames=0;frameSum=0;}
+ renderer.render(scene,camera);
+ if(time-lastHUD>400){updateHUD();renderMinimap();lastHUD=time;}
+}
+function pickGround(clientX,clientY){const rect=renderer.domElement.getBoundingClientRect();const x=(clientX-rect.left)/rect.width*2-1,y=-(clientY-rect.top)/rect.height*2+1;raycaster.setFromCamera(new THREE.Vector2(x,y),camera);return raycaster.ray.intersectPlane(plane,new THREE.Vector3());}
+let pointerDown=null,pinchStart=0;
+renderer.domElement.addEventListener('pointerdown',e=>{pointerDown={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,button:e.button,moved:false};renderer.domElement.setPointerCapture(e.pointerId);});
+renderer.domElement.addEventListener('pointermove',e=>{
+ const p=pickGround(e.clientX,e.clientY);if(p){buildRing.position.x=p.x;buildRing.position.z=p.z;buildRing.material.color.set(canBuild(selected,p.x,p.z,true)?0xff5267:0x64f7df);}
+ if(!pointerDown)return;const dx=e.clientX-pointerDown.lastX,dy=e.clientY-pointerDown.lastY;pointerDown.lastX=e.clientX;pointerDown.lastY=e.clientY;
+ if(Math.hypot(e.clientX-pointerDown.x,e.clientY-pointerDown.y)>6)pointerDown.moved=true;
+ if(pointerDown.button===2||e.shiftKey){azimuth+=dx*.006;camPitch=Math.max(.35,Math.min(1.3,camPitch+dy*.003));}
+ else{const scale=zoom/Math.max(350,innerHeight);camTarget.x+=(-dx*Math.cos(azimuth)-dy*Math.sin(azimuth))*scale;camTarget.z+=(dx*Math.sin(azimuth)-dy*Math.cos(azimuth))*scale;camTarget.x=Math.max(-350,Math.min(350,camTarget.x));camTarget.z=Math.max(-350,Math.min(350,camTarget.z));}
+ updateCamera();
+});
+renderer.domElement.addEventListener('pointerup',e=>{if(pointerDown&&!pointerDown.moved&&pointerDown.button===0){const p=pickGround(e.clientX,e.clientY);if(p)buildAt(p.x,p.z);}pointerDown=null;});
+renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
+renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(800,Math.max(110,zoom+e.deltaY*.32));updateCamera();},{passive:false});
+window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);updateCamera();});
+const toggleBuild=type=>{selected=type;$$('[data-build]').forEach(b=>b.classList.toggle('active',b.dataset.build===type));toast('Bouwmodus: '+names[type]);};
+$$('[data-build]').forEach(b=>b.onclick=()=>toggleBuild(b.dataset.build));
+window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
+$('#unitRange').addEventListener('input',e=>{unitCount=unitSteps[+e.target.value];$('#unitLabel').textContent=unitCount.toLocaleString('nl-NL');enemies.resize(unitCount);toast('Stresstest: '+unitCount.toLocaleString('nl-NL')+' 3D-zombies actief.');});
+$('#upgradeConvoyBtn').onclick=()=>{if(convoyLevel>=4){toast('Konvooi is maximaal uitgebreid (9 escorte-units).');return;}const sc=convoyLevel*220,al=convoyLevel*30;if(resources.scrap<sc||resources.alloy<al){toast('Konvooi-upgrade vereist '+sc+' scrap en '+al+' alloy.');return;}resources.scrap-=sc;resources.alloy-=al;convoyLevel++;escortMeshes.push(makeEscort(),makeEscort());save();toast('Konvooi level '+convoyLevel+': '+escortMeshes.length+' escorte-units, meer vuurkracht!');updateHUD();};
+$('#marchBtn').onclick=()=>{if(liveGPS){toast('GPS actief. De escorte volgt je werkelijke locatie.');return;}walking=!walking;$('#marchBtn').textContent=walking?'■ STOP PATROL':'▶ START PATROL';toast(walking?'Generaal op patrouille. Escorte actief en bewapend.':'Patrouille beëindigd.');};
+$('#pauseBtn').onclick=()=>{gamePaused=!gamePaused;$('#pauseBtn').textContent=gamePaused?'▶ RESUME':'Ⅱ PAUSE';};
+$('#resetBtn').onclick=()=>{if(confirm('Deze demo-wereld en lokale voortgang wissen?'))reset();};
+$('#demoBtn').onclick=()=>{if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;}newWorld(demoMap());};
+$('#osmBtn').onclick=()=>$('#osmDialog').classList.remove('hidden');$('#cancelOsm').onclick=()=>$('#osmDialog').classList.add('hidden');
+$('#confirmOsm').onclick=async()=>{
+ const lat=Number($('#latInput').value),lon=Number($('#lonInput').value);if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>85||Math.abs(lon)>180){toast('Vul geldige GPS-coördinaten in.');return;}
+ const btn=$('#confirmOsm');btn.disabled=true;btn.textContent='OSM DATA LADEN…';showMessage('Overpass haalt OpenStreetMap-wegen, gebouwen en water op…');
+ const center={lat,lon},rlat=.0037,rlon=.0059;
+ const bbox=`${lat-rlat},${lon-rlon},${lat+rlat},${lon+rlon}`;
+ const query=`[out:json][timeout:24];(way["highway"](${bbox});way["building"](${bbox});way["natural"="water"](${bbox});way["landuse"~"grass|forest|meadow|reservoir"](${bbox});way["leisure"~"park|garden"](${bbox});way["waterway"="riverbank"](${bbox}););out geom;`;
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),28000);
+ try{
+  const resp=await fetch('https://overpass-api.de/api/interpreter?data='+encodeURIComponent(query),{signal:controller.signal});if(!resp.ok)throw Error('Overpass status '+resp.status);
+  const data=await resp.json();const map=fromOverpass(data,center);if(map.buildings.length>1200)map.buildings.length=1200;
+  newWorld(map);$('#osmDialog').classList.add('hidden');
+ }catch(e){toast('OSM laden mislukt: '+e.message+'. De demo blijft speelbaar.');console.warn('OpenStreetMap download error',e);}finally{clearTimeout(timeout);btn.disabled=false;btn.textContent='LAAD KAART';}
+};
+$('#locationBtn').onclick=()=>{
+ if(!navigator.geolocation){toast('GPS is hier niet beschikbaar.');return;}
+ navigator.geolocation.getCurrentPosition(p=>{$('#latInput').value=p.coords.latitude.toFixed(5);$('#lonInput').value=p.coords.longitude.toFixed(5);toast('GPS-coördinaten ingevuld. Klik op Laad kaart.');},e=>toast('GPS geweigerd of niet beschikbaar: '+e.message),{enableHighAccuracy:true,timeout:12000});
+};
+$('#gpsBtn').onclick=()=>{
+ if(!navigator.geolocation){toast('Deze browser ondersteunt geen GPS.');return;}
+ if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;gpsActive=false;liveGPS=false;$('#gpsBtn').textContent='⌖ USE MY GPS';toast('GPS-tracking gestopt.');return;}
+ gpsWatch=navigator.geolocation.watchPosition(pos=>{
+  gpsUpdated=Date.now();const p=toWorld(pos.coords.latitude,pos.coords.longitude,currentMap.center);
+  if(Math.abs(p.x)>HALF||Math.abs(p.z)>HALF){liveGPS=false;toast('Je staat buiten deze sector. Laad OSM rond je GPS-locatie via het kaartmenu.');return;}
+  const cell=gridIndex(p.x,p.z);if(cell<0||grid[cell]){showMessage('GPS staat op een terreinobstakel in de gamekaart.');return;}
+  liveGPS=true;walking=false;general.position.set(p.x,0,p.z);$('#marchBtn').textContent='▶ START PATROL';$('#gpsBtn').textContent='■ STOP GPS';
+ },e=>{toast('GPS-fout: '+e.message);if(gpsWatch!==null)navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;liveGPS=false;$('#gpsBtn').textContent='⌖ USE MY GPS';},{enableHighAccuracy:true,maximumAge:2000,timeout:15000});
+};
+$('#menuToggle').onclick=()=>$('#buildPanel').classList.toggle('open');
+window.addEventListener('beforeunload',save);
+newWorld(demoMap());$('#loader').style.display='none';updateCamera();requestAnimationFrame(animate);setInterval(save,15000);
+
+</script><script>setTimeout(()=>{if(!window.__outpostBooted){const l=document.getElementById('loader');l.innerHTML='<strong>3D-module kon niet laden</strong><span>Open de website met internettoegang. Three.js wordt van een externe CDN geladen.</span>'; }},12000);</script></body></html>
