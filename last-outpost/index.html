@@ -237,11 +237,13 @@ function drawPolygon(points,mat,y=0.04){try{let g=new THREE.ShapeGeometry(polygo
 function drawStreet(a,b,width,material){const dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz);if(d<.5)return;const m=box(width,.12,d,material);m.position.set((a.x+b.x)/2,.16,(a.z+b.z)/2);m.rotation.y=Math.atan2(dx,dz);terrainRoot.add(m);}
 function drawMap(map){
  const parkMat=new THREE.MeshBasicMaterial({color:0x2a5740,side:THREE.DoubleSide});
+  const bgtRoadMat=new THREE.MeshBasicMaterial({color:0x52636a,side:THREE.DoubleSide});
  const waterMat=new THREE.MeshStandardMaterial({color:0x12516a,metalness:.3,roughness:.4,side:THREE.DoubleSide,emissive:0x0a3649,emissiveIntensity:.18});
  const streetMat=new THREE.MeshStandardMaterial({color:0x52636a,roughness:.98});
  const footMat=new THREE.MeshStandardMaterial({color:0x6b756d,roughness:1});
  const brMat=new THREE.MeshStandardMaterial({color:0x8f9c98,roughness:1});
  map.parks.forEach(p=>drawPolygon(p,parkMat,.02));map.water.forEach(p=>drawPolygon(p,waterMat,.08));
+  (map.roadSurfaces||[]).forEach(p=>drawPolygon(p,bgtRoadMat,.13));
  for(const r of map.roads)for(let i=1;i<r.points.length;i++)drawStreet(r.points[i-1],r.points[i],r.width,r.bridge?brMat:r.vehicle?streetMat:footMat);
  if(map.kind==='demo')for(const b of map.bridges||[]){part(terrainRoot,box(65,.4,18,brMat),b.x,.5,b.z);}
  const facade=[0x223b4a,0x2b4850,0x3a535d,0x27434f,0x38515a];
@@ -297,10 +299,10 @@ function newWorld(map){
  flow=flowField(grid,base);enemies.setSpawnSites(flow,grid);enemies.resize(unitCount);makeDangerMesh();
  truck=makeTruck();refreshPath();general=makeGeneral();escortMeshes=Array.from({length:3+(convoyLevel-1)*2},()=>makeEscort());walking=false;gpsActive=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
  camTarget.set(base.x,0,base.z);zoom=370;updateCamera();
- $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='osm'?'REAL OSM':'DEMO';
- $('#mapbadge').textContent=(map.kind==='osm'?'LIVE OSM GEOMETRY':'DEMO MAP')+' · 800 × 800 M';$('#mapbadge').classList.toggle('osm',map.kind==='osm');
- $('#attribution').innerHTML=map.kind==='osm'?'3D op OSM-geometrie · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>':'Demo-wereld is fictief · echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>';
- updateHUD();save();toast(map.kind==='osm'?'Echte OpenStreetMap-geometrie geladen.':'Testsector actief. Turrets en bunkers kunnen gebouwd worden.');
+ $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='osm'?'REAL OSM':map.kind==='bgt'?'BGT NL':'DEMO';
+ $('#mapbadge').textContent=(map.kind==='osm'?'LIVE OSM GEOMETRY':map.kind==='bgt'?'REAL BGT NL':'DEMO MAP')+' · 800 × 800 M';$('#mapbadge').classList.toggle('osm',map.kind==='osm');
+ $('#attribution').innerHTML=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D-geometrie':'3D op OSM-geometrie · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>':'Demo-wereld is fictief · echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>';
+ updateHUD();save();toast(map.kind==='bgt'?'Echte Nederlandse BGT-geometrie geladen.':map.kind==='osm'?'Echte OpenStreetMap-geometrie geladen.':'Testsector actief. Turrets en bunkers kunnen gebouwd worden.');
 }
 function updateCamera(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();
  const offset=new THREE.Vector3(Math.sin(azimuth)*zoom,Math.sin(camPitch)*zoom*1.55,Math.cos(azimuth)*zoom);camera.position.copy(camTarget).add(offset);camera.lookAt(camTarget);
@@ -506,8 +508,8 @@ async function loadBGT(center,button){
   throw Error('Geen bruikbare BGT-data. '+errors.join('; '));
  // The BGT contains road SURFACES, not guaranteed connected driving centerlines.
  // No fabricated truck route: keep demo road network explicitly identified as provisional.
- result.roads=demoMap().roads;
- result.provisionalRoadGraph=true;
+ result.roads=[];
+ result.provisionalRoadGraph=false;
  return {map:result,warnings:errors};
 }
 $('#confirmOsm').onclick=async()=>{
@@ -519,8 +521,8 @@ $('#confirmOsm').onclick=async()=>{
   newWorld(data.map);
   $('#osmDialog').classList.add('hidden');
   if(geoMap){geoMap.jumpTo({center:[lon,lat]});updateMapMarkers();}
-  showMessage('BGT-data geladen. Vrachtwagenwegen zijn nog fictieve testgeometrie.'+(data.warnings.length?' Let op: '+data.warnings.join(' / '):''));
-  toast('Nederlandse BGT-wereld geladen. Weg-routing is nog een prototype.');
+  showMessage('BGT-kaart geladen. Echte vrachtwagenrouting volgt later.'+(data.warnings.length?' Let op: '+data.warnings.join(' / '):''));
+  toast('Nederlandse BGT-wereld geladen. Vrachtwagens wachten op echte routedata.');
  }catch(e){
   console.warn('PDOK laden mislukt',e);
   showMessage('PDOK BGT niet beschikbaar: '+e.message);
