@@ -301,7 +301,7 @@ function newWorld(map){
  camTarget.set(base.x,0,base.z);zoom=370;updateCamera();
  $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='osm'?'REAL OSM':map.kind==='bgt'?'BGT NL':'DEMO';
  $('#mapbadge').textContent=(map.kind==='osm'?'LIVE OSM GEOMETRY':map.kind==='bgt'?'REAL BGT NL':'DEMO MAP')+' · 800 × 800 M';$('#mapbadge').classList.toggle('osm',map.kind==='osm');
- $('#attribution').innerHTML=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D-geometrie':'3D op OSM-geometrie · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>':'Demo-wereld is fictief · echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a>';
+ $('#attribution').innerHTML=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D-geometrie':map.kind==='osm'?'3D op OSM-geometrie · © OpenStreetMap contributors':'Fictieve demo · © OpenStreetMap contributors';
  updateHUD();save();toast(map.kind==='bgt'?'Echte Nederlandse BGT-geometrie geladen.':map.kind==='osm'?'Echte OpenStreetMap-geometrie geladen.':'Testsector actief. Turrets en bunkers kunnen gebouwd worden.');
 }
 function updateCamera(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();
