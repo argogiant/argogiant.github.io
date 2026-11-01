@@ -386,7 +386,7 @@ function animate(time){requestAnimationFrame(animate);let dt=Math.min(.05,(time-
  if(!gamePaused&&enemies){simulation(dt);}if(enemies)renderEnemies();
  frames++;frameSum+=dt;if(frameSum>=.5){displayFPS=frames/frameSum;frames=0;frameSum=0;}
  renderer.render(scene,camera);
- if(time-lastHUD>400){updateHUD();renderMinimap();lastHUD=time;}
+ if(time-lastHUD>400){updateHUD();renderMinimap();if(geoMode)updateMapMarkers();lastHUD=time;}
 }
 function pickGround(clientX,clientY){const rect=renderer.domElement.getBoundingClientRect();const x=(clientX-rect.left)/rect.width*2-1,y=-(clientY-rect.top)/rect.height*2+1;raycaster.setFromCamera(new THREE.Vector2(x,y),camera);return raycaster.ray.intersectPlane(plane,new THREE.Vector3());}
 let pointerDown=null,pinchStart=0;
@@ -413,19 +413,121 @@ $('#pauseBtn').onclick=()=>{gamePaused=!gamePaused;$('#pauseBtn').textContent=ga
 $('#resetBtn').onclick=()=>{if(confirm('Deze demo-wereld en lokale voortgang wissen?'))reset();};
 $('#demoBtn').onclick=()=>{if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;}newWorld(demoMap());};
 $('#osmBtn').onclick=()=>$('#osmDialog').classList.remove('hidden');$('#cancelOsm').onclick=()=>$('#osmDialog').classList.add('hidden');
-$('#confirmOsm').onclick=async()=>{
- const lat=Number($('#latInput').value),lon=Number($('#lonInput').value);if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>85||Math.abs(lon)>180){toast('Vul geldige GPS-coördinaten in.');return;}
- const btn=$('#confirmOsm');btn.disabled=true;btn.textContent='OSM DATA LADEN…';showMessage('Overpass haalt OpenStreetMap-wegen, gebouwen en water op…');
- const center={lat,lon},rlat=.0037,rlon=.0059;
- const bbox=`${lat-rlat},${lon-rlon},${lat+rlat},${lon+rlon}`;
- const query=`[out:json][timeout:24];(way["highway"](${bbox});way["building"](${bbox});way["natural"="water"](${bbox});way["landuse"~"grass|forest|meadow|reservoir"](${bbox});way["leisure"~"park|garden"](${bbox});way["waterway"="riverbank"](${bbox}););out geom;`;
- const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),28000);
- try{
-  const resp=await fetch('https://overpass.private.coffee/api/interpreter?data='+encodeURIComponent(query),{signal:controller.signal});if(!resp.ok)throw Error('Overpass status '+resp.status);
-  const data=await resp.json();const map=fromOverpass(data,center);if(map.buildings.length>1200)map.buildings.length=1200;
-  newWorld(map);$('#osmDialog').classList.add('hidden');
- }catch(e){toast('OSM laden mislukt: '+e.message+'. De demo blijft speelbaar.');console.warn('OpenStreetMap download error',e);}finally{clearTimeout(timeout);btn.disabled=false;btn.textContent='LAAD KAART';}
+// GPS MAP + Dutch BGT sector import
+let geoMap=null,geoMode=false,geoPosition=null,sectorFeatures=[];
+function gameFeatures(){
+ const features=[];
+ const toPoint=(p,kind)=>({type:'Feature',properties:{kind},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
+ if(currentMap){
+  for(const b of buildings){
+   const p=toGeo(b.x,b.z,currentMap.center);
+   features.push(toPoint(p,b.type));
+  }
+  if(general){
+   const p=toGeo(general.position.x,general.position.z,currentMap.center);
+   features.push(toPoint(p,'general'));
+  }
+ }
+ if(geoPosition)features.push(toPoint(geoPosition,'gps'));
+ return {type:'FeatureCollection',features};
+}
+function updateMapMarkers(){
+ if(!geoMap||!geoMap.isStyleLoaded())return;
+ const src=geoMap.getSource('gameunits');if(src)src.setData(gameFeatures());
+}
+function initGeoMap(){
+ if(geoMap||typeof maplibregl==='undefined'){if(typeof maplibregl==='undefined')toast('Kaartbibliotheek kon niet laden. Controleer internet.');return;}
+ geoMap=new maplibregl.Map({
+  container:'geoMap',style:'https://tiles.openfreemap.org/styles/liberty',
+  center:[currentMap?.center.lon||5.3878,currentMap?.center.lat||52.1562],
+  zoom:16,attributionControl:true
+ });
+ geoMap.addControl(new maplibregl.NavigationControl(),'top-right');
+ geoMap.on('load',()=>{
+  geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
+  geoMap.addLayer({id:'gameunits-ring',type:'circle',source:'gameunits',paint:{
+   'circle-radius':['match',['get','kind'],'hq',13,'general',11,'gps',11,7],
+   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
+   'circle-stroke-width':2,'circle-stroke-color':'#071923'
+  }});
+  updateMapMarkers();
+ });
+ geoMap.on('error',e=>console.warn('Map tiles:',e.error?.message||e));
+}
+$('#mapModeBtn').onclick=()=>{
+ geoMode=!geoMode;
+ if(geoMode){
+  initGeoMap();
+  $('#viewport').classList.add('map-mode');$('#mapModeBtn').textContent='◈ TERUG NAAR 3D';
+  if(geoMap){geoMap.resize();updateMapMarkers();}
+  showMessage('Echte kaartmodus. Gebruik GPS om jouw locatie te tonen.');
+ }else{
+  $('#viewport').classList.remove('map-mode');$('#mapModeBtn').textContent='▤ GPS MAP VIEW';
+  showMessage('3D-wereld ingeschakeld.');
+ }
 };
+async function loadBGT(center,button){
+ // Individual Dutch BGT collections are publicly available under OGC Features.
+ const endpoint='https://api.pdok.nl/lv/bgt/ogc/v1';
+ const dlat=.0036,dlon=.0057;
+ const bbox=[center.lon-dlon,center.lat-dlat,center.lon+dlon,center.lat+dlat].join(',');
+ const groups=[['pand','buildings'],['wegdeel','roads'],['waterdeel','water'],['begroeidterreindeel','parks']];
+ const result={label:'PDOK BGT · Nederlandse kaart',kind:'bgt',center,roads:[],buildings:[],water:[],parks:[],bridges:[],roadSurfaces:[]};
+ const errors=[];
+ for(const [collection,target] of groups){
+  button.textContent='BGT: '+collection.toUpperCase()+'…';
+  try{
+   const url=endpoint+'/collections/'+collection+'/items?bbox='+bbox+'&limit=1000&f=json';
+   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),18000);
+   let response;
+   try{response=await fetch(url,{signal:controller.signal,headers:{Accept:'application/geo+json'}});}
+   finally{clearTimeout(timer);}
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const data=await response.json();
+   if(!Array.isArray(data.features))throw Error('Onbekend GeoJSON-formaat');
+   for(const feat of data.features){
+    const g=feat.geometry;if(!g)continue;
+    const polys=g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[];
+    for(const polygon of polys){
+     const ring=polygon?.[0];if(!ring||ring.length<4)continue;
+     const pts=ring.map(pt=>toWorld(pt[1],pt[0],center));
+     if(pts.some(p=>!Number.isFinite(p.x)||!Number.isFinite(p.z)))continue;
+     const xs=pts.map(p=>p.x),zs=pts.map(p=>p.z);
+     if(Math.min(...xs)>400||Math.max(...xs)<-400||Math.min(...zs)>400||Math.max(...zs)<-400)continue;
+     if(target==='buildings')result.buildings.push({poly:pts,height:9});
+     else if(target==='roads')result.roadSurfaces.push(pts);
+     else result[target].push(pts);
+    }
+   }
+   if(data.links?.some(l=>l.rel==='next'))errors.push(collection+': alleen eerste 1000 objecten');
+  }catch(e){console.warn('BGT '+collection+' fout',e);errors.push(collection+': '+e.message);}
+ }
+ if(!result.buildings.length&&!result.roadSurfaces.length&&!result.water.length&&!result.parks.length)
+  throw Error('Geen bruikbare BGT-data. '+errors.join('; '));
+ // The BGT contains road SURFACES, not guaranteed connected driving centerlines.
+ // No fabricated truck route: keep demo road network explicitly identified as provisional.
+ result.roads=demoMap().roads;
+ result.provisionalRoadGraph=true;
+ return {map:result,warnings:errors};
+}
+$('#confirmOsm').onclick=async()=>{
+ const lat=Number($('#latInput').value),lon=Number($('#lonInput').value);
+ if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>85||Math.abs(lon)>180){toast('Ongeldige GPS-coördinaten.');return;}
+ const btn=$('#confirmOsm');btn.disabled=true;
+ try{
+  const data=await loadBGT({lat,lon},btn);
+  newWorld(data.map);
+  $('#osmDialog').classList.add('hidden');
+  if(geoMap){geoMap.jumpTo({center:[lon,lat]});updateMapMarkers();}
+  showMessage('BGT-data geladen. Vrachtwagenwegen zijn nog fictieve testgeometrie.'+(data.warnings.length?' Let op: '+data.warnings.join(' / '):''));
+  toast('Nederlandse BGT-wereld geladen. Weg-routing is nog een prototype.');
+ }catch(e){
+  console.warn('PDOK laden mislukt',e);
+  showMessage('PDOK BGT niet beschikbaar: '+e.message);
+  toast('BGT-import mislukt. GPS-kaart blijft beschikbaar.');
+ }finally{btn.disabled=false;btn.textContent='LAAD KAART';}
+};
+
 $('#locationBtn').onclick=()=>{
  if(!navigator.geolocation){toast('GPS is hier niet beschikbaar.');return;}
  navigator.geolocation.getCurrentPosition(p=>{$('#latInput').value=p.coords.latitude.toFixed(5);$('#lonInput').value=p.coords.longitude.toFixed(5);toast('GPS-coördinaten ingevuld. Klik op Laad kaart.');},e=>toast('GPS geweigerd of niet beschikbaar: '+e.message),{enableHighAccuracy:true,timeout:12000});
@@ -434,7 +536,7 @@ $('#gpsBtn').onclick=()=>{
  if(!navigator.geolocation){toast('Deze browser ondersteunt geen GPS.');return;}
  if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;gpsActive=false;liveGPS=false;$('#gpsBtn').textContent='⌖ USE MY GPS';toast('GPS-tracking gestopt.');return;}
  gpsWatch=navigator.geolocation.watchPosition(pos=>{
-  gpsUpdated=Date.now();const p=toWorld(pos.coords.latitude,pos.coords.longitude,currentMap.center);
+  gpsUpdated=Date.now();geoPosition={lat:pos.coords.latitude,lon:pos.coords.longitude};if(geoMap){geoMap.easeTo({center:[geoPosition.lon,geoPosition.lat],zoom:Math.max(geoMap.getZoom(),16)});updateMapMarkers();}const p=toWorld(pos.coords.latitude,pos.coords.longitude,currentMap.center);
   if(Math.abs(p.x)>HALF||Math.abs(p.z)>HALF){liveGPS=false;toast('Je staat buiten deze sector. Laad OSM rond je GPS-locatie via het kaartmenu.');return;}
   const cell=gridIndex(p.x,p.z);if(cell<0||grid[cell]){showMessage('GPS staat op een terreinobstakel in de gamekaart.');return;}
   liveGPS=true;walking=false;general.position.set(p.x,0,p.z);$('#marchBtn').textContent='▶ START PATROL';$('#gpsBtn').textContent='■ STOP GPS';
