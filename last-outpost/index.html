@@ -10,14 +10,24 @@
 #viewport.map-mode #mapStatus{display:block}
 #geoMap .maplibregl-control-container .maplibregl-ctrl-bottom-right{bottom:48px}
 @media(max-width:720px){#mapStatus{bottom:100px;max-width:90%;left:50%;font-size:10px}#geoMap .maplibregl-control-container .maplibregl-ctrl-top-right{top:63px}}
+
+/* Individual structure actions and build feedback */
+.inspect-panel{background:#102632;border:1px solid #2b5964;border-radius:8px;padding:11px;margin:9px 0 10px;display:grid;gap:8px}
+.inspect-panel>b{font-size:13px;color:#c1fbf6}
+.inspect-panel>span{font-size:11px;line-height:1.45;color:#a6c1cb}
+.inspect-panel .actions{margin-top:2px}
+#baseSetup{border-left-color:#eeb45a;background:#302d26}
+#population{padding:8px 0;line-height:1.6}
+#mapStatus{pointer-events:none}
+@media(max-width:720px){#buildPanel{max-height:66vh}}
 </style><link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"><link rel="icon" href="data:,"></head>
 <body>
 <div id="app">
  <main id="viewport"><div id="render"></div><div id="geoMap"></div><div id="mapStatus">OpenFreeMap • verplaats je kaart of activeer GPS</div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
- <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // GPS BGT TEST 0.3</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
- <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Selecteer een gebouw en klik daarna op de 3D-kaart.</p><div id="buildList" class="buildlist"><button data-build="turret" class="build active"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ UPGRADE CONVOY</button><button id="mapModeBtn" class="action primary">▤ GPS MAP VIEW</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET SECTOR</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers.</span></div></aside>
+ <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // RTS SANDBOX 0.4</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
+ <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de 3D- of GPS-kaart. Klik op een bestaand gebouw voor upgrades.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● RECRUIT / FACTORY</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ SOLDIER · 130 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModeBtn" class="action primary">▤ GPS MAP VIEW</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET SECTOR</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
  <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>RENDER FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>3D DRAW CALLS</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">Dit meet je echte FPS op jouw apparaat. Verhoog het aantal voor een stresstest.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
- <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>PDOK BGT-wereld laden</h2><p>Laad Nederlandse gebouwen, wegvlakken, groen en water voor een gebied van circa 800 × 800 meter. Via de echte GPS-kaart kun je ook zonder deze import rondkijken. Vrachtwagen-routing over de echte wegen is nog experimenteel.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="confirmOsm" class="action primary">LAAD KAART</button></div><p class="tiny muted">OSM-kaartdata vereist internet. Je actuele GPS-locatie wordt alleen verwerkt nadat je toestemming geeft.</p></div></div>
+ <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build / select</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>PDOK BGT-wereld laden</h2><p>Laad Nederlandse gebouwen, wegvlakken, groen en water voor een gebied van circa 800 × 800 meter. Via de echte GPS-kaart kun je ook zonder deze import rondkijken. Vrachtwagen-routing over de echte wegen is nog experimenteel.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="confirmOsm" class="action primary">LAAD KAART</button></div><p class="tiny muted">OSM-kaartdata vereist internet. Je actuele GPS-locatie wordt alleen verwerkt nadat je toestemming geeft.</p></div></div>
 </div><script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 // LAST OUTPOST - deterministic, renderer-independent prototype simulation.
@@ -135,20 +145,45 @@ function roadPath(nodes,start,end){if(!nodes.length)return[];
  while(heap.length){const [cost,u]=pop();if(cost>d[u])continue;if(u===t)break;for(const v of nodes[u].adj){let nd=cost+v.d;if(nd<d[v.id]){d[v.id]=nd;prev[v.id]=u;push([nd,v.id]);}}}
  if(!Number.isFinite(d[t]))return[];const path=[];for(let p=t;p>=0;p=prev[p]){path.push({x:nodes[p].x,z:nodes[p].z});if(p===s)break;}return path.reverse();
 }
+
 class Enemies {
- constructor(max=6000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];}
- setSpawnSites(flow,blocked){this.spawnSites=[];for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){
-  if(x>4&&x<N-5&&z>4&&z<N-5)continue;let i=z*N+x;if(!blocked[i]&&flow[i]>=0)this.spawnSites.push(gridWorld(i));
- }}
- spawn(i){const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};this.x[i]=p.x+(this.rnd()-.5)*2;this.z[i]=p.z+(this.rnd()-.5)*2;this.hp[i]=35+this.rnd()*25;this.speed[i]=3.8+this.rnd()*3;this.state[i]=1;}
- resize(n){n=clamp(n|0,0,this.max);if(n>this.count)for(let i=this.count;i<n;i++)this.spawn(i);this.count=n;}
- damage(i,amount){if(this.hp[i]<=0)return false;this.hp[i]-=amount;if(this.hp[i]<=0){this.kills++;this.spawn(i);return true;}return false;}
- tick(dt,flow,target){let hits=0;for(let i=0;i<this.count;i++){
-  const x=this.x[i],z=this.z[i];if(Math.hypot(x-target.x,z-target.z)<22){hits++;this.breaches++;this.spawn(i);continue;}
-  const g=gridIndex(x,z),j=nextFlowStep(g,flow);if(j<0){this.spawn(i);continue;}
-  const p=gridWorld(j),dx=p.x-x,dz=p.z-z,dd=Math.hypot(dx,dz)||1;
-  const step=Math.min(this.speed[i]*dt,dd);this.x[i]+=dx/dd*step;this.z[i]+=dz/dd*step;
- }return hits;
+ constructor(max=6000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.dir=new Float32Array(max);this.turn=new Float32Array(max);this.alert=new Float32Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];}
+ setSpawnSites(flow,blocked){this.spawnSites=[];for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){if(x>5&&x<N-6&&z>5&&z<N-6)continue;let i=z*N+x;if(!blocked[i])this.spawnSites.push(gridWorld(i));}}
+ spawn(i){const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};this.x[i]=p.x;this.z[i]=p.z;this.hp[i]=35+this.rnd()*25;this.speed[i]=1.2+this.rnd()*1.8;this.dir[i]=this.rnd()*Math.PI*2;this.turn[i]=this.rnd()*4;this.alert[i]=0;this.state[i]=0;}
+ resize(n){n=clamp(n|0,0,this.max);for(let i=this.count;i<n;i++)this.spawn(i);this.count=n;}
+ damage(i,amount){if(this.hp[i]<=0)return false;this.hp[i]-=amount;this.alert[i]=12;this.state[i]=1;if(this.hp[i]<=0){this.kills++;this.spawn(i);return true;}return false;}
+ tick(dt,flow,target){
+  let hits=0;const active=!!target;
+  // Approximate local herd awareness: neighbours already alerted in index-adjacent cohorts.
+  // Detection is limited to periodic cohorts so thousands of zombies remain affordable.
+  for(let i=0;i<this.count;i++){
+   this.alert[i]=Math.max(0,this.alert[i]-dt);
+   this.turn[i]-=dt;
+   if(this.turn[i]<=0){this.turn[i]=1+this.rnd()*5;this.dir[i]+=(this.rnd()-.5)*2.5;}
+   if((i+Math.floor(simTime*5))%6===0){
+    let near=false;
+    if(active&&Math.hypot(this.x[i]-target.x,this.z[i]-target.z)<65)near=true;
+    if(general&&Math.hypot(this.x[i]-general.position.x,this.z[i]-general.position.z)<48)near=true;
+    if(truck&&crew.trucks>0&&Math.hypot(this.x[i]-truck.position.x,this.z[i]-truck.position.z)<50)near=true;
+    if(!near)for(let k=1;k<=3;k++){const j=(i+k)%this.count;if(this.alert[j]>5&&Math.hypot(this.x[i]-this.x[j],this.z[i]-this.z[j])<18){near=true;break;}}
+    if(near)this.alert[i]=14;
+   }
+   this.state[i]=this.alert[i]>0?1:0;
+   let dx=Math.sin(this.dir[i]),dz=Math.cos(this.dir[i]),velocity=this.speed[i];
+   if(active&&this.alert[i]>0){
+    const d=Math.hypot(this.x[i]-target.x,this.z[i]-target.z);
+    if(d<18){hits++;this.breaches++;this.spawn(i);continue;}
+    const gi=gridIndex(this.x[i],this.z[i]),ni=nextFlowStep(gi,flow);
+    if(ni>=0&&ni!==gi){const p=gridWorld(ni),len=Math.hypot(p.x-this.x[i],p.z-this.z[i])||1;dx=(p.x-this.x[i])/len;dz=(p.z-this.z[i])/len;velocity*=1.8;}
+   }else if(this.alert[i]>0&&general){
+    const d=Math.hypot(this.x[i]-general.position.x,this.z[i]-general.position.z);
+    if(d<100&&d>2){dx=(general.position.x-this.x[i])/d;dz=(general.position.z-this.z[i])/d;velocity*=1.4;}
+   }
+   const nx=this.x[i]+dx*velocity*dt,nz=this.z[i]+dz*velocity*dt,ci=gridIndex(nx,nz);
+   if(ci>=0&&!grid[ci]){this.x[i]=nx;this.z[i]=nz;}
+   else{this.dir[i]+=Math.PI*(.4+this.rnd());this.turn[i]=.3;}
+  }
+  return hits;
  }
 }
 function consumePathPosition(path,progress){if(path.length<2)return {x:path[0]?.x||0,z:path[0]?.z||0,heading:0};let p=progress;
@@ -175,20 +210,21 @@ const tmp=new THREE.Vector3(),dummy=new THREE.Object3D();
 const terrainRoot=new THREE.Group(), buildingRoot=new THREE.Group(),unitRoot=new THREE.Group(),effectRoot=new THREE.Group();scene.add(terrainRoot,buildingRoot,unitRoot,effectRoot);
 let currentMap,grid,flow,graph,enemies,zombieMesh,zombieHeads,truck,truckMesh,truckRoute=[],truckProgress=0,truckDir=1,truckHealth=100,truckShipment=0;
 let general,escortMeshes=[],generalProgress=0,walking=false,gpsActive=false,gpsWatch=null,gpsUpdated=0,liveGPS=false,patrolPath=[],patrolLen=0;
-let resources={scrap:1200,energy:250,alloy:160,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=500,base,initialMine;
-let selected='turret',displayFPS=0,frames=0,frameSum=0,simMS=0,last=performance.now(),lastHUD=0;
+let resources={scrap:1600,energy:450,alloy:220,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=500,base=null,initialMine=null;
+let selectedBuilding=null,workerMeshes=[],workerRoute=[],workerProgress=[],truckFleet=[],crew={workers:0,guards:0,trucks:0},nextProduction=0;
+let selected='hq',displayFPS=0,frames=0,frameSum=0,simMS=0,last=performance.now(),lastHUD=0;
 let camTarget=new THREE.Vector3(0,0,0),azimuth=0.65,zoom=370,camPitch=0.88,toastTimer;
 let visibleTracers=[],buildingMarkers=[],earthPulse=0;
 let deliveries=0,scorePulse=0,commandDiscounts=0,convoyLevel=1;
 const unitSteps=[50,150,500,1000,2000,5000];
 const blue=new THREE.MeshStandardMaterial({color:0x1ba5b5,metalness:.55,roughness:.37}),blueBright=new THREE.MeshStandardMaterial({color:0x5be7f0,metalness:.25,roughness:.25,emissive:0x0f5b60,emissiveIntensity:.45}),metal=new THREE.MeshStandardMaterial({color:0x304753,metalness:.7,roughness:.35}),dark=new THREE.MeshStandardMaterial({color:0x132c39,metalness:.42,roughness:.65}),orange=new THREE.MeshStandardMaterial({color:0xffb453,metalness:.25,roughness:.4,emissive:0x4e270c,emissiveIntensity:.3}),red=new THREE.MeshStandardMaterial({color:0xff5366,roughness:.6,emissive:0x86222d,emissiveIntensity:.3}),green=new THREE.MeshStandardMaterial({color:0x78e9a7,roughness:.5,emissive:0x103921,emissiveIntensity:.4});
-const costs={turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
-const names={turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
+const costs={hq:{scrap:0,energy:0},turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
+const names={hq:'Headquarters',turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
 const halfMap=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));halfMap.rotation.x=-Math.PI/2;halfMap.position.y=-.7;terrainRoot.add(halfMap);
 const gridHelper=new THREE.GridHelper(SIZE,50,0x35646a,0x25434a);gridHelper.material.transparent=true;gridHelper.material.opacity=.21;gridHelper.position.y=-.49;terrainRoot.add(gridHelper);
 const boundary=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(SIZE,1,SIZE)),new THREE.LineBasicMaterial({color:0x5acdd0,transparent:true,opacity:.32}));boundary.position.y=0;terrainRoot.add(boundary);
-const buildRing=new THREE.Mesh(new THREE.RingGeometry(14,17,48),new THREE.MeshBasicMaterial({color:0x69eddc,side:THREE.DoubleSide,transparent:true,opacity:.65,depthWrite:false}));buildRing.rotation.x=-Math.PI/2;buildRing.position.y=.5;scene.add(buildRing);
-const ringPulse=new THREE.Mesh(new THREE.RingGeometry(51,53,64),new THREE.MeshBasicMaterial({color:0x3ecad3,side:THREE.DoubleSide,transparent:true,opacity:.14,depthWrite:false}));ringPulse.rotation.x=-Math.PI/2;ringPulse.position.y=.5;ringPulse.visible=false;scene.add(ringPulse);
+const buildRing=new THREE.Mesh(new THREE.RingGeometry(6,8,48),new THREE.MeshBasicMaterial({color:0x69eddc,side:THREE.DoubleSide,transparent:true,opacity:.65,depthWrite:false}));buildRing.rotation.x=-Math.PI/2;buildRing.position.y=.5;scene.add(buildRing);
+const ringPulse=new THREE.Mesh(new THREE.RingGeometry(30,32,64),new THREE.MeshBasicMaterial({color:0x3ecad3,side:THREE.DoubleSide,transparent:true,opacity:.14,depthWrite:false}));ringPulse.rotation.x=-Math.PI/2;ringPulse.position.y=.5;ringPulse.visible=false;scene.add(ringPulse);
 const now=()=>performance.now();
 function showMessage(msg){$('#messageText').textContent=msg;}
 function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3500);showMessage(msg);}
@@ -197,7 +233,7 @@ const box=(w,h,d,mat)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
 const cylinder=(r1,r2,h,mat,sides=8)=>new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,sides),mat);
 function part(g,mesh,x,y,z,ry=0){mesh.position.set(x,y,z);mesh.rotation.y=ry;g.add(mesh);return mesh;}
 function makeBuilding(b){
- const g=new THREE.Group();g.position.set(b.x,0,b.z);g.userData.structure=b;
+ const g=new THREE.Group();g.position.set(b.x,0,b.z);g.scale.setScalar(.53);g.userData.structure=b;
  if(b.type==='hq'){
   part(g,cylinder(21,24,3,metal,8),0,2,0);part(g,box(29,9,25,dark),0,7,0);part(g,box(25,2,21,blue),0,12,0);
   part(g,cylinder(7,9,16,metal,8),0,20,0);part(g,cylinder(9,8,2,blueBright,8),0,28,0);
@@ -225,13 +261,13 @@ function makeBuilding(b){
 }
 function makeTruck(){const g=new THREE.Group();part(g,box(11,4,20,metal),0,5,0);part(g,box(10,6,9,blue),0,9,5);part(g,box(10,5,10,orange),0,9,-5);
  for(const sx of [-1,1])for(const sz of [-1,1]){const wheel=cylinder(2.7,2.7,2.2,dark,10);wheel.rotation.z=Math.PI/2;part(g,wheel,sx*5.8,3,sz*6);}
- part(g,box(9,1,2,blueBright),0,9,10);unitRoot.add(g);return g;}
+ part(g,box(9,1,2,blueBright),0,9,10);g.scale.setScalar(.55);unitRoot.add(g);return g;}
 function makeGeneral(){
  const g=new THREE.Group();part(g,cylinder(3.5,3.5,4,blue,8),0,3,0);part(g,cylinder(1.8,2,13,blueBright,8),0,12,0);
  const tip=cylinder(0,5,11,orange,4);tip.position.y=25;g.add(tip);
- const beacon=new THREE.Mesh(new THREE.RingGeometry(9.5,11,32),new THREE.MeshBasicMaterial({color:0x7bffff,transparent:true,opacity:.7,side:THREE.DoubleSide}));beacon.rotation.x=-Math.PI/2;beacon.position.y=.9;g.add(beacon);unitRoot.add(g);return g;
+ const beacon=new THREE.Mesh(new THREE.RingGeometry(9.5,11,32),new THREE.MeshBasicMaterial({color:0x7bffff,transparent:true,opacity:.7,side:THREE.DoubleSide}));beacon.rotation.x=-Math.PI/2;beacon.position.y=.9;g.add(beacon);g.scale.setScalar(.58);unitRoot.add(g);return g;
 }
-function makeEscort(){const g=new THREE.Group();part(g,cylinder(5,6,4,metal,8),0,3,0);part(g,box(9,4,11,blue),0,6,0);part(g,box(3,2.3,13,orange),0,8,4);unitRoot.add(g);return g;}
+function makeEscort(){const g=new THREE.Group();part(g,cylinder(5,6,4,metal,8),0,3,0);part(g,box(9,4,11,blue),0,6,0);part(g,box(3,2.3,13,orange),0,8,4);g.scale.setScalar(.44);unitRoot.add(g);return g;}
 function polygonGeometry(points){const path=new THREE.Shape();points.forEach((p,i)=>i?path.lineTo(p.x,-p.z):path.moveTo(p.x,-p.z));path.closePath();return path;}
 function drawPolygon(points,mat,y=0.04){try{let g=new THREE.ShapeGeometry(polygonGeometry(points));let m=new THREE.Mesh(g,mat);m.rotation.x=-Math.PI/2;m.position.y=y;terrainRoot.add(m);}catch(e){/* malformed OSM feature */}}
 function drawStreet(a,b,width,material){const dx=b.x-a.x,dz=b.z-a.z,d=Math.hypot(dx,dz);if(d<.5)return;const m=box(width,.12,d,material);m.position.set((a.x+b.x)/2,.16,(a.z+b.z)/2);m.rotation.y=Math.atan2(dx,dz);terrainRoot.add(m);}
@@ -260,71 +296,128 @@ function drawMap(map){
 }
 function makeDangerMesh(){
  const max=6000;
- zombieMesh=new THREE.InstancedMesh(new THREE.ConeGeometry(2.3,6.4,5),new THREE.MeshStandardMaterial({color:0xff6071,emissive:0x79222c,emissiveIntensity:.45,roughness:.8}),max);
+ zombieMesh=new THREE.InstancedMesh(new THREE.ConeGeometry(.9,2.5,5),new THREE.MeshStandardMaterial({color:0x56b96a,emissive:0x124824,emissiveIntensity:.45,roughness:.8}),max);
  zombieMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);zombieMesh.frustumCulled=false;unitRoot.add(zombieMesh);
- zombieHeads=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1.6,0),new THREE.MeshStandardMaterial({color:0xffa7aa,emissive:0x631d2b,roughness:.7}),max);
+ zombieHeads=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.76,0),new THREE.MeshStandardMaterial({color:0x9bdf88,emissive:0x234b26,roughness:.7}),max);
  zombieHeads.instanceMatrix.setUsage(THREE.DynamicDrawUsage);zombieHeads.frustumCulled=false;unitRoot.add(zombieHeads);
 }
 function renderEnemies(){if(!enemies||!zombieMesh)return;zombieMesh.count=enemies.count;zombieHeads.count=enemies.count;
- for(let i=0;i<enemies.count;i++){dummy.position.set(enemies.x[i],3.8,enemies.z[i]);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();zombieMesh.setMatrixAt(i,dummy.matrix);
- dummy.position.y=8;dummy.updateMatrix();zombieHeads.setMatrixAt(i,dummy.matrix);}
+ for(let i=0;i<enemies.count;i++){dummy.position.set(enemies.x[i],1.3,enemies.z[i]);dummy.rotation.set(0,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();zombieMesh.setMatrixAt(i,dummy.matrix);
+ dummy.position.y=3.2;dummy.updateMatrix();zombieHeads.setMatrixAt(i,dummy.matrix);}
  zombieMesh.instanceMatrix.needsUpdate=true;zombieHeads.instanceMatrix.needsUpdate=true;
 }
 function refreshPath(){if(!base||!initialMine)return;
  truckRoute=roadPath(graph,initialMine,base);truckProgress=0;truckDir=1;
- if(truckRoute.length<2){$('#routeStatus').textContent='NO ROUTE';showMessage('Geen verbonden vrachtwagenroute gevonden. Kies andere locaties.');}
+ if(truckRoute.length<2){$('#routeStatus').textContent='NO ROUTE';showMessage('Nog geen echte verbinding. BGT-weg-routing volgt later.');}
  else{$('#routeStatus').textContent=Math.round(pathLength(truckRoute))+' m';}
  if(window.routeLine){unitRoot.remove(window.routeLine);window.routeLine.geometry.dispose();window.routeLine.material.dispose();window.routeLine=null;}
  if(truckRoute.length>1){const vertices=truckRoute.map(p=>new THREE.Vector3(p.x,1.1,p.z));window.routeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(vertices),new THREE.LineDashedMaterial({color:0x50dbf5,dashSize:9,gapSize:7,transparent:true,opacity:.8}));window.routeLine.computeLineDistances();unitRoot.add(window.routeLine);}
  patrolPath=truckRoute.length>1?[...truckRoute].reverse():[];patrolLen=pathLength(patrolPath);generalProgress=0;
 }
 function credits(){/* Keep fractional energy regeneration; only round display values. */}
-function sessionKey(){return 'lastoutpost:v1:'+currentMap.kind+':'+currentMap.center.lat.toFixed(4)+':'+currentMap.center.lon.toFixed(4);}
-function save(){if(!currentMap)return;try{localStorage.setItem(sessionKey(),JSON.stringify({resources,buildings:buildings.map(({type,x,z})=>({type,x,z})),deliveries,convoyLevel}));}catch{}}
-function loadSave(){try{let data=JSON.parse(localStorage.getItem(sessionKey()));if(data?.buildings?.length){resources={...resources,...data.resources};deliveries=data.deliveries||0;convoyLevel=data.convoyLevel||1;return data.buildings;}}catch{}return null;}
-function reset(){if(!currentMap)return;const map=currentMap;localStorage.removeItem(sessionKey());currentMap=null;newWorld(map);toast('Sector gereset. Nieuwe game gestart.');}
+function sessionKey(){return 'lastoutpost:v4:'+currentMap.kind+':'+currentMap.center.lat.toFixed(4)+':'+currentMap.center.lon.toFixed(4);}
+
+function save(){if(!currentMap)return;try{localStorage.setItem(sessionKey(),JSON.stringify({resources,buildings:buildings.map(({type,x,z,level})=>({type,x,z,level:level||1})),deliveries,convoyLevel,crew}));}catch(e){}}
+function loadSave(){try{const d=JSON.parse(localStorage.getItem(sessionKey()));if(d&&Array.isArray(d.buildings)){resources={...resources,...d.resources};deliveries=d.deliveries||0;convoyLevel=d.convoyLevel||1;crew={workers:0,guards:0,trucks:0,...d.crew};return d.buildings;}}catch(e){}return null;}
+function reset(){if(!currentMap)return;const map=currentMap;localStorage.removeItem(sessionKey());currentMap=null;newWorld(map);toast('Nieuwe lege sector. Plaats eerst een Headquarters.');}
+
 function newWorld(map){
- save();currentMap=map;clearGroup(terrainRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);visibleTracers=[];buildings=[];initialMine=null;base=null;truck=null;truckMesh=null;
- // Static world geometry is rebuilt, but no raster tiles or external textures are used.
+ save();currentMap=map;clearGroup(terrainRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
+ visibleTracers=[];buildings=[];selectedBuilding=null;initialMine=null;base=null;truck=null;truckMesh=null;truckRoute=[];workerMeshes=[];workerProgress=[];escortMeshes=[];
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.7;terrainRoot.add(ground);
- const gridLine=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);gridLine.material.transparent=true;gridLine.material.opacity=.27;gridLine.position.y=-.49;terrainRoot.add(gridLine);
+ const lines=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);lines.material.transparent=true;lines.material.opacity=.27;lines.position.y=-.49;terrainRoot.add(lines);
  drawMap(map);grid=createOccupancy(map);graph=buildRoadGraph(map);
- enemies=new Enemies();let stored=loadSave();if(!stored){resources={scrap:1200,energy:250,alloy:160,hp:100};deliveries=0;convoyLevel=1;}
- const preferredBase=closestPassable(map.kind==='demo'?45:0,map.kind==='demo'?70:0,grid);
- const chosenMine=closestPassable(map.kind==='demo'?-165:-110,map.kind==='demo'?-175:-90,grid);
- const starter=stored||[{type:'hq',...preferredBase},{type:'mine',...chosenMine},{type:'turret',x:preferredBase.x+52,z:preferredBase.z+15},{type:'turret',x:preferredBase.x-44,z:preferredBase.z-35},{type:'tower',x:preferredBase.x+54,z:preferredBase.z+60}];
- for(const b of starter){if(!['hq','mine','turret','tower','bunker','factory'].includes(b.type))continue;const item={...b,radius:b.type==='hq'?22:b.type==='bunker'?18:13,fire:0};buildings.push(item);makeBuilding(item);if(item.type==='hq'&&!base)base=item;if(item.type==='mine'&&!initialMine)initialMine=item;}
- if(!base){base={type:'hq',...preferredBase,radius:22,fire:0};buildings.unshift(base);makeBuilding(base);}
- if(!initialMine){initialMine={type:'mine',...chosenMine,radius:13,fire:0};buildings.push(initialMine);makeBuilding(initialMine);}
- flow=flowField(grid,base);enemies.setSpawnSites(flow,grid);enemies.resize(unitCount);makeDangerMesh();
- truck=makeTruck();refreshPath();general=makeGeneral();escortMeshes=Array.from({length:3+(convoyLevel-1)*2},()=>makeEscort());walking=false;gpsActive=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
- camTarget.set(base.x,0,base.z);zoom=370;updateCamera();
- $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='osm'?'REAL OSM':map.kind==='bgt'?'BGT NL':'DEMO';
- $('#mapbadge').textContent=(map.kind==='osm'?'LIVE OSM GEOMETRY':map.kind==='bgt'?'REAL BGT NL':'DEMO MAP')+' · 800 × 800 M';$('#mapbadge').classList.toggle('osm',map.kind==='osm');
- $('#attribution').innerHTML=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D-geometrie':map.kind==='osm'?'3D op OSM-geometrie · © OpenStreetMap contributors':'Fictieve demo · © OpenStreetMap contributors';
- updateHUD();save();toast(map.kind==='bgt'?'Echte Nederlandse BGT-geometrie geladen.':map.kind==='osm'?'Echte OpenStreetMap-geometrie geladen.':'Testsector actief. Turrets en bunkers kunnen gebouwd worden.');
+ resources={scrap:1600,energy:450,alloy:220,hp:100};crew={workers:0,guards:0,trucks:0};deliveries=0;convoyLevel=1;
+ const stored=loadSave();
+ for(const b of stored||[]){if(!['hq','mine','turret','tower','bunker','factory'].includes(b.type))continue;const item={...b,level:b.level||1,radius:b.type==='hq'?14:8,fire:0};buildings.push(item);makeBuilding(item);if(item.type==='hq'&&!base)base=item;if(item.type==='mine'&&!initialMine)initialMine=item;}
+ enemies=new Enemies();flow=flowField(grid,base||{x:0,z:0});enemies.setSpawnSites(flow,grid);enemies.resize(unitCount);makeDangerMesh();
+ general=makeGeneral();general.position.set(0,0,0);if(base)general.position.set(base.x+20,0,base.z+12);
+ if(base&&initialMine)refreshPath();
+ if(crew.trucks>0&&base){truck=makeTruck();truck.position.set(base.x,0,base.z);}
+ for(let i=0;i<crew.guards;i++)escortMeshes.push(makeEscort());
+ for(let i=0;i<crew.workers;i++)workerMeshes.push(makeWorker());
+ walking=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
+ camTarget.set(base?.x||0,0,base?.z||0);zoom=370;updateCamera();
+ $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='bgt'?'BGT NL':'DEMO';
+ $('#mapbadge').textContent=(map.kind==='bgt'?'REAL BGT NL':'DEMO MAP')+' · 800 × 800 M';
+ $('#attribution').textContent=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D geometry':'Demo world · © OpenStreetMap contributors';
+ ringPulse.visible=!!base;toggleBuild(base?'inspect':'hq');updateInspector();updateHUD();save();
+ toast(base?'Je basis is geladen. Klik op gebouwen voor upgrades.':'Nieuwe wereld: plaats zelf je Headquarters op de kaart!');
 }
 function updateCamera(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();
  const offset=new THREE.Vector3(Math.sin(azimuth)*zoom,Math.sin(camPitch)*zoom*1.55,Math.cos(azimuth)*zoom);camera.position.copy(camTarget).add(offset);camera.lookAt(camTarget);
 }
-function nearestCommand(x,z){let d=Infinity;for(const b of buildings)if(['hq','bunker','tower'].includes(b.type)){let dist=distance(b,{x,z});d=Math.min(d,dist);}return d;}
+
+function nearestCommand(x,z){let d=Infinity;for(const b of buildings)if(['hq','bunker','tower'].includes(b.type))d=Math.min(d,distance(b,{x,z}));return d;}
+function buildingAt(x,z){let closest=null,dist=15;for(const b of buildings){const d=distance(b,{x,z});if(d<dist){closest=b;dist=d;}}return closest;}
+function updateInspector(){
+ const b=selectedBuilding;
+ $('#inspectTitle').textContent=b?names[b.type]+' · LEVEL '+(b.level||1):'Geen gebouw geselecteerd';
+ $('#inspectDetails').textContent=b?'Positie '+Math.round(b.x)+', '+Math.round(b.z)+' · Upgrade: '+(100*(b.level||1))+' scrap + '+(20*(b.level||1))+' alloy. Max level 5.':'Klik op een bestaand gebouw in de 3D-wereld of GPS-kaart.';
+ $('#inspectUpgrade').disabled=!b;$('#inspectRepair').disabled=!base;
+ $('#population').textContent='Workers '+crew.workers+' · Guards '+crew.guards+' · Trucks '+crew.trucks+' / '+(buildings.filter(x=>x.type==='factory').reduce((n,b)=>n+2*(b.level||1),0));
+ $('#baseSetup').style.display=base?'none':'block';
+}
 function canBuild(type,x,z,quiet=false){
- if(!safePlacement(x,z,grid,buildings,type==='bunker'?18:12))return 'Geblokkeerd door gebouw, water of bestaande structuur';
- const d=nearestCommand(x,z);
- const max=type==='bunker'?315:type==='tower'?245:type==='mine'?275:185;
- if(d>max)return 'Te ver van commandonetwerk. Bouw eerst een subbase of control tower.';
- const discount=(liveGPS&&Date.now()-gpsUpdated<60000&&distance(general.position,{x,z})<=60)?0.75:1;
- const cost=costs[type];if(resources.scrap<Math.ceil(cost.scrap*discount)||resources.energy<Math.ceil(cost.energy*discount))return 'Niet genoeg grondstoffen. Wacht op je vrachtwagen.';
+ if(!safePlacement(x,z,grid,buildings,type==='hq'?13:7))return 'Geblokkeerd door terrein, water of gebouw';
+ if(type==='hq'){if(base)return 'Je kunt maar één hoofdkwartier hebben';return null;}
+ if(!base)return 'Plaats eerst je Headquarters';
+ const d=nearestCommand(x,z),range=type==='bunker'?315:type==='tower'?245:type==='mine'?275:185;
+ if(d>range)return 'Buiten commandobereik: bouw een control tower of command bunker';
+ const discount=(liveGPS&&Date.now()-gpsUpdated<60000&&general&&distance(general.position,{x,z})<=60)?.75:1;
+ const cost=costs[type];if(!cost)return 'Onbekend gebouw';
+ if(resources.scrap<Math.ceil(cost.scrap*discount)||resources.energy<Math.ceil(cost.energy*discount))return 'Niet genoeg scrap of energie';
  return null;
 }
-function buildAt(x,z){if(!costs[selected])return;const msg=canBuild(selected,x,z);if(msg){toast(msg);return;}
- const price=costs[selected];const discount=(liveGPS&&Date.now()-gpsUpdated<60000&&distance(general.position,{x,z})<=60)?0.75:1;
+function buildAt(x,z){
+ if(selected==='inspect'){selectedBuilding=buildingAt(x,z);updateInspector();return;}
+ if(!costs[selected])return;
+ const msg=canBuild(selected,x,z);if(msg){toast(msg);return;}
+ const price=costs[selected],discount=liveGPS&&Date.now()-gpsUpdated<60000&&general&&distance(general.position,{x,z})<=60?.75:1;
  resources.scrap-=Math.ceil(price.scrap*discount);resources.energy-=Math.ceil(price.energy*discount);
- const item={type:selected,x,z,radius:selected==='bunker'?18:13,fire:0};buildings.push(item);makeBuilding(item);
- if(selected==='mine'&&!initialMine){initialMine=item;refreshPath();}
+ const item={type:selected,x,z,radius:selected==='hq'?14:8,level:1,fire:0};
+ buildings.push(item);makeBuilding(item);selectedBuilding=item;
+ if(selected==='hq'){base=item;flow=flowField(grid,base);enemies.setSpawnSites(flow,grid);general.position.set(x+16,0,z+16);toggleBuild('turret');}
+ if(selected==='mine'&&!initialMine)initialMine=item;
+ if(base&&initialMine)refreshPath();
  if(selected==='bunker'||selected==='tower')commandDiscounts++;
- updateHUD();save();toast(names[selected]+' geplaatst'+(discount<1?' · GPS-korting actief!':'')+'!');
+ updateInspector();updateHUD();save();updateMapMarkers();toast(names[item.type]+' gebouwd!');
 }
+function makeWorker(){
+ const g=new THREE.Group();part(g,cylinder(1.2,1.5,4,blue,6),0,3,0);part(g,new THREE.Mesh(new THREE.SphereGeometry(1.3,7,5),green),0,6,0);unitRoot.add(g);return g;
+}
+function recruit(type){
+ if(!base){toast('Bouw eerst je Headquarters');return;}
+ const factoryLevel=buildings.filter(b=>b.type==='factory').reduce((n,b)=>n+(b.level||1),0);
+ const capacity=2+factoryLevel*3+buildings.filter(b=>b.type==='bunker').reduce((n,b)=>n+(b.level||1)*3,0);
+ const cost={workers:80,guards:130,trucks:240}[type];
+ if(type==='trucks'&&!factoryLevel){toast('Bouw eerst een Vehicle Factory voor vrachtwagens');return;}
+ if(type==='guards'&&!buildings.some(b=>b.type==='bunker')){toast('Bouw eerst een Command Bunker om soldaten te trainen');return;}
+ if(type!=='trucks'&&crew.workers+crew.guards>=capacity){toast('Population cap bereikt. Upgrade een bunker of fabriek');return;}
+ if(type==='trucks'&&crew.trucks>=factoryLevel*2){toast('Voertuigcapaciteit bereikt. Upgrade je fabriek');return;}
+ if(resources.scrap<cost){toast('Niet genoeg scrap');return;}
+ resources.scrap-=cost;crew[type]++;
+ if(type==='workers'){workerMeshes.push(makeWorker());workerProgress.push(Math.random()*100);}
+ if(type==='guards')escortMeshes.push(makeEscort());
+ if(type==='trucks'&&!truck){truck=makeTruck();truck.position.set(base.x,0,base.z);refreshPath();}
+ updateInspector();save();toast(type==='workers'?'Werker gekocht':type==='guards'?'Soldaat gerekruteerd':'Vrachtwagen gekocht');
+}
+$('#buyWorker').onclick=()=>recruit('workers');
+$('#buyGuard').onclick=()=>recruit('guards');
+$('#buyTruck').onclick=()=>recruit('trucks');
+$('#inspectUpgrade').onclick=()=>{
+ const b=selectedBuilding;if(!b)return;
+ const level=b.level||1,sc=level*100,al=level*20;
+ if(level>=5){toast('Maximum level bereikt');return;}
+ if(resources.scrap<sc||resources.alloy<al){toast('Upgrade vereist '+sc+' scrap en '+al+' alloy');return;}
+ resources.scrap-=sc;resources.alloy-=al;b.level=level+1;
+ if(b.mesh){b.mesh.scale.setScalar(.53+(b.level-1)*.035);}
+ updateInspector();updateHUD();save();toast(names[b.type]+' upgraded naar level '+b.level);
+};
+$('#inspectRepair').onclick=()=>{
+ if(!base)return;if(resources.scrap<50){toast('Repareren kost 50 scrap');return;}
+ resources.scrap-=50;resources.hp=Math.min(100,resources.hp+20);save();updateHUD();toast('HQ gerepareerd');
+};
 function fire(from,to,color=0x69f3ff){
  if(visibleTracers.length>45)return;
  const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(from.x,13,from.z),new THREE.Vector3(to.x,5,to.z)]);
@@ -332,13 +425,13 @@ function fire(from,to,color=0x69f3ff){
 }
 function turretCombat(dt){
  for(const b of buildings){if(!['turret','bunker'].includes(b.type))continue;b.fire=(b.fire||0)-dt;if(b.fire>0)continue;b.fire=b.type==='turret'?.33:.7;
- const boosted=b.type==='turret'&&buildings.some(t=>t.type==='tower'&&distance(t,b)<145);const range=b.type==='turret'?(boosted?108:83):68;let best=-1,bd=range*range;
+ const boosted=b.type==='turret'&&buildings.some(t=>t.type==='tower'&&distance(t,b)<145);const range=(b.type==='turret'?(boosted?108:83):68)+(b.level-1)*15;let best=-1,bd=range*range;
  // Spatial partitioning will replace the linear scan in the multiplayer phase.
  for(let i=0;i<enemies.count;i++){const dx=enemies.x[i]-b.x,dz=enemies.z[i]-b.z;const d=dx*dx+dz*dz;if(d<bd){bd=d;best=i;}}
- if(best>=0){fire(b,{x:enemies.x[best],z:enemies.z[best]},b.type==='turret'?0x7be9ff:0xfcb369);enemies.damage(best,b.type==='turret'?42:56);}
+ if(best>=0){fire(b,{x:enemies.x[best],z:enemies.z[best]},b.type==='turret'?0x7be9ff:0xfcb369);enemies.damage(best,(b.type==='turret'?42:56)+(b.level-1)*16);}
  }
 }
-function updateTruck(dt){if(!truck||truckRoute.length<2)return;
+function updateTruck(dt){if(!truck||!crew.trucks||truckRoute.length<2)return;
  const total=pathLength(truckRoute);truckProgress+=dt*15.5*truckDir;
  if(truckProgress>=total){truckProgress=total;truckDir=-1;deliveries++;resources.scrap+=75+(buildings.filter(b=>b.type==='mine').length-1)*15;resources.alloy+=9;showMessage('Vrachtwagen heeft scrap en alloy afgeleverd.');save();}
  if(truckProgress<=0){truckProgress=0;truckDir=1;}
@@ -351,7 +444,12 @@ function updateTruck(dt){if(!truck||truckRoute.length<2)return;
 function updateGeneral(dt){if(!general)return;
  if(walking&&patrolPath.length>1&&!liveGPS){generalProgress=(generalProgress+dt*17)%Math.max(1,patrolLen*2);const f=generalProgress>patrolLen?patrolLen*2-generalProgress:generalProgress;
  const p=consumePathPosition(patrolPath,f);general.position.set(p.x,0,p.z);
- }else if(!liveGPS){general.position.set(base.x+35,0,base.z-24);}
+ }else if(!liveGPS){general.position.set((base?.x||0)+18,0,(base?.z||0)-16);}
+ for(let i=0;i<workerMeshes.length;i++){
+  const m=workerMeshes[i];let x=(base?.x||0)+Math.cos(simTime*.2+i*2)*14,z=(base?.z||0)+Math.sin(simTime*.2+i*2)*14;
+  if(initialMine&&base){const t=(Math.sin(simTime*.17+i)+1)/2;x=base.x*(1-t)+initialMine.x*t;z=base.z*(1-t)+initialMine.z*t;}
+  const ci=gridIndex(x,z);if(ci>=0&&!grid[ci])m.position.set(x,0,z);
+ }
  for(let i=0;i<escortMeshes.length;i++){
   const ang=(i/escortMeshes.length)*Math.PI*2+simTime*.75;
   const mesh=escortMeshes[i];const x=general.position.x+Math.sin(ang)*17,z=general.position.z+Math.cos(ang)*17;
@@ -364,11 +462,12 @@ function updateGeneral(dt){if(!general)return;
  }
  $('#convoy').textContent=(liveGPS?'GPS':walking?'PATROL':scorePulse>simTime?'COMBAT':'READY')+' · LVL '+convoyLevel;
 }
-function simulation(dt){const start=performance.now();simTime+=dt;resources.energy=Math.min(500,resources.energy+dt*.6);
- const hits=enemies.tick(dt,flow,base);resources.hp=Math.max(10,resources.hp-Math.min(hits*.18,dt*3));
+function simulation(dt){const start=performance.now();simTime+=dt;resources.energy=Math.min(450+buildings.filter(b=>b.type==='tower').reduce((n,b)=>n+b.level*75,0),resources.energy+dt*.6);
+ const hits=enemies.tick(dt,flow,base);if(base)resources.hp=Math.max(10,resources.hp-Math.min(hits*.18,dt*3));
+ if(base&&crew.workers&&simTime>nextProduction){resources.scrap+=crew.workers*(initialMine?12:3);nextProduction=simTime+8;}
  turretCombat(dt);updateTruck(dt);updateGeneral(dt);
  for(let i=visibleTracers.length-1;i>=0;i--){const t=visibleTracers[i];t.life-=dt;t.line.material.opacity=Math.max(0,t.life/.13);if(t.life<=0){effectRoot.remove(t.line);t.line.geometry.dispose();t.line.material.dispose();visibleTracers.splice(i,1);}}
- ringPulse.visible=true;ringPulse.position.x=base.x;ringPulse.position.z=base.z;
+ ringPulse.visible=!!base;if(base){ringPulse.position.x=base.x;ringPulse.position.z=base.z;}
  ringPulse.material.opacity=.07+.04*Math.sin(simTime*1.7);ringPulse.scale.setScalar(1+.04*Math.sin(simTime));
  simMS=simMS*.85+(performance.now()-start)*.15;
 }
@@ -379,7 +478,7 @@ function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.
  currentMap.parks.forEach(p=>fill(p,'#35704b'));currentMap.water.forEach(p=>fill(p,'#1b648a'));
  ctx.strokeStyle='#809397';for(const r of currentMap.roads){ctx.beginPath();r.points.forEach((p,i)=>i?ctx.lineTo(px(p.x),pz(p.z)):ctx.moveTo(px(p.x),pz(p.z)));ctx.lineWidth=r.vehicle?1.5:.8;ctx.stroke();}
  currentMap.buildings.forEach(b=>fill(b.poly,'#3d5a65'));
- for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/500))){ctx.fillStyle='#f17780';ctx.fillRect(px(enemies.x[i]),pz(enemies.z[i]),1.3,1.3);}
+ for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/500))){ctx.fillStyle='#8ccc64';ctx.fillRect(px(enemies.x[i]),pz(enemies.z[i]),1.3,1.3);}
  for(const b of buildings){ctx.fillStyle=b.type==='hq'?'#fff6ab':b.type==='turret'?'#75e9f1':b.type==='mine'?'#ffc66d':'#68cfdf';ctx.beginPath();ctx.arc(px(b.x),pz(b.z),b.type==='hq'?4:2.5,0,Math.PI*2);ctx.fill();}
  if(general){ctx.fillStyle='#fffff9';ctx.beginPath();ctx.arc(px(general.position.x),pz(general.position.z),3.5,0,Math.PI*2);ctx.fill();}
  if(truck){ctx.fillStyle='#ffc665';ctx.fillRect(px(truck.position.x)-2,pz(truck.position.z)-2,4,4);}
@@ -401,13 +500,13 @@ renderer.domElement.addEventListener('pointermove',e=>{
  else{const scale=zoom/Math.max(350,innerHeight);camTarget.x+=(-dx*Math.cos(azimuth)-dy*Math.sin(azimuth))*scale;camTarget.z+=(dx*Math.sin(azimuth)-dy*Math.cos(azimuth))*scale;camTarget.x=Math.max(-350,Math.min(350,camTarget.x));camTarget.z=Math.max(-350,Math.min(350,camTarget.z));}
  updateCamera();
 });
-renderer.domElement.addEventListener('pointerup',e=>{if(pointerDown&&!pointerDown.moved&&pointerDown.button===0){const p=pickGround(e.clientX,e.clientY);if(p)buildAt(p.x,p.z);}pointerDown=null;});
+renderer.domElement.addEventListener('pointerup',e=>{if(pointerDown&&!pointerDown.moved&&pointerDown.button===0){const p=pickGround(e.clientX,e.clientY);if(p){const existing=buildingAt(p.x,p.z);if(existing){selectedBuilding=existing;updateInspector();}else buildAt(p.x,p.z);}}pointerDown=null;});
 renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
 renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(800,Math.max(110,zoom+e.deltaY*.32));updateCamera();},{passive:false});
 window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);updateCamera();});
 const toggleBuild=type=>{selected=type;$$('[data-build]').forEach(b=>b.classList.toggle('active',b.dataset.build===type));toast('Bouwmodus: '+names[type]);};
 $$('[data-build]').forEach(b=>b.onclick=()=>toggleBuild(b.dataset.build));
-window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
+window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='0')toggleBuild('inspect');if(e.key.toLowerCase()==='h')toggleBuild('hq');if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
 $('#unitRange').addEventListener('input',e=>{unitCount=unitSteps[+e.target.value];$('#unitLabel').textContent=unitCount.toLocaleString('nl-NL');enemies.resize(unitCount);toast('Stresstest: '+unitCount.toLocaleString('nl-NL')+' 3D-zombies actief.');});
 $('#upgradeConvoyBtn').onclick=()=>{if(convoyLevel>=4){toast('Konvooi is maximaal uitgebreid (9 escorte-units).');return;}const sc=convoyLevel*220,al=convoyLevel*30;if(resources.scrap<sc||resources.alloy<al){toast('Konvooi-upgrade vereist '+sc+' scrap en '+al+' alloy.');return;}resources.scrap-=sc;resources.alloy-=al;convoyLevel++;escortMeshes.push(makeEscort(),makeEscort());save();toast('Konvooi level '+convoyLevel+': '+escortMeshes.length+' escorte-units, meer vuurkracht!');updateHUD();};
 $('#marchBtn').onclick=()=>{if(liveGPS){toast('GPS actief. De escorte volgt je werkelijke locatie.');return;}walking=!walking;$('#marchBtn').textContent=walking?'■ STOP PATROL':'▶ START PATROL';toast(walking?'Generaal op patrouille. Escorte actief en bewapend.':'Patrouille beëindigd.');};
@@ -423,7 +522,7 @@ function gameFeatures(){
  if(currentMap){
   for(const b of buildings){
    const p=toGeo(b.x,b.z,currentMap.center);
-   features.push(toPoint(p,b.type));
+   features.push({type:'Feature',properties:{kind:b.type,level:b.level||1},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
   }
   if(general){
    const p=toGeo(general.position.x,general.position.z,currentMap.center);
@@ -431,6 +530,10 @@ function gameFeatures(){
   }
  }
  if(geoPosition)features.push(toPoint(geoPosition,'gps'));
+ if(truck&&crew.trucks)features.push(toPoint(toGeo(truck.position.x,truck.position.z,currentMap.center),'truck'));
+ if(enemies)for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/140)))features.push(toPoint(toGeo(enemies.x[i],enemies.z[i],currentMap.center),'zombie'));
+ for(const m of workerMeshes)features.push(toPoint(toGeo(m.position.x,m.position.z,currentMap.center),'worker'));
+ for(const m of escortMeshes)features.push(toPoint(toGeo(m.position.x,m.position.z,currentMap.center),'guard'));
  return {type:'FeatureCollection',features};
 }
 function updateMapMarkers(){
@@ -448,11 +551,19 @@ function initGeoMap(){
  geoMap.on('load',()=>{
   geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
   geoMap.addLayer({id:'gameunits-ring',type:'circle',source:'gameunits',paint:{
-   'circle-radius':['match',['get','kind'],'hq',13,'general',11,'gps',11,7],
-   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
+   'circle-radius':['match',['get','kind'],'hq',10,'general',8,'gps',10,'zombie',2.5,'turret',5,'worker',4,'guard',4,'truck',7,6],
+   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','zombie','#68c56a','worker','#f7dc91','guard','#5ae8e7','truck','#f5b458','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
    'circle-stroke-width':2,'circle-stroke-color':'#071923'
   }});
   updateMapMarkers();
+  geoMap.on('click',event=>{
+   const xy=toWorld(event.lngLat.lat,event.lngLat.lng,currentMap.center);
+   if(Math.abs(xy.x)>HALF||Math.abs(xy.z)>HALF){toast('Buiten sector. Laad een BGT-sector rondom deze locatie.');return;}
+   const existing=buildingAt(xy.x,xy.z);
+   if(existing){selectedBuilding=existing;updateInspector();toast(names[existing.type]+' geselecteerd');}
+   else if(selected!=='inspect')buildAt(xy.x,xy.z);
+   else toast('Kies links een bouwtype.');
+  });
  });
  geoMap.on('error',e=>console.warn('Map tiles:',e.error?.message||e));
 }
@@ -462,6 +573,7 @@ $('#mapModeBtn').onclick=()=>{
   initGeoMap();
   $('#viewport').classList.add('map-mode');$('#mapModeBtn').textContent='◈ TERUG NAAR 3D';
   if(geoMap){geoMap.resize();updateMapMarkers();}
+  toast('Kies een gebouwtype en klik op de kaart om het te plaatsen.');
   showMessage('Echte kaartmodus. Gebruik GPS om jouw locatie te tonen.');
  }else{
   $('#viewport').classList.remove('map-mode');$('#mapModeBtn').textContent='▤ GPS MAP VIEW';
