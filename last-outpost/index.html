@@ -21,6 +21,8 @@
 #mapStatus{pointer-events:none}
 @media(max-width:720px){#buildPanel{max-height:66vh}}
 .dialog-card select{background:#081b25;color:#e9fbfb;padding:10px;border:1px solid #38636d;border-radius:6px;width:100%;font:inherit}.dialog-card select:focus-visible{outline:2px solid #56d9dd}
+#factoryPanel{border-color:#3e6b52;background:linear-gradient(145deg,#122c27,#0f2730)}
+#factoryUnitChoices .action{min-height:36px;text-align:left}
 #soldierPanel{border-color:#53634f;background:linear-gradient(145deg,#182a25,#0f2730)}
 #soldierPanel>b{color:#e4e8ae}
 .action:disabled{opacity:.36;cursor:not-allowed}
@@ -29,8 +31,8 @@
 <body>
 <div id="app">
  <main id="viewport"><div id="render"></div><div id="geoMap"></div><div id="mapStatus">OpenFreeMap • verplaats je kaart of activeer GPS</div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
- <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // RTS SANDBOX 0.6</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
- <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de 3D- of GPS-kaart. Klik op een bestaand gebouw voor upgrades.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● INFANTRY COMMAND</div><div id="soldierPanel" class="inspect-panel"><b id="soldierTitle">Geen soldaat geselecteerd</b><span id="soldierDetails">Train infanterie via een Command Bunker. Klik daarna op een soldaat op de kaart.</span><div class="actions"><button id="soldierEntrench" class="action">⛨ ENTRENCH · 45 SCRAP</button><button id="soldierMove" class="action">⌖ MOVE TO POSITION</button><button id="soldierFollow" class="action">↺ FOLLOW GENERAL</button></div></div><div class="sectionlabel space">● RECRUIT / FACTORY</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ SOLDIER · 130 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModeBtn" class="action primary">▤ GPS MAP VIEW</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET HUIDIGE WERELD</button><button id="resetAllBtn" class="action subtle">⌫ WIS ALLE TESTWERELDEN</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
+ <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // RTS SANDBOX 0.7</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
+ <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de 3D- of GPS-kaart. Klik op een bestaand gebouw voor upgrades.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="barracks" class="build"><i>♟</i><span><b>INFANTRY BARRACKS</b><small>190 scrap · 25 energy</small></span><em>6</em></button><button data-build="armory" class="build"><i>⚙</i><span><b>ARMORY / UPGRADES</b><small>260 scrap · 35 energy</small></span><em>7</em></button><button data-build="research" class="build"><i>⌬</i><span><b>RESEARCH CENTER</b><small>330 scrap · 55 energy</small></span><em>8</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● INFANTRY COMMAND</div><div id="soldierPanel" class="inspect-panel"><b id="soldierTitle">Geen soldaat geselecteerd</b><span id="soldierDetails">Train infanterie via een Command Bunker. Klik daarna op een soldaat op de kaart.</span><div class="actions"><button id="soldierEntrench" class="action">⛨ ENTRENCH · 45 SCRAP</button><button id="soldierMove" class="action">⌖ MOVE TO POSITION</button><button id="soldierFollow" class="action">↺ FOLLOW GENERAL</button></div></div><div class="sectionlabel space">● BUILDING PRODUCTION</div><div id="factoryPanel" class="inspect-panel"><b id="factoryTitle">Selecteer Barracks of Factory</b><span id="factoryDetails">Level 1: twee infanterietypen. Upgrade gebouwen voor meer units.</span><div id="factoryUnitChoices" class="actions"></div><div class="actions"><button id="rallyBtn" class="action">⚑ SET RALLY POINT</button><button id="cancelQueueBtn" class="action">⌫ CANCEL QUEUE</button><button id="weaponUpgradeBtn" class="action">⬆ WEAPON TECH</button><button id="armorUpgradeBtn" class="action">⬆ ARMOR TECH</button></div></div><div class="sectionlabel space">● QUICK RECRUIT</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ RIFLEMAN · 90 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModeBtn" class="action primary">▤ GPS MAP VIEW</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET HUIDIGE WERELD</button><button id="resetAllBtn" class="action subtle">⌫ WIS ALLE TESTWERELDEN</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
  <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>RENDER FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>3D DRAW CALLS</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">Dit meet je echte FPS op jouw apparaat. Verhoog het aantal voor een stresstest.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
  <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build / select</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>PDOK BGT-wereld laden</h2><p>Kies de grootte van je speelwereld. De lichte GPS-kaart kan altijd verder worden bekeken; de donkere 3D-simulatie werkt binnen de gekozen sector. Massive vraagt veel meer kaartdata en geheugen.</p><label>Kaartformaat<select id="sectorSize"><option value="800">Small · 800 × 800 m (0,64 km²)</option><option value="1600">Medium · 1,6 × 1,6 km (2,56 km²)</option><option value="3200">Massive · 3,2 × 3,2 km (10,24 km²)</option></select></label><p id="sectorSizeHint" class="tiny muted">Small: snelste keuze om turrets, zombies en gebouwen te testen.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="confirmOsm" class="action primary">LAAD KAART</button></div><p class="tiny muted">BGT-kaartdata wordt van PDOK opgehaald. GPS wordt alleen gebruikt met jouw toestemming. Het downloaden van Massive kan veel gegevens en tientallen aanvragen vereisen.</p></div></div>
 </div><script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script type="module">
@@ -276,15 +278,15 @@ const terrainRoot=new THREE.Group(),mapDetailsRoot=new THREE.Group(),buildingRoo
 let currentMap,grid,flow,graph,enemies,zombieMesh,zombieHeads,truck,truckMesh,truckRoute=[],truckProgress=0,truckDir=1,truckHealth=100,truckShipment=0;
 let general,escortMeshes=[],generalProgress=0,walking=false,gpsActive=false,gpsWatch=null,gpsUpdated=0,liveGPS=false,patrolPath=[],patrolLen=0;
 let resources={scrap:1600,energy:450,alloy:220,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=500,base=null,initialMine=null;
-let selectedBuilding=null,selectedGuard=null,guardOrderMode=null,restoredGuardStates=[],workerMeshes=[],workerRoute=[],workerProgress=[],truckFleet=[],crew={workers:0,guards:0,trucks:0},nextProduction=0;
+let selectedBuilding=null,selectedGuard=null,guardOrderMode=null,rallyModeBuilding=null,restoredGuardStates=[],milTech={weapons:0,armor:0},combatVehicles=[],restoredVehicles=[],workerMeshes=[],workerRoute=[],workerProgress=[],truckFleet=[],crew={workers:0,guards:0,trucks:0},nextProduction=0;
 let selected='hq',displayFPS=0,frames=0,frameSum=0,simMS=0,last=performance.now(),lastHUD=0;
 let camTarget=new THREE.Vector3(0,0,0),azimuth=0.65,zoom=370,camPitch=0.88,toastTimer;
 let visibleTracers=[],buildingMarkers=[],earthPulse=0;
 let deliveries=0,scorePulse=0,commandDiscounts=0,convoyLevel=1;
 const unitSteps=[50,150,500,1000,2000,5000];
 const blue=new THREE.MeshStandardMaterial({color:0x1ba5b5,metalness:.55,roughness:.37}),blueBright=new THREE.MeshStandardMaterial({color:0x5be7f0,metalness:.25,roughness:.25,emissive:0x0f5b60,emissiveIntensity:.45}),metal=new THREE.MeshStandardMaterial({color:0x304753,metalness:.7,roughness:.35}),dark=new THREE.MeshStandardMaterial({color:0x132c39,metalness:.42,roughness:.65}),orange=new THREE.MeshStandardMaterial({color:0xffb453,metalness:.25,roughness:.4,emissive:0x4e270c,emissiveIntensity:.3}),red=new THREE.MeshStandardMaterial({color:0xff5366,roughness:.6,emissive:0x86222d,emissiveIntensity:.3}),green=new THREE.MeshStandardMaterial({color:0x78e9a7,roughness:.5,emissive:0x103921,emissiveIntensity:.4});
-const costs={hq:{scrap:0,energy:0},turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
-const names={inspect:'Select / Inspect',hq:'Headquarters',turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
+const costs={barracks:{scrap:190,energy:25},armory:{scrap:260,energy:35},research:{scrap:330,energy:55},hq:{scrap:0,energy:0},turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
+const names={barracks:'Infantry Barracks',armory:'Armory',research:'Research Center',inspect:'Select / Inspect',hq:'Headquarters',turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
 const halfMap=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));halfMap.rotation.x=-Math.PI/2;halfMap.position.y=-.7;terrainRoot.add(halfMap);
 const gridHelper=new THREE.GridHelper(SIZE,50,0x35646a,0x25434a);gridHelper.material.transparent=true;gridHelper.material.opacity=.21;gridHelper.position.y=-.49;terrainRoot.add(gridHelper);
 const boundary=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(SIZE,1,SIZE)),new THREE.LineBasicMaterial({color:0x5acdd0,transparent:true,opacity:.32}));boundary.position.y=0;terrainRoot.add(boundary);
@@ -309,6 +311,23 @@ const armyGlass=new THREE.MeshStandardMaterial({color:0x2c7680,roughness:.23,met
 const armyLight=new THREE.MeshStandardMaterial({color:0xeabb67,emissive:0x42240a,roughness:.65});
 const armySkin=new THREE.MeshStandardMaterial({color:0xb58c69,roughness:1});
 const armyMat=[armyOlive,armyDark,armyCamo,armyStone,armySand,armyGun,armyTire,armyGlass,armyLight,armySkin];
+const UNIT_CATALOG={
+ rifle:{name:'Rifleman',from:'barracks',level:1,cost:90,time:2.5,hp:100,damage:19,range:65,accuracy:.59,rate:.96,armor:'none'},
+ scout:{name:'Scout',from:'barracks',level:1,cost:80,time:2,hp:80,damage:13,range:70,accuracy:.67,rate:.75,armor:'none'},
+ rocket:{name:'Rocket Trooper',from:'barracks',level:2,cost:160,time:4.5,hp:105,damage:48,range:95,accuracy:.68,rate:2.4,armor:'none'},
+ heavy:{name:'Heavy Gunner',from:'barracks',level:3,cost:220,time:6,hp:165,damage:30,range:75,accuracy:.72,rate:.75,armor:'armory1'},
+ medic:{name:'Field Medic',from:'barracks',level:4,cost:185,time:5,hp:100,damage:9,range:45,accuracy:.55,rate:1.15,armor:'research1'},
+ elite:{name:'Elite Commando',from:'barracks',level:5,cost:325,time:7.5,hp:200,damage:51,range:95,accuracy:.9,rate:.7,armor:'research2'},
+ buggy:{name:'Scout Buggy',from:'factory',level:1,cost:190,time:4,hp:220,damage:16,range:85,accuracy:.69,rate:.72,armor:'light-armor'},
+ apc:{name:'Armored APC',from:'factory',level:2,cost:340,time:6,hp:440,damage:30,range:95,accuracy:.73,rate:1,armor:'light-armor'},
+ tank:{name:'Battle Tank',from:'factory',level:3,cost:550,time:10,hp:800,damage:85,range:125,accuracy:.76,rate:2.4,armor:'tank'}
+};
+function availableUnitTypes(b){
+ if(!b||!['barracks','factory'].includes(b.type))return [];
+ return Object.entries(UNIT_CATALOG).filter(([type,d])=>d.from===b.type&&d.level<=(b.level||1)&&
+  (!d.armor.startsWith('research')||buildings.some(x=>x.type==='research'&&(x.level||1)>=Number(d.armor.slice(8))))&&
+  (!d.armor.startsWith('armory')||buildings.some(x=>x.type==='armory'&&(x.level||1)>=Number(d.armor.slice(6)))));
+}
 function armyAntenna(g,x,y,z,h=12){
  part(g,cylinder(.28,.28,h,armyGun,6),x,y+h/2,z);
  part(g,new THREE.Mesh(new THREE.SphereGeometry(1,7,5),armyLight),x,y+h,z);
@@ -328,7 +347,7 @@ function armyWheels(g,xs,zs,r=2.7){
 }
 function makeBuilding(b){
  const g=new THREE.Group();g.position.set(b.x,0,b.z);g.scale.setScalar(.53+(b.level-1)*.035);g.userData.structure=b;
- const slab={hq:[45,44],turret:[18,18],tower:[18,18],bunker:[37,30],mine:[29,30],factory:[43,39]}[b.type]||[24,24];
+ const slab={hq:[45,44],barracks:[35,28],armory:[31,30],research:[31,31],turret:[18,18],tower:[18,18],bunker:[37,30],mine:[29,30],factory:[43,39]}[b.type]||[24,24];
  part(g,box(slab[0],1,slab[1],armyStone),0,.45,0);
  if(b.type==='hq'){
   part(g,box(28,13,24,armyDark),0,7,-3);part(g,box(31,2,27,armyCamo),0,14,-3);
@@ -342,6 +361,28 @@ function makeBuilding(b){
   const dish=new THREE.Mesh(new THREE.SphereGeometry(6,12,6,0,Math.PI*2,0,Math.PI*.47),armyGun);
   dish.rotation.x=Math.PI/2;radar.add(dish);part(radar,cylinder(2,2,4,armyStone),0,0,0);
   radar.rotation.z=.3;g.add(radar);
+ }else if(b.type==='barracks'){
+  part(g,box(30,8,23,armyOlive),0,5,-1);
+  part(g,box(32,2,25,armyCamo),0,10,-1);
+  part(g,box(12,6,2,armyGun),0,4,11);
+  part(g,box(9,1.6,2,armyStone),0,8,11);
+  part(g,box(9,5,12,armyDark),-8,5,-9);
+  part(g,box(9,1.4,13,armyCamo),-8,8,-9);
+  armySandbags(g,0,14,8);armyAntenna(g,11,10,-7,12);armyCrate(g,12,-13);
+ }else if(b.type==='armory'){
+  part(g,box(26,12,23,armyDark),0,7,0);
+  part(g,box(29,2,26,armyStone),0,14,0);
+  part(g,box(11,7,2,armyGun),0,5,12);
+  part(g,box(22,2,6,armyOlive),0,16,-5);
+  for(const z of [-9,-2,5])armyCrate(g,-10,z);
+  part(g,box(8,3,4,armyGun),10,14,0);
+ }else if(b.type==='research'){
+  part(g,box(24,11,25,armyStone),0,6,0);
+  part(g,box(27,2,28,armyOlive),0,13,0);
+  for(const x of [-7,0,7])part(g,box(5,4,2,armyGlass),x,9,13);
+  armyAntenna(g,9,13,-9,15);
+  part(g,cylinder(4,4,2,armyGun,12),-6,16,-4);
+  part(g,box(12,2,2,armyCamo),-6,20,-4);
  }else if(b.type==='turret'){
   part(g,cylinder(7,8,3,armyStone,8),0,2,0);
   part(g,cylinder(4,5,4,armyOlive,8),0,5,0);
@@ -642,16 +683,16 @@ function save(){
  try{
   const guardStates=escortMeshes.map(mesh=>{
    const st=mesh.userData.guard||{};
-   return {x:mesh.position.x,z:mesh.position.z,hp:st.hp||100,order:st.order||'follow',entrenched:!!st.entrenched,coverHP:st.coverHP||0};
+   return {type:st.type||'rifle',x:mesh.position.x,z:mesh.position.z,hp:st.hp||100,order:st.order||'follow',entrenched:!!st.entrenched,coverHP:st.coverHP||0};
   });
   localStorage.setItem(sessionKey(),JSON.stringify({
-   resources,buildings:buildings.map(({type,x,z,level})=>({type,x,z,level:level||1})),
-   deliveries,convoyLevel,crew,guardStates
+   resources,buildings:buildings.map(({type,x,z,level,queue,trainProgress,rally})=>({type,x,z,level:level||1,queue:Array.isArray(queue)?queue:[],trainProgress:trainProgress||0,rally:rally||null})),
+   deliveries,convoyLevel,crew,guardStates,milTech,vehicleStates:combatVehicles.map(v=>({type:v.userData.vehicle.type,x:v.position.x,z:v.position.z,hp:v.userData.vehicle.hp}))
   }));
  }catch(error){console.warn('LAST OUTPOST kon voortgang niet opslaan',error);}
 }
 function loadSave(){
- restoredGuardStates=[];
+ restoredGuardStates=[];restoredVehicles=[];
  try{
   const d=JSON.parse(localStorage.getItem(sessionKey()));
   if(d&&Array.isArray(d.buildings)){
@@ -659,6 +700,8 @@ function loadSave(){
    deliveries=d.deliveries||0;convoyLevel=d.convoyLevel||1;
    crew={workers:0,guards:0,trucks:0,...d.crew};
    restoredGuardStates=Array.isArray(d.guardStates)?d.guardStates.slice(0,100):[];
+   restoredVehicles=Array.isArray(d.vehicleStates)?d.vehicleStates.slice(0,60):[];
+   milTech={weapons:0,armor:0,...d.milTech};
    return d.buildings;
   }
  }catch(error){console.warn('Kon opgeslagen sector niet laden',error);}
@@ -677,32 +720,34 @@ function clearAllTestWorlds(){
 
 function newWorld(map){
  save();configureSector(map.sizeMeters||800);currentMap=map;clearGroup(terrainRoot);clearGroup(mapDetailsRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
- visibleTracers=[];buildings=[];selectedBuilding=null;selectedGuard=null;guardOrderMode=null;restoredGuardStates=[];initialMine=null;base=null;truck=null;truckMesh=null;truckRoute=[];workerMeshes=[];workerProgress=[];escortMeshes=[];
+ visibleTracers=[];buildings=[];selectedBuilding=null;selectedGuard=null;guardOrderMode=null;rallyModeBuilding=null;restoredGuardStates=[];restoredVehicles=[];combatVehicles=[];initialMine=null;base=null;truck=null;truckMesh=null;truckRoute=[];workerMeshes=[];workerProgress=[];escortMeshes=[];
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.7;terrainRoot.add(ground);
  const lines=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);lines.material.transparent=true;lines.material.opacity=.27;lines.position.y=-.49;terrainRoot.add(lines);
  grid=createOccupancy(map);graph=buildRoadGraph(map);
- resources={scrap:1600,energy:450,alloy:220,hp:100};crew={workers:0,guards:0,trucks:0};deliveries=0;convoyLevel=1;
+ resources={scrap:1600,energy:450,alloy:220,hp:100};crew={workers:0,guards:0,trucks:0};milTech={weapons:0,armor:0};deliveries=0;convoyLevel=1;
  const stored=loadSave();
- for(const b of stored||[]){if(!['hq','mine','turret','tower','bunker','factory'].includes(b.type))continue;const item={...b,level:b.level||1,radius:b.type==='hq'?14:8,fire:0};buildings.push(item);makeBuilding(item);if(item.type==='hq'&&!base)base=item;if(item.type==='mine'&&!initialMine)initialMine=item;}
+ for(const b of stored||[]){if(!['hq','mine','turret','tower','bunker','factory','barracks','armory','research'].includes(b.type))continue;const item={...b,level:b.level||1,radius:b.type==='hq'?14:8,fire:0,queue:Array.isArray(b.queue)?b.queue:[],trainProgress:Number(b.trainProgress)||0,rally:b.rally||null};buildings.push(item);makeBuilding(item);if(item.type==='hq'&&!base)base=item;if(item.type==='mine'&&!initialMine)initialMine=item;}
  zombieCorpses=[];zombieParts=[];enemies=new Enemies();flow=flowField(grid,base||{x:0,z:0});enemies.setSpawnSites(flow,grid);enemies.resize(unitCount);makeDangerMesh();
  general=makeGeneral();general.position.set(0,0,0);if(base)general.position.set(base.x+20,0,base.z+12);
  if(base&&initialMine)refreshPath();
  if(crew.trucks>0&&base){truck=makeTruck();truck.position.set(base.x,0,base.z);}
  for(let i=0;i<Math.max(crew.guards,restoredGuardStates.length);i++){
-  const mesh=makeEscort(),saveState=restoredGuardStates[i];
+  const saveState=restoredGuardStates[i],mesh=makeInfantryVariant(saveState?.type||'rifle');
   if(saveState){
    const st=mesh.userData.guard;
    if(Number.isFinite(saveState.x)&&Number.isFinite(saveState.z)){
     const cell=gridIndex(saveState.x,saveState.z);
     if(cell>=0&&!grid[cell])mesh.position.set(saveState.x,0,saveState.z);
    }
-   st.hp=clamp(Number(saveState.hp)||100,1,200);
+   st.hp=clamp(Number(saveState.hp)||st.maxHp,1,st.maxHp);
    st.order=['follow','hold','move','entrenched'].includes(saveState.order)?saveState.order:'follow';
-   if(saveState.entrenched){entrenchGuard(mesh,true);st.hp=clamp(Number(saveState.hp)||200,1,200);st.coverHP=clamp(Number(saveState.coverHP)||150,1,150);}
+   if(saveState.entrenched){entrenchGuard(mesh,true);st.hp=clamp(Number(saveState.hp)||st.maxHp,1,st.maxHp);st.coverHP=clamp(Number(saveState.coverHP)||150,1,150);}
   }
   escortMeshes.push(mesh);
 }
  for(let i=0;i<crew.workers;i++)workerMeshes.push(makeWorker());
+ for(const info of restoredVehicles){if(!UNIT_CATALOG[info.type]||UNIT_CATALOG[info.type].from!=='factory')continue;const v=makeCombatVehicle(info.type);v.position.set(info.x,0,info.z);v.userData.vehicle.hp=info.hp||UNIT_CATALOG[info.type].hp;combatVehicles.push(v);}
+ refreshRallyMarkers();
  walking=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
  camTarget.set(base?.x||0,0,base?.z||0);zoom=SIZE===3200?1300:SIZE===1600?700:370;scene.fog.density=.00175*Math.sqrt(800/SIZE);drawMap(map);updateCamera();
  $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='bgt'?'BGT NL':'DEMO';
@@ -719,7 +764,7 @@ function nearestCommand(x,z){let d=Infinity;for(const b of buildings)if(['hq','b
 function buildingAt(x,z){let closest=null,dist=15;for(const b of buildings){const d=distance(b,{x,z});if(d<dist){closest=b;dist=d;}}return closest;}
 function updateSoldierPanel(){
  const s=selectedGuard?.userData?.guard;
- $('#soldierTitle').textContent=s?'INFANTRY · '+(s.entrenched?'ENTRENCHED':s.order.toUpperCase()):'Geen soldaat geselecteerd';
+ $('#soldierTitle').textContent=s?(UNIT_CATALOG[s.type]?.name||'Infantry')+' · '+(s.entrenched?'ENTRENCHED':s.order.toUpperCase()):'Geen soldaat geselecteerd';
  $('#soldierDetails').textContent=s?
    'HP '+Math.round(s.hp)+'/'+s.maxHp+(s.entrenched?' · Zandzakken '+Math.round(s.coverHP)+' HP · +damage / accuracy':' · bereik 65m · aanval automatisch'):
    'Klik op een soldaat in de 3D-wereld of op een blauwe stip in de GPS-kaart.';
@@ -748,7 +793,7 @@ function removeCover(mesh){
  unitRoot.remove(state.cover);
  state.cover.traverse(c=>{if(c.geometry)c.geometry.dispose();});
  state.cover=null;
- state.entrenched=false;state.coverHP=0;state.maxHp=100;state.hp=Math.min(state.hp,100);
+ state.entrenched=false;state.coverHP=0;state.maxHp=state.baseHP||100;state.hp=Math.min(state.hp,state.maxHp);
 }
 function entrenchGuard(mesh,free=false){
  const st=mesh?.userData.guard;if(!st||st.entrenched||st.down>0)return;
@@ -764,7 +809,7 @@ function entrenchGuard(mesh,free=false){
   }
  }
  unitRoot.add(g);st.cover=g;st.entrenched=true;st.order='entrenched';st.path=[];st.pathIndex=0;
- st.maxHp=200;st.hp=Math.min(200,st.hp+100);st.coverHP=150;
+ st.maxHp=(st.baseHP||100)+100;st.hp=Math.min(st.maxHp,st.hp+100);st.coverHP=150;
  if(!free){updateSoldierPanel();save();toast('Zandzakken gebouwd. +100 HP, beter richten en meer schade!');}
 }
 $('#soldierEntrench').onclick=()=>{if(!selectedGuard)return;entrenchGuard(selectedGuard);};
@@ -778,14 +823,118 @@ $('#soldierFollow').onclick=()=>{
  st.order='follow';st.path=[];st.pathIndex=0;guardOrderMode=null;
  updateSoldierPanel();save();toast('Soldaat volgt de generaal.');
 };
+
+function populationCapacity(){
+ return 3+buildings.filter(x=>x.type==='barracks').reduce((n,b)=>n+2+(b.level||1)*3,0)+
+  buildings.filter(x=>x.type==='bunker').reduce((n,b)=>n+(b.level||1)*3,0);
+}
+function factoryCapacity(){
+ return buildings.filter(x=>x.type==='factory').reduce((n,b)=>n+(b.level||1)*2,0);
+}
+function queuedCount(type){
+ return buildings.reduce((sum,b)=>sum+(b.queue||[]).filter(t=>UNIT_CATALOG[t]?.from===type).length,0);
+}
+function trainUnit(building,type){
+ const def=UNIT_CATALOG[type];
+ if(!building||!def||building.type!==def.from)return;
+ const unlocked=availableUnitTypes(building).some(([t])=>t===type);
+ if(!unlocked){toast('Upgrade je gebouw of speel eerst de vereiste technologie vrij');return;}
+ const queue=building.queue||(building.queue=[]),maxQueue=2+(building.level||1)*2;
+ if(queue.length>=maxQueue){toast('Productiewachtrij vol. Upgrade het gebouw voor meer capaciteit.');return;}
+ if(def.from==='barracks'&&crew.guards+crew.workers+queuedCount('barracks')>=populationCapacity()){toast('Population cap bereikt. Bouw of upgrade extra barracks.');return;}
+ if(def.from==='factory'&&combatVehicles.length+crew.trucks+queuedCount('factory')>=factoryCapacity()){toast('Voertuigcapaciteit bereikt. Upgrade de Vehicle Factory.');return;}
+ if(resources.scrap<def.cost){toast('Niet genoeg scrap voor '+def.name);return;}
+ resources.scrap-=def.cost;queue.push(type);
+ updateProductionPanel();save();updateHUD();toast(def.name+' toegevoegd aan de productiewachtrij');
+}
+function updateProductionPanel(){
+ const b=selectedBuilding,productive=b&&['barracks','factory'].includes(b.type);
+ const info=$('#factoryDetails'),actions=$('#factoryUnitChoices');
+ actions.replaceChildren();
+ $('#factoryTitle').textContent=productive?names[b.type]+' LEVEL '+b.level:
+  b?.type==='armory'?'ARMORY · TECHNOLOGY':b?.type==='research'?'RESEARCH CENTER': 'Selecteer Barracks, Factory of Armory';
+ $('#rallyBtn').disabled=!productive;
+ $('#cancelQueueBtn').disabled=!productive||!(b.queue||[]).length;
+ $('#weaponUpgradeBtn').disabled=b?.type!=='armory';
+ $('#armorUpgradeBtn').disabled=b?.type!=='armory';
+ if(productive){
+  const count=b.queue?.length||0;
+  info.textContent='Queue '+count+'/'+(2+b.level*2)+' · Rally '+(b.rally?Math.round(b.rally.x)+', '+Math.round(b.rally.z):'niet ingesteld')+
+   ' · beschikbare units: '+availableUnitTypes(b).length;
+  for(const [type,def] of availableUnitTypes(b)){
+   const button=document.createElement('button');
+   button.className='action';button.type='button';
+   button.textContent=def.name+' · '+def.cost+' scrap · '+def.time+'s';
+   button.disabled=resources.scrap<def.cost;
+   button.addEventListener('click',()=>trainUnit(b,type));
+   actions.appendChild(button);
+  }
+ }else if(b?.type==='armory'){
+  info.textContent='Wapens '+milTech.weapons+'/5 · Pantser '+milTech.armor+'/5 · upgrading geeft alle infanteristen blijvende bonussen';
+ }else if(b?.type==='research'){
+  info.textContent='Research Level '+b.level+' · unlockt Medics (L1) en Elite Commandos (L2) via Barracks upgrades';
+ }else{
+  info.textContent='Selecteer Infantry Barracks om infanterie te trainen of een Vehicle Factory voor voertuigen.';
+ }
+}
+function refreshRallyMarkers(){
+ for(const marker of buildingMarkers){unitRoot.remove(marker);marker.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});}
+ buildingMarkers.length=0;
+ for(const b of buildings){
+  if(!['barracks','factory'].includes(b.type)||!b.rally)continue;
+  const g=new THREE.Group();g.position.set(b.rally.x,0,b.rally.z);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(4.5,6,26),new THREE.MeshBasicMaterial({color:0xeedc79,side:THREE.DoubleSide,transparent:true,opacity:.85}));
+  ring.rotation.x=-Math.PI/2;ring.position.y=.3;g.add(ring);
+  const mast=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,10,6),armyGun);mast.position.y=5;g.add(mast);
+  const flag=new THREE.Mesh(new THREE.ConeGeometry(3,5,3),armyLight);
+  flag.rotation.z=-Math.PI/2;flag.position.set(2,9,0);g.add(flag);
+  unitRoot.add(g);buildingMarkers.push(g);
+ }
+}
+function setRallyPoint(b,x,z){
+ if(!b)return;
+ const ci=gridIndex(x,z);
+ if(ci<0||grid[ci]){toast('Verzamelpunt moet op begaanbaar terrein liggen');return;}
+ const origin=closestPassable(b.x+13,b.z+9,grid);
+ const route=routeForInfantry(origin,{x,z});
+ if(!route){toast('Geen begaanbaar pad naar dit rally point');return;}
+ b.rally={x,z};rallyModeBuilding=null;refreshRallyMarkers();updateProductionPanel();updateMapMarkers();save();
+ toast('Rally point ingesteld: nieuwe units lopen hierheen.');
+}
+$('#rallyBtn').onclick=()=>{
+ const b=selectedBuilding;
+ if(!b||!['barracks','factory'].includes(b.type))return;
+ rallyModeBuilding=b;guardOrderMode=null;toggleBuild('inspect');
+ toast('Klik nu op het gewenste rally point op de 3D- of GPS-kaart.');
+};
+$('#cancelQueueBtn').onclick=()=>{
+ const b=selectedBuilding;if(!b?.queue?.length)return;
+ const type=b.queue.pop(),refund=Math.round((UNIT_CATALOG[type]?.cost||0)*.8);
+ resources.scrap+=refund;
+ if(!b.queue.length)b.trainProgress=0;
+ updateProductionPanel();save();toast('Productie geannuleerd. '+refund+' scrap terug.');
+};
+function buyTech(kind){
+ const armory=buildings.find(x=>x.type==='armory');
+ if(!armory){toast('Bouw eerst een Armory');return;}
+ const current=milTech[kind]||0;
+ if(current>=Math.min(5,armory.level)){toast('Upgrade de Armory voor het volgende tech-level (max 5)');return;}
+ const sc=120+current*130,al=20+current*20;
+ if(resources.scrap<sc||resources.alloy<al){toast('Tech upgrade kost '+sc+' scrap + '+al+' alloy');return;}
+ resources.scrap-=sc;resources.alloy-=al;milTech[kind]=current+1;
+ updateProductionPanel();save();toast(kind==='weapons'?'Rifle damage upgraded':'Infantry armor upgraded');
+}
+$('#weaponUpgradeBtn').onclick=()=>buyTech('weapons');
+$('#armorUpgradeBtn').onclick=()=>buyTech('armor');
+
 function updateInspector(){
  const b=selectedBuilding;
  $('#inspectTitle').textContent=b?names[b.type]+' · LEVEL '+(b.level||1):'Geen gebouw geselecteerd';
  $('#inspectDetails').textContent=b?'Positie '+Math.round(b.x)+', '+Math.round(b.z)+' · Upgrade: '+(100*(b.level||1))+' scrap + '+(20*(b.level||1))+' alloy. Max level 5.':'Klik op een bestaand gebouw in de 3D-wereld of GPS-kaart.';
  $('#inspectUpgrade').disabled=!b;$('#inspectRepair').disabled=!base;
- $('#population').textContent='Workers '+crew.workers+' · Guards '+crew.guards+' · Trucks '+crew.trucks+' / '+(buildings.filter(x=>x.type==='factory').reduce((n,b)=>n+2*(b.level||1),0));
+ $('#population').textContent='Pop '+(crew.guards+crew.workers)+'/'+populationCapacity()+' · Infantry '+crew.guards+' · Workers '+crew.workers+' · Vehicles '+(crew.trucks+combatVehicles.length)+'/'+factoryCapacity();
  $('#baseSetup').style.display=base?'none':'block';
- updateSoldierPanel();
+ updateSoldierPanel();updateProductionPanel();
 }
 
 function routeForInfantry(start,end){
@@ -824,6 +973,7 @@ function moveSelectedGuard(x,z){
  return true;
 }
 function handleGroundCommand(x,z){
+ if(rallyModeBuilding){setRallyPoint(rallyModeBuilding,x,z);return;}
  if(guardOrderMode==='move'){moveSelectedGuard(x,z);return;}
  const soldier=nearbyGuard(x,z,9);
  if(soldier){selectGuard(soldier);return;}
@@ -849,28 +999,150 @@ function buildAt(x,z){
  const msg=canBuild(selected,x,z);if(msg){toast(msg);return;}
  const price=costs[selected],discount=liveGPS&&Date.now()-gpsUpdated<60000&&general&&distance(general.position,{x,z})<=60?.75:1;
  resources.scrap-=Math.ceil(price.scrap*discount);resources.energy-=Math.ceil(price.energy*discount);
- const item={type:selected,x,z,radius:selected==='hq'?14:8,level:1,fire:0};
+ const item={type:selected,x,z,radius:selected==='hq'?14:8,level:1,fire:0,queue:[],trainProgress:0,rally:null};
  buildings.push(item);makeBuilding(item);selectedBuilding=item;
  if(selected==='hq'){base=item;flow=flowField(grid,base);enemies.setSpawnSites(flow,grid);general.position.set(x+16,0,z+16);toggleBuild('turret');}
  if(selected==='mine'&&!initialMine)initialMine=item;
  if(base&&initialMine)refreshPath();
  if(selected==='bunker'||selected==='tower')commandDiscounts++;
+ if(selected==='barracks'||selected==='factory')refreshRallyMarkers();
  updateInspector();updateHUD();save();updateMapMarkers();toast(names[item.type]+' gebouwd!');
 }
 function makeWorker(){return makeFootSoldier(false,true);}
+
+function makeInfantryVariant(type){
+ const def=UNIT_CATALOG[type]||UNIT_CATALOG.rifle;
+ const mesh=makeEscort(),st=mesh.userData.guard;
+ st.type=type;st.baseHP=def.hp+milTech.armor*18;
+ st.maxHp=st.baseHP;st.hp=st.baseHP;st.cooldown=def.rate*.5;
+ if(type==='rocket'){
+  part(mesh,box(1.5,1.5,7,armyGun),-1.9,6.6,1.9);
+  part(mesh,box(2.1,2,1.8,armyLight),-1.9,6.7,-.3);
+ }else if(type==='heavy'){
+  part(mesh,box(4,3.7,2,armyGun),0,6.3,-.2);
+  part(mesh,box(2.5,1.8,8,armyGun),1.9,5.5,4);
+  part(mesh,box(2.5,2,3,armySand),-2.9,5,0);
+ }else if(type==='medic'){
+  part(mesh,box(3.2,3.2,2.2,armySand),0,6,-1.8);
+  part(mesh,box(1,2,.4,armyLight),0,6,-3.1);
+  part(mesh,box(2,.8,.4,armyLight),0,6,-3.1);
+ }else if(type==='elite'){
+  part(mesh,box(4.2,2.7,2.3,armyGun),0,6,-.1);
+  part(mesh,box(3.4,1.5,2.1,armyGlass),0,9.8,.7);
+ }else if(type==='scout'){
+  part(mesh,box(2.1,2,1.5,armyLight),-1.8,7,-1);
+  mesh.scale.setScalar(.64);
+ }
+ return mesh;
+}
+function makeCombatVehicle(type){
+ const def=UNIT_CATALOG[type];
+ const g=new THREE.Group(),tank=type==='tank',apc=type==='apc';
+ const w=tank?16:apc?13:11,d=tank?24:apc?22:18;
+ part(g,box(w,3,d,armyDark),0,3.5,0);
+ part(g,box(w*.91,4,d*.83,tank?armyOlive:armyCamo),0,6,0);
+ if(tank){
+  for(const x of [-w*.48,w*.48]){
+   part(g,box(2.6,3,d*.9,armyTire),x,2.4,0);
+   for(const z of [-8,-4,0,4,8])part(g,cylinder(1.45,1.45,1,armyGun,9),x*1.08,2.4,z);
+  }
+  part(g,cylinder(5.5,6.1,3,armyStone,8),0,9,0);
+  part(g,box(7,3.5,8,armyOlive),0,11,0);
+  part(g,box(1.7,1.7,20,armyGun),0,11,13);
+  armyAntenna(g,-4,11,-3,7);
+ }else{
+  armyWheels(g,[-w*.53,w*.53],[-d*.33,d*.33],2.5);
+  part(g,box(7,3,5,armyGun),0,10,0);
+  part(g,box(1.3,1.2,8,armyGun),0,11,6);
+  part(g,box(6,1.7,1,armyGlass),0,7.8,d*.43);
+  if(apc)for(const z of [-5,0,5])part(g,box(1,1.2,2,armyGun),w*.44,7,z);
+ }
+ g.scale.setScalar(.68);
+ g.userData.vehicle={type,hp:def.hp,maxHp:def.hp,cooldown:Math.random()*def.rate,order:'hold',path:[],pathIndex:0};
+ unitRoot.add(g);return g;
+}
+function spawnTrainedUnit(b,type){
+ const def=UNIT_CATALOG[type];
+ if(!def)return false;
+ const spawn=closestPassable(b.x+13,b.z+9,grid);
+ if(def.from==='barracks'){
+  if(crew.guards+crew.workers>=populationCapacity())return false;
+  const soldier=makeInfantryVariant(type),st=soldier.userData.guard;
+  soldier.position.set(spawn.x,0,spawn.z);
+  escortMeshes.push(soldier);crew.guards++;
+  if(b.rally){
+   const path=routeForInfantry(spawn,b.rally);
+   if(path?.length){st.order='move';st.path=path;st.pathIndex=0;}else st.order='hold';
+  }else st.order='hold';
+ }else{
+  if(combatVehicles.length+crew.trucks>=factoryCapacity())return false;
+  const vehicle=makeCombatVehicle(type),st=vehicle.userData.vehicle;
+  vehicle.position.set(spawn.x,0,spawn.z);
+  if(b.rally){
+   const path=routeForInfantry(spawn,b.rally);
+   if(path?.length){st.order='move';st.path=path;st.pathIndex=0;}
+  }
+  combatVehicles.push(vehicle);
+ }
+ return true;
+}
+function updateProduction(dt){
+ for(const b of buildings){
+  if(!['barracks','factory'].includes(b.type)||!b.queue?.length)continue;
+  const unitType=b.queue[0],def=UNIT_CATALOG[unitType];
+  if(!def){b.queue.shift();continue;}
+  b.trainProgress=(b.trainProgress||0)+dt;
+  const duration=def.time/(1+(b.level-1)*.16);
+  if(b.trainProgress>=duration){
+   if(!spawnTrainedUnit(b,unitType)){b.trainProgress=duration;continue;}
+   b.queue.shift();b.trainProgress=0;
+   if(b===selectedBuilding)updateProductionPanel();
+   toast(def.name+' gereed'+(b.rally?' · op weg naar rally point':' · verdedigt de Barracks'));
+   save();
+  }
+ }
+}
+function updateCombatVehicles(dt){
+ for(const v of combatVehicles){
+  const st=v.userData.vehicle,def=UNIT_CATALOG[st.type];
+  if(!def||st.hp<=0)continue;
+  if(st.order==='move'&&st.path?.length){
+   let point=st.path[st.pathIndex],distanceTo=Math.hypot(point.x-v.position.x,point.z-v.position.z);
+   if(distanceTo<3.5){st.pathIndex++;if(st.pathIndex>=st.path.length){st.order='hold';st.path=[];}else{point=st.path[st.pathIndex];distanceTo=Math.hypot(point.x-v.position.x,point.z-v.position.z);}}
+   if(st.order==='move'&&distanceTo>0){
+    const dx=point.x-v.position.x,dz=point.z-v.position.z;
+    const spd=st.type==='buggy'?22:st.type==='apc'?15:11,step=Math.min(spd*dt,distanceTo);
+    const nx=v.position.x+dx/distanceTo*step,nz=v.position.z+dz/distanceTo*step,cell=gridIndex(nx,nz);
+    if(cell>=0&&!grid[cell]){v.position.set(nx,0,nz);v.rotation.y=Math.atan2(dx,dz);}
+   }
+  }
+  st.cooldown=Math.max(0,st.cooldown-dt);
+  let target=-1,minDist=def.range*def.range;
+  for(let i=0;i<enemies.count;i++){
+   const dx=enemies.x[i]-v.position.x,dz=enemies.z[i]-v.position.z,d=dx*dx+dz*dz;
+   if(d<minDist){minDist=d;target=i;}
+  }
+  if(target>=0&&st.cooldown<=0&&clearLineOfSight(v.position,{x:enemies.x[target],z:enemies.z[target]})){
+   st.cooldown=def.rate;
+   fire(v.position,{x:enemies.x[target],z:enemies.z[target]},st.type==='tank'?0xffd883:0xd9e9b6,7,2);
+   if(Math.random()<def.accuracy)enemies.damage(target,def.damage*(1+milTech.weapons*.13));
+  }
+ }
+}
+
 function recruit(type){
  if(!base){toast('Bouw eerst je Headquarters');return;}
  const factoryLevel=buildings.filter(b=>b.type==='factory').reduce((n,b)=>n+(b.level||1),0);
- const capacity=2+factoryLevel*3+buildings.filter(b=>b.type==='bunker').reduce((n,b)=>n+(b.level||1)*3,0);
+ const capacity=populationCapacity();
  const cost={workers:80,guards:130,trucks:240}[type];
  if(type==='trucks'&&!factoryLevel){toast('Bouw eerst een Vehicle Factory voor vrachtwagens');return;}
- if(type==='guards'&&!buildings.some(b=>b.type==='bunker')){toast('Bouw eerst een Command Bunker om soldaten te trainen');return;}
+ if(type==='guards'){const barracks=buildings.find(b=>b.type==='barracks');if(!barracks){toast('Bouw eerst een Infantry Barracks');return;}trainUnit(barracks,'rifle');return;}
  if(type!=='trucks'&&crew.workers+crew.guards>=capacity){toast('Population cap bereikt. Upgrade een bunker of fabriek');return;}
  if(type==='trucks'&&crew.trucks>=factoryLevel*2){toast('Voertuigcapaciteit bereikt. Upgrade je fabriek');return;}
  if(resources.scrap<cost){toast('Niet genoeg scrap');return;}
  resources.scrap-=cost;crew[type]++;
  if(type==='workers'){workerMeshes.push(makeWorker());workerProgress.push(Math.random()*100);}
- if(type==='guards'){const soldier=makeEscort();escortMeshes.push(soldier);selectGuard(soldier);}
+ if(type==='guards'){const soldier=makeInfantryVariant('rifle');escortMeshes.push(soldier);selectGuard(soldier);}
  if(type==='trucks'&&!truck){truck=makeTruck();truck.position.set(base.x,0,base.z);refreshPath();}
  updateInspector();save();toast(type==='workers'?'Werker gekocht':type==='guards'?'Soldaat gerekruteerd':'Vrachtwagen gekocht');
 }
@@ -884,7 +1156,7 @@ $('#inspectUpgrade').onclick=()=>{
  if(resources.scrap<sc||resources.alloy<al){toast('Upgrade vereist '+sc+' scrap en '+al+' alloy');return;}
  resources.scrap-=sc;resources.alloy-=al;b.level=level+1;
  if(b.mesh){b.mesh.scale.setScalar(.53+(b.level-1)*.035);}
- updateInspector();updateHUD();save();toast(names[b.type]+' upgraded naar level '+b.level);
+ updateInspector();updateHUD();save();toast(names[b.type]+' upgraded naar level '+b.level+' · nieuwe productiemogelijkheden beschikbaar!');
 };
 $('#inspectRepair').onclick=()=>{
  if(!base)return;if(resources.scrap<50){toast('Repareren kost 50 scrap');return;}
@@ -993,7 +1265,8 @@ function infantryCombat(dt){
   const mesh=escortMeshes[i],st=mesh.userData.guard;
   if(!st||st.down>0)continue;
   st.cooldown=Math.max(0,st.cooldown-dt);
-  const range=st.entrenched?88:65;
+  const def=UNIT_CATALOG[st.type]||UNIT_CATALOG.rifle;
+  const range=def.range+(st.entrenched?23:0);
   let best=-1,minDist=range*range,close=false;
   // Range-square check first: no expensive square roots for every zombie.
   for(let j=0;j<enemies.count;j++){
@@ -1016,12 +1289,13 @@ function infantryCombat(dt){
    }
   }
   if(best>=0&&st.cooldown<=0&&clearLineOfSight(mesh.position,{x:enemies.x[best],z:enemies.z[best]})){
-   st.cooldown=st.entrenched?.72:.96;
+   st.cooldown=def.rate*(st.entrenched?.73:1);
    mesh.rotation.y=Math.atan2(enemies.x[best]-mesh.position.x,enemies.z[best]-mesh.position.z);
    fire(mesh.position,{x:enemies.x[best],z:enemies.z[best]},st.entrenched?0xf2d49a:0xe6ba69,5,2.3);
    // Entrenched infantry aim more reliably and deal greater damage.
-   const aim=st.entrenched?.89:.59;
-   if(Math.random()<aim)enemies.damage(best,infantryWeaponDamage(st.entrenched,'unarmored'));
+   const aim=Math.min(.98,def.accuracy+(st.entrenched?.22:0));
+   if(Math.random()<aim)enemies.damage(best,Math.round(def.damage*(1+milTech.weapons*.13)*(st.entrenched?1.45:1)));
+   if(st.type==='medic')for(const ally of escortMeshes){const a=ally.userData.guard;if(a&&a.hp<a.maxHp&&Math.hypot(ally.position.x-mesh.position.x,ally.position.z-mesh.position.z)<35)a.hp=Math.min(a.maxHp,a.hp+4);}
    else enemies.alert[best]=Math.max(enemies.alert[best],6);
   }
  }
@@ -1029,7 +1303,7 @@ function infantryCombat(dt){
 function simulation(dt){const start=performance.now();simTime+=dt;resources.energy=Math.min(450+buildings.filter(b=>b.type==='tower').reduce((n,b)=>n+b.level*75,0),resources.energy+dt*.6);
  const hits=enemies.tick(dt,flow,base);if(base)resources.hp=Math.max(10,resources.hp-Math.min(hits*.18,dt*3));
  if(base&&crew.workers&&simTime>nextProduction){resources.scrap+=crew.workers*(initialMine?12:3);nextProduction=simTime+8;}
- turretCombat(dt);updateTruck(dt);updateGeneral(dt);infantryCombat(dt);updateZombieCorpses(dt);
+ updateProduction(dt);turretCombat(dt);updateTruck(dt);updateGeneral(dt);infantryCombat(dt);updateCombatVehicles(dt);updateZombieCorpses(dt);
  for(let i=visibleTracers.length-1;i>=0;i--){const t=visibleTracers[i];t.life-=dt;t.line.material.opacity=Math.max(0,t.life/.13);if(t.life<=0){effectRoot.remove(t.line);t.line.geometry.dispose();t.line.material.dispose();visibleTracers.splice(i,1);}}
  ringPulse.visible=!!base;if(base){ringPulse.position.x=base.x;ringPulse.position.z=base.z;}
  ringPulse.material.opacity=.07+.04*Math.sin(simTime*1.7);ringPulse.scale.setScalar(1+.04*Math.sin(simTime));
@@ -1046,6 +1320,8 @@ function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.
  for(const b of buildings){ctx.fillStyle=b.type==='hq'?'#fff6ab':b.type==='turret'?'#75e9f1':b.type==='mine'?'#ffc66d':'#68cfdf';ctx.beginPath();ctx.arc(px(b.x),pz(b.z),b.type==='hq'?4:2.5,0,Math.PI*2);ctx.fill();}
  if(general){ctx.fillStyle='#fffff9';ctx.beginPath();ctx.arc(px(general.position.x),pz(general.position.z),3.5,0,Math.PI*2);ctx.fill();}
  if(truck){ctx.fillStyle='#ffc665';ctx.fillRect(px(truck.position.x)-2,pz(truck.position.z)-2,4,4);}
+ for(const v of combatVehicles){ctx.fillStyle='#b2ae69';ctx.fillRect(px(v.position.x)-2,pz(v.position.z)-2,4,4);}
+ for(const b of buildings)if(b.rally){ctx.fillStyle='#e5de94';ctx.beginPath();ctx.arc(px(b.rally.x),pz(b.rally.z),2.3,0,Math.PI*2);ctx.fill();}
 }
 function animate(time){requestAnimationFrame(animate);let dt=Math.min(.05,(time-last)/1000||.016);last=time;
  if(!gamePaused&&enemies){simulation(dt);}if(enemies)renderEnemies();
@@ -1070,9 +1346,9 @@ renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.mi
 window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);updateCamera();});
 const toggleBuild=type=>{selected=type;$$('[data-build]').forEach(b=>b.classList.toggle('active',b.dataset.build===type));toast('Bouwmodus: '+names[type]);};
 $$('[data-build]').forEach(b=>b.onclick=()=>toggleBuild(b.dataset.build));
-window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='0')toggleBuild('inspect');if(e.key.toLowerCase()==='e'&&selectedGuard)entrenchGuard(selectedGuard);if(e.key.toLowerCase()==='r'&&selectedGuard)$('#soldierFollow').click();if(e.key.toLowerCase()==='h')toggleBuild('hq');if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
+window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='0')toggleBuild('inspect');if('678'.includes(e.key))toggleBuild(['barracks','armory','research'][Number(e.key)-6]);if(e.key.toLowerCase()==='e'&&selectedGuard)entrenchGuard(selectedGuard);if(e.key.toLowerCase()==='r'&&selectedGuard)$('#soldierFollow').click();if(e.key.toLowerCase()==='h')toggleBuild('hq');if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
 $('#unitRange').addEventListener('input',e=>{unitCount=unitSteps[+e.target.value];$('#unitLabel').textContent=unitCount.toLocaleString('nl-NL');enemies.resize(unitCount);toast('Stresstest: '+unitCount.toLocaleString('nl-NL')+' 3D-zombies actief.');});
-$('#upgradeConvoyBtn').onclick=()=>{if(convoyLevel>=4){toast('Konvooi is maximaal uitgebreid (9 escorte-units).');return;}const sc=convoyLevel*220,al=convoyLevel*30;if(resources.scrap<sc||resources.alloy<al){toast('Konvooi-upgrade vereist '+sc+' scrap en '+al+' alloy.');return;}resources.scrap-=sc;resources.alloy-=al;convoyLevel++;escortMeshes.push(makeEscort(),makeEscort());crew.guards+=2;save();toast('Konvooi level '+convoyLevel+': '+escortMeshes.length+' escorte-units, meer vuurkracht!');updateHUD();};
+$('#upgradeConvoyBtn').onclick=()=>{if(convoyLevel>=4){toast('Konvooi is maximaal uitgebreid (9 escorte-units).');return;}const sc=convoyLevel*220,al=convoyLevel*30;if(resources.scrap<sc||resources.alloy<al){toast('Konvooi-upgrade vereist '+sc+' scrap en '+al+' alloy.');return;}resources.scrap-=sc;resources.alloy-=al;convoyLevel++;escortMeshes.push(makeInfantryVariant('rifle'),makeInfantryVariant('rifle'));crew.guards+=2;save();toast('Konvooi level '+convoyLevel+': '+escortMeshes.length+' escorte-units, meer vuurkracht!');updateHUD();};
 $('#marchBtn').onclick=()=>{if(liveGPS){toast('GPS actief. De escorte volgt je werkelijke locatie.');return;}walking=!walking;$('#marchBtn').textContent=walking?'■ STOP PATROL':'▶ START PATROL';toast(walking?'Generaal op patrouille. Escorte actief en bewapend.':'Patrouille beëindigd.');};
 $('#pauseBtn').onclick=()=>{gamePaused=!gamePaused;$('#pauseBtn').textContent=gamePaused?'▶ RESUME':'Ⅱ PAUSE';};
 $('#resetBtn').onclick=()=>{if(confirm('Reset ALLE gebouwen, units en grondstoffen van deze sector? De kaart blijft geladen.'))reset();};
@@ -1098,6 +1374,8 @@ function gameFeatures(){
  if(truck&&crew.trucks)features.push(toPoint(toGeo(truck.position.x,truck.position.z,currentMap.center),'truck'));
  if(enemies)for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/140)))features.push(toPoint(toGeo(enemies.x[i],enemies.z[i],currentMap.center),'zombie'));
  for(const m of workerMeshes)features.push(toPoint(toGeo(m.position.x,m.position.z,currentMap.center),'worker'));
+ for(const b of buildings)if(b.rally)features.push(toPoint(toGeo(b.rally.x,b.rally.z,currentMap.center),'rally'));
+ for(const v of combatVehicles)features.push(toPoint(toGeo(v.position.x,v.position.z,currentMap.center),'vehicle'));
  for(const m of escortMeshes){
   const st=m.userData.guard,p=toGeo(m.position.x,m.position.z,currentMap.center);
   features.push({type:'Feature',properties:{kind:st?.entrenched?'entrenched':'guard',hp:Math.round(st?.hp||100)},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
@@ -1119,8 +1397,8 @@ function initGeoMap(){
  geoMap.on('load',()=>{
   geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
   geoMap.addLayer({id:'gameunits-ring',type:'circle',source:'gameunits',paint:{
-   'circle-radius':['match',['get','kind'],'hq',10,'general',8,'gps',10,'zombie',2.5,'turret',5,'worker',4,'guard',4,'entrenched',6,'truck',7,6],
-   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','zombie','#68c56a','worker','#f7dc91','guard','#5ae8e7','entrenched','#d6bf78','truck','#f5b458','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
+   'circle-radius':['match',['get','kind'],'hq',10,'general',8,'gps',10,'zombie',2.5,'turret',5,'worker',4,'guard',4,'entrenched',6,'vehicle',7,'rally',6,'truck',7,6],
+   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','zombie','#68c56a','worker','#f7dc91','guard','#5ae8e7','entrenched','#d6bf78','vehicle','#aea87c','rally','#ffd75b','truck','#f5b458','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
    'circle-stroke-width':2,'circle-stroke-color':'#071923'
   }});
   updateMapMarkers();
