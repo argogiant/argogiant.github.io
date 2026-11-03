@@ -5,6 +5,8 @@
 /* GPS MAP MODE */
 #geoMap{position:absolute;inset:0;z-index:1;display:none;background:#142b31}
 #viewport.map-mode #geoMap{display:block}
+#viewport.map-mode #render{pointer-events:none}
+#viewport:not(.map-mode) #geoMap{pointer-events:none}
 #viewport.map-mode #render{visibility:hidden}
 #mapStatus{display:none;position:absolute;left:50%;bottom:65px;z-index:3;transform:translateX(-50%);padding:7px 14px;background:#08232be8;color:#d5f5f4;border:1px solid #39727b;border-radius:8px;max-width:65%;font-size:11px;text-align:center;pointer-events:none}
 #viewport.map-mode #mapStatus{display:block}
@@ -30,11 +32,11 @@
 </style><link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"><link rel="icon" href="data:,"></head>
 <body>
 <div id="app">
- <main id="viewport"><div id="render"></div><div id="geoMap"></div><div id="mapStatus">OpenFreeMap • verplaats je kaart of activeer GPS</div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
- <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // RTS SANDBOX 0.7</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
- <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de 3D- of GPS-kaart. Klik op een bestaand gebouw voor upgrades.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="barracks" class="build"><i>♟</i><span><b>INFANTRY BARRACKS</b><small>190 scrap · 25 energy</small></span><em>6</em></button><button data-build="armory" class="build"><i>⚙</i><span><b>ARMORY / UPGRADES</b><small>260 scrap · 35 energy</small></span><em>7</em></button><button data-build="research" class="build"><i>⌬</i><span><b>RESEARCH CENTER</b><small>330 scrap · 55 energy</small></span><em>8</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● INFANTRY COMMAND</div><div id="soldierPanel" class="inspect-panel"><b id="soldierTitle">Geen soldaat geselecteerd</b><span id="soldierDetails">Train infanterie via een Command Bunker. Klik daarna op een soldaat op de kaart.</span><div class="actions"><button id="soldierEntrench" class="action">⛨ ENTRENCH · 45 SCRAP</button><button id="soldierMove" class="action">⌖ MOVE TO POSITION</button><button id="soldierFollow" class="action">↺ FOLLOW GENERAL</button></div></div><div class="sectionlabel space">● BUILDING PRODUCTION</div><div id="factoryPanel" class="inspect-panel"><b id="factoryTitle">Selecteer Barracks of Factory</b><span id="factoryDetails">Level 1: twee infanterietypen. Upgrade gebouwen voor meer units.</span><div id="factoryUnitChoices" class="actions"></div><div class="actions"><button id="rallyBtn" class="action">⚑ SET RALLY POINT</button><button id="cancelQueueBtn" class="action">⌫ CANCEL QUEUE</button><button id="weaponUpgradeBtn" class="action">⬆ WEAPON TECH</button><button id="armorUpgradeBtn" class="action">⬆ ARMOR TECH</button></div></div><div class="sectionlabel space">● QUICK RECRUIT</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ RIFLEMAN · 90 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModeBtn" class="action primary">▤ GPS MAP VIEW</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ DEMO SECTOR</button><button id="resetBtn" class="action subtle">↺ RESET HUIDIGE WERELD</button><button id="resetAllBtn" class="action subtle">⌫ WIS ALLE TESTWERELDEN</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
- <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>RENDER FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>3D DRAW CALLS</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">Dit meet je echte FPS op jouw apparaat. Verhoog het aantal voor een stresstest.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
- <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build / select</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>PDOK BGT-wereld laden</h2><p>Kies de grootte van je speelwereld. De lichte GPS-kaart kan altijd verder worden bekeken; de donkere 3D-simulatie werkt binnen de gekozen sector. Massive vraagt veel meer kaartdata en geheugen.</p><label>Kaartformaat<select id="sectorSize"><option value="800">Small · 800 × 800 m (0,64 km²)</option><option value="1600">Medium · 1,6 × 1,6 km (2,56 km²)</option><option value="3200">Massive · 3,2 × 3,2 km (10,24 km²)</option></select></label><p id="sectorSizeHint" class="tiny muted">Small: snelste keuze om turrets, zombies en gebouwen te testen.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="confirmOsm" class="action primary">LAAD KAART</button></div><p class="tiny muted">BGT-kaartdata wordt van PDOK opgehaald. GPS wordt alleen gebruikt met jouw toestemming. Het downloaden van Massive kan veel gegevens en tientallen aanvragen vereisen.</p></div></div>
+ <main id="viewport"><div id="render"></div><div id="geoMap"></div><div id="mapStatus">TACTICAL MAP · 3D-gebouwen · plaats gebouwen en troepen direct op de kaart</div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
+ <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // TACTICAL MAP 0.8</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
+ <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de echte kaart. Selecteer gebouwen voor productie, upgrades en rally points.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="barracks" class="build"><i>♟</i><span><b>INFANTRY BARRACKS</b><small>190 scrap · 25 energy</small></span><em>6</em></button><button data-build="armory" class="build"><i>⚙</i><span><b>ARMORY / UPGRADES</b><small>260 scrap · 35 energy</small></span><em>7</em></button><button data-build="research" class="build"><i>⌬</i><span><b>RESEARCH CENTER</b><small>330 scrap · 55 energy</small></span><em>8</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● INFANTRY COMMAND</div><div id="soldierPanel" class="inspect-panel"><b id="soldierTitle">Geen soldaat geselecteerd</b><span id="soldierDetails">Train infanterie via een Command Bunker. Klik daarna op een soldaat op de kaart.</span><div class="actions"><button id="soldierEntrench" class="action">⛨ ENTRENCH · 45 SCRAP</button><button id="soldierMove" class="action">⌖ MOVE TO POSITION</button><button id="soldierFollow" class="action">↺ FOLLOW GENERAL</button></div></div><div class="sectionlabel space">● BUILDING PRODUCTION</div><div id="factoryPanel" class="inspect-panel"><b id="factoryTitle">Selecteer Barracks of Factory</b><span id="factoryDetails">Level 1: twee infanterietypen. Upgrade gebouwen voor meer units.</span><div id="factoryUnitChoices" class="actions"></div><div class="actions"><button id="rallyBtn" class="action">⚑ SET RALLY POINT</button><button id="cancelQueueBtn" class="action">⌫ CANCEL QUEUE</button><button id="weaponUpgradeBtn" class="action">⬆ WEAPON TECH</button><button id="armorUpgradeBtn" class="action">⬆ ARMOR TECH</button></div></div><div class="sectionlabel space">● QUICK RECRUIT</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ RIFLEMAN · 90 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModeBtn" class="action primary">◈ EXPERIMENTAL 3D VIEW</button><button id="mapNewWorldBtn" class="action">⊕ NEW WORLD HERE</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ OFFLINE 3D DEMO</button><button id="resetBtn" class="action subtle">↺ RESET HUIDIGE WERELD</button><button id="resetAllBtn" class="action subtle">⌫ WIS ALLE TESTWERELDEN</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
+ <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>RENDER FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>RENDER MODE</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">Dit meet je echte FPS op jouw apparaat. Verhoog het aantal voor een stresstest.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
+ <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build / select</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>Nieuwe wereld / kaartgegevens</h2><p>De interactieve 3D-stadskaart is nu de game. Kies de grootte en begin een nieuwe wereld rond de kaartlocatie, zonder PDOK-download. Voor de experimentele terreinimport kun je PDOK BGT apart laden.</p><label>Kaartformaat<select id="sectorSize"><option value="800">Small · 800 × 800 m (0,64 km²)</option><option value="1600">Medium · 1,6 × 1,6 km (2,56 km²)</option><option value="3200">Massive · 3,2 × 3,2 km (10,24 km²)</option></select></label><p id="sectorSizeHint" class="tiny muted">Small: snelste keuze om turrets, zombies en gebouwen te testen.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="newTileWorldBtn" class="action primary">▶ NIEUWE WERELD OP KAART</button><button id="confirmOsm" class="action">EXPERIMENTELE PDOK IMPORT</button></div><p class="tiny muted">De kaart zelf werkt via OpenFreeMap. Gebouw- en waterobstakels worden voor de simulatie afgeleid uit geladen kaarttegels. Niet-geladen gebieden hebben mogelijk onvolledige botsingsdata. Een nieuwe wereld bewaart de vorige sector afzonderlijk.</p></div></div>
 </div><script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 // LAST OUTPOST - deterministic, renderer-independent prototype simulation.
@@ -55,6 +57,14 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
 function randomSeeded(seed=42){let s=seed>>>0; return()=>((s=(1664525*s+1013904223)>>>0)/4294967296);}
 const rect=(x,z,w,h)=>[{x:x-w/2,z:z-h/2},{x:x+w/2,z:z-h/2},{x:x+w/2,z:z+h/2},{x:x-w/2,z:z+h/2}];
+
+function mapTileWorld(center={lat:52.1562,lon:5.3878},sizeMeters=1600){
+ // OpenFreeMap renders the actual city buildings. Tile footprints are separately
+ // read from its loaded vector tile source for collision and pathfinding.
+ return {label:'LIVE OPENFREEMAP · Tactical sector',kind:'tiles',
+  center:{lat:center.lat,lon:center.lon},sizeMeters,roads:[],roadSurfaces:[],
+  buildings:[],parks:[],water:[],bridges:[],liveTileCount:0};
+}
 function demoMap(){
   const rnd=randomSeeded(17), roads=[], buildings=[], parks=[],water=[];
   const xs=[-350,-235,-110,25,165,310],zs=[-320,-200,-70,75,210,340];
@@ -166,7 +176,16 @@ function roadPath(nodes,start,end){if(!nodes.length)return[];
 
 class Enemies {
  constructor(max=6000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.dir=new Float32Array(max);this.turn=new Float32Array(max);this.alert=new Float32Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];this.herdBuckets=new Map();this.nextHerdUpdate=0;}
- setSpawnSites(flow,blocked){this.spawnSites=[];for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){if(x>5&&x<N-6&&z>5&&z<N-6)continue;let i=z*N+x;if(!blocked[i])this.spawnSites.push(gridWorld(i));}}
+ setSpawnSites(flow,blocked){
+ this.spawnSites=[];
+ for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){
+  const border=x<8||x>=N-8||z<8||z>=N-8;
+  // Wanderers spread through city blocks as well as the sector edges.
+  if(!border&&(x*37+z*53)%11!==0)continue;
+  const index=z*N+x;
+  if(!blocked[index])this.spawnSites.push(gridWorld(index));
+ }
+}
  spawn(i){const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};this.x[i]=p.x;this.z[i]=p.z;this.hp[i]=35+this.rnd()*25;this.speed[i]=1.2+this.rnd()*1.8;this.dir[i]=this.rnd()*Math.PI*2;this.turn[i]=this.rnd()*4;this.alert[i]=0;this.state[i]=0;}
  resize(n){n=clamp(n|0,0,this.max);for(let i=this.count;i<n;i++)this.spawn(i);this.count=n;}
  damage(i,amount){if(this.hp[i]<=0)return false;this.hp[i]-=amount;this.alert[i]=12;this.state[i]=1;if(this.hp[i]<=0){this.kills++;if(zombieCorpses.length<18)zombieFallEffect(this.x[i],this.z[i],this.dir[i]);this.spawn(i);return true;}return false;}
@@ -707,19 +726,23 @@ function loadSave(){
  }catch(error){console.warn('Kon opgeslagen sector niet laden',error);}
  return null;
 }
-function reset(){if(!currentMap)return;const map=currentMap;localStorage.removeItem(sessionKey());currentMap=null;newWorld(map);toast('Huidige wereld volledig gereset. Kies je HQ.');}
+function reset(){if(!currentMap)return;
+ const map=currentMap.kind==='tiles'?mapTileWorld(currentMap.center,SIZE):currentMap;
+ localStorage.removeItem(sessionKey());currentMap=null;newWorld(map);
+ toast('Huidige wereld volledig gereset. Kies je HQ.');
+}
 function clearAllTestWorlds(){
  let removed=0;
  for(const key of Object.keys(localStorage))if(key.startsWith('lastoutpost:')){
   localStorage.removeItem(key);removed++;
  }
- const map=currentMap||demoMap();currentMap=null;
+ const map=currentMap?(currentMap.kind==='tiles'?mapTileWorld(currentMap.center,SIZE):currentMap):mapTileWorld();currentMap=null;
  newWorld(map);
  toast('Alle lokale testwerelden gewist ('+removed+' opslagitems). Nieuwe lege wereld.');
 }
 
 function newWorld(map){
- save();configureSector(map.sizeMeters||800);currentMap=map;clearGroup(terrainRoot);clearGroup(mapDetailsRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
+ save();tileFeaturesSeen.clear();tileLoadSummary={buildings:0,water:0};configureSector(map.sizeMeters||800);currentMap=map;clearGroup(terrainRoot);clearGroup(mapDetailsRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
  visibleTracers=[];buildings=[];selectedBuilding=null;selectedGuard=null;guardOrderMode=null;rallyModeBuilding=null;restoredGuardStates=[];restoredVehicles=[];combatVehicles=[];initialMine=null;base=null;truck=null;truckMesh=null;truckRoute=[];workerMeshes=[];workerProgress=[];escortMeshes=[];
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.7;terrainRoot.add(ground);
  const lines=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);lines.material.transparent=true;lines.material.opacity=.27;lines.position.y=-.49;terrainRoot.add(lines);
@@ -750,11 +773,12 @@ function newWorld(map){
  refreshRallyMarkers();
  walking=false;liveGPS=false;$('#marchBtn').textContent='▶ START PATROL';
  camTarget.set(base?.x||0,0,base?.z||0);zoom=SIZE===3200?1300:SIZE===1600?700:370;scene.fog.density=.00175*Math.sqrt(800/SIZE);drawMap(map);updateCamera();
- $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='bgt'?'BGT NL':'DEMO';
- $('#mapbadge').textContent=(map.kind==='bgt'?'REAL BGT NL':'DEMO MAP')+' · '+sectorLabel();
- $('#attribution').textContent=map.kind==='bgt'?'BGT © PDOK/Kadaster · 3D geometry':'Demo world · © OpenStreetMap contributors';
+ $('#nodes').textContent=graph.length.toLocaleString('nl-NL');$('#obstacles').textContent=map.buildings.length+' / '+map.water.length;$('#worldType').textContent=map.kind==='bgt'?'BGT NL':map.kind==='tiles'?'LIVE TILES':'DEMO';
+ $('#mapbadge').textContent=(map.kind==='bgt'?'REAL BGT NL':map.kind==='tiles'?'LIVE 3D CITY':'DEMO MAP')+' · '+sectorLabel();
+ $('#attribution').textContent=map.kind==='bgt'?'BGT © PDOK/Kadaster':map.kind==='tiles'?'© OpenStreetMap contributors · OpenFreeMap':'Demo world · © OpenStreetMap contributors';
  ringPulse.visible=!!base;toggleBuild(base?'inspect':'hq');updateInspector();updateHUD();save();
  toast(base?'Je basis is geladen. Klik op gebouwen voor upgrades.':'Nieuwe wereld: plaats zelf je Headquarters op de kaart!');
+ if(geoMode&&geoMap){geoMap.resize();updateMapMarkers();if(map.kind==='tiles')setTimeout(collectLiveTileObstacles,250);}
 }
 function updateCamera(){const w=innerWidth,h=innerHeight,aspect=w/h;camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();
  const offset=new THREE.Vector3(Math.sin(azimuth)*zoom,Math.sin(camPitch)*zoom*1.55,Math.cos(azimuth)*zoom);camera.position.copy(camTarget).add(offset);camera.lookAt(camTarget);
@@ -1309,7 +1333,7 @@ function simulation(dt){const start=performance.now();simTime+=dt;resources.ener
  ringPulse.material.opacity=.07+.04*Math.sin(simTime*1.7);ringPulse.scale.setScalar(1+.04*Math.sin(simTime));
  simMS=simMS*.85+(performance.now()-start)*.15;
 }
-function updateHUD(){if(!currentMap)return;credits();$('#scrap').textContent=resources.scrap.toLocaleString('nl-NL');$('#energy').textContent=Math.floor(resources.energy).toLocaleString('nl-NL');$('#alloy').textContent=resources.alloy.toLocaleString('nl-NL');$('#hp').textContent=resources.hp.toFixed(0)+'%';$('#units').textContent=enemies.count.toLocaleString('nl-NL');$('#kills').textContent=enemies.kills.toLocaleString('nl-NL');$('#breaches').textContent=enemies.breaches.toLocaleString('nl-NL');$('#turrets').textContent=buildings.filter(x=>x.type==='turret').length;$('#outposts').textContent=buildings.filter(x=>['hq','tower','bunker'].includes(x.type)).length;$('#deliveries').textContent=deliveries;$('#fps').textContent=displayFPS?displayFPS.toFixed(0):'--';$('#simms').textContent=simMS.toFixed(2)+' ms';$('#draws').textContent=renderer.info.render.calls.toLocaleString('nl-NL');if(selectedGuard)updateSoldierPanel();}
+function updateHUD(){if(!currentMap)return;credits();$('#scrap').textContent=resources.scrap.toLocaleString('nl-NL');$('#energy').textContent=Math.floor(resources.energy).toLocaleString('nl-NL');$('#alloy').textContent=resources.alloy.toLocaleString('nl-NL');$('#hp').textContent=resources.hp.toFixed(0)+'%';$('#units').textContent=enemies.count.toLocaleString('nl-NL');$('#kills').textContent=enemies.kills.toLocaleString('nl-NL');$('#breaches').textContent=enemies.breaches.toLocaleString('nl-NL');$('#turrets').textContent=buildings.filter(x=>x.type==='turret').length;$('#outposts').textContent=buildings.filter(x=>['hq','tower','bunker'].includes(x.type)).length;$('#deliveries').textContent=deliveries;$('#fps').textContent=displayFPS?displayFPS.toFixed(0):'--';$('#simms').textContent=simMS.toFixed(2)+' ms';$('#draws').textContent=geoMode?'MAP':'3D '+renderer.info.render.calls.toLocaleString('nl-NL');if(selectedGuard)updateSoldierPanel();}
 function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.width,h=c.height,k=w/SIZE;const px=x=>(x+HALF)*k,pz=z=>(z+HALF)*k;
  ctx.fillStyle='#0c2b2e';ctx.fillRect(0,0,w,h);
  const fill=(p,color)=>{ctx.beginPath();p.forEach((v,i)=>i?ctx.lineTo(px(v.x),pz(v.z)):ctx.moveTo(px(v.x),pz(v.z)));ctx.closePath();ctx.fillStyle=color;ctx.fill();};
@@ -1324,10 +1348,10 @@ function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.
  for(const b of buildings)if(b.rally){ctx.fillStyle='#e5de94';ctx.beginPath();ctx.arc(px(b.rally.x),pz(b.rally.z),2.3,0,Math.PI*2);ctx.fill();}
 }
 function animate(time){requestAnimationFrame(animate);let dt=Math.min(.05,(time-last)/1000||.016);last=time;
- if(!gamePaused&&enemies){simulation(dt);}if(enemies)renderEnemies();
+ if(!gamePaused&&enemies){simulation(dt);}if(enemies&&!geoMode)renderEnemies();
  frames++;frameSum+=dt;if(frameSum>=.5){displayFPS=frames/frameSum;frames=0;frameSum=0;}
- renderer.render(scene,camera);
- if(time-lastHUD>400){updateHUD();renderMinimap();if(geoMode)updateMapMarkers();lastHUD=time;}
+ if(!geoMode)renderer.render(scene,camera);
+ if(time-lastHUD>400){updateHUD();if(!geoMode)renderMinimap();if(geoMode)updateMapMarkers();lastHUD=time;}
 }
 function pickGround(clientX,clientY){const rect=renderer.domElement.getBoundingClientRect();const x=(clientX-rect.left)/rect.width*2-1,y=-(clientY-rect.top)/rect.height*2+1;raycaster.setFromCamera(new THREE.Vector2(x,y),camera);return raycaster.ray.intersectPlane(plane,new THREE.Vector3());}
 let pointerDown=null,pinchStart=0;
@@ -1353,80 +1377,367 @@ $('#marchBtn').onclick=()=>{if(liveGPS){toast('GPS actief. De escorte volgt je w
 $('#pauseBtn').onclick=()=>{gamePaused=!gamePaused;$('#pauseBtn').textContent=gamePaused?'▶ RESUME':'Ⅱ PAUSE';};
 $('#resetBtn').onclick=()=>{if(confirm('Reset ALLE gebouwen, units en grondstoffen van deze sector? De kaart blijft geladen.'))reset();};
 $('#resetAllBtn').onclick=()=>{if(confirm('ALLE opgeslagen LAST OUTPOST-testwerelden op DIT apparaat definitief wissen?'))clearAllTestWorlds();};
-$('#demoBtn').onclick=()=>{if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;}newWorld(demoMap());};
-$('#osmBtn').onclick=()=>{if(SECTOR_PRESETS[SIZE])$('#sectorSize').value=String(SIZE);updateSectorHint();$('#osmDialog').classList.remove('hidden');};$('#cancelOsm').onclick=()=>$('#osmDialog').classList.add('hidden');
+$('#demoBtn').onclick=()=>{
+ if(gpsWatch!==null){navigator.geolocation.clearWatch(gpsWatch);gpsWatch=null;}
+ geoMode=false;$('#viewport').classList.remove('map-mode');
+ $('#mapModeBtn').textContent='▤ BACK TO TACTICAL MAP';
+ newWorld(demoMap());
+ toast('Offline fictieve DEMO in 3D. Via NEW WORLD HERE speel je weer op de echte stad.');
+};
+$('#osmBtn').onclick=()=>{
+ if(SECTOR_PRESETS[SIZE])$('#sectorSize').value=String(SIZE);
+ if(geoMap){const center=geoMap.getCenter();$('#latInput').value=center.lat.toFixed(5);$('#lonInput').value=center.lng.toFixed(5);}
+ updateSectorHint();$('#osmDialog').classList.remove('hidden');
+};$('#cancelOsm').onclick=()=>$('#osmDialog').classList.add('hidden');
 // GPS MAP + Dutch BGT sector import
-let geoMap=null,geoMode=false,geoPosition=null,sectorFeatures=[];
-function gameFeatures(){
- const features=[];
- const toPoint=(p,kind)=>({type:'Feature',properties:{kind},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
- if(currentMap){
-  for(const b of buildings){
-   const p=toGeo(b.x,b.z,currentMap.center);
-   features.push({type:'Feature',properties:{kind:b.type,level:b.level||1},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
-  }
-  if(general){
-   const p=toGeo(general.position.x,general.position.z,currentMap.center);
-   features.push(toPoint(p,'general'));
+let geoMap=null,geoMode=true,geoPosition=null,sectorFeatures=[];
+let tileFeaturesSeen=new Set(),tileLoadSummary={buildings:0,water:0},tileCollectBusy=false;
+// Synchronize collision shapes from the same vector tiles that render the
+// lighter 3D city. Only currently loaded tiles are queryable, so we enrich the
+// sector as the player explores and show an explicit partial-data indicator.
+function mapTileSources(){
+ if(!geoMap?.isStyleLoaded())return [];
+ const style=geoMap.getStyle(),out=[],found=new Set();
+ for(const layer of style.layers||[]){
+  const sourceLayer=layer['source-layer']||'';
+  const kind=sourceLayer==='building'||sourceLayer==='building_part'?'buildings':
+             sourceLayer==='water'?'water':null;
+  if(!kind||!layer.source||style.sources?.[layer.source]?.type!=='vector')continue;
+  const key=layer.source+'|'+sourceLayer;if(found.has(key))continue;
+  found.add(key);out.push({source:layer.source,sourceLayer,kind});
+ }
+ if(!out.some(x=>x.kind==='buildings')){
+  // Some styles hide building layers at the current zoom; the vector tile
+  // source can still expose building polygons for collision.
+  for(const [id,source] of Object.entries(style.sources||{})){
+   if(source.type==='vector'){
+    out.push({source:id,sourceLayer:'building',kind:'buildings'});
+    if(!out.some(x=>x.kind==='water'))out.push({source:id,sourceLayer:'water',kind:'water'});
+    break;
+   }
   }
  }
- if(geoPosition)features.push(toPoint(geoPosition,'gps'));
- if(truck&&crew.trucks)features.push(toPoint(toGeo(truck.position.x,truck.position.z,currentMap.center),'truck'));
- if(enemies)for(let i=0;i<enemies.count;i+=Math.max(1,Math.floor(enemies.count/140)))features.push(toPoint(toGeo(enemies.x[i],enemies.z[i],currentMap.center),'zombie'));
- for(const m of workerMeshes)features.push(toPoint(toGeo(m.position.x,m.position.z,currentMap.center),'worker'));
- for(const b of buildings)if(b.rally)features.push(toPoint(toGeo(b.rally.x,b.rally.z,currentMap.center),'rally'));
- for(const v of combatVehicles)features.push(toPoint(toGeo(v.position.x,v.position.z,currentMap.center),'vehicle'));
- for(const m of escortMeshes){
-  const st=m.userData.guard,p=toGeo(m.position.x,m.position.z,currentMap.center);
-  features.push({type:'Feature',properties:{kind:st?.entrenched?'entrenched':'guard',hp:Math.round(st?.hp||100)},geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
+ return out;
+}
+function collectLiveTileObstacles(){
+ if(!geoMap||!geoMap.isStyleLoaded()||!currentMap||
+    !['tiles','bgt'].includes(currentMap.kind)||tileCollectBusy)return;
+ tileCollectBusy=true;
+ let count=0,newlyBlocked=[];
+ try{
+  const origin=currentMap.center,half=SIZE/2;
+  for(const entry of mapTileSources()){
+   let objects=[];
+   try{objects=geoMap.querySourceFeatures(entry.source,{sourceLayer:entry.sourceLayer})||[];}
+   catch(error){console.warn('Vector tiles niet uitleesbaar',entry.sourceLayer,error);continue;}
+   for(const feature of objects){
+    if(count>=11000||tileFeaturesSeen.size>=24000)break;
+    const geometry=feature.geometry,groups=geometry?.type==='Polygon'?[geometry.coordinates]:
+      geometry?.type==='MultiPolygon'?geometry.coordinates:[];
+    for(const group of groups){
+     const outer=group?.[0];if(!outer||outer.length<4||outer.length>5000)continue;
+     const first=outer[0];
+     const signature=entry.sourceLayer+':'+String(feature.id??'')+':'+outer.length+':'+
+       Number(first[0]).toFixed(6)+':'+Number(first[1]).toFixed(6);
+     if(tileFeaturesSeen.has(signature))continue;
+     const polygon=outer.map(coords=>toWorld(coords[1],coords[0],origin));
+     let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
+     for(const p of polygon){
+      if(!Number.isFinite(p.x)||!Number.isFinite(p.z)){minX=Infinity;break;}
+      minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);
+      minZ=Math.min(minZ,p.z);maxZ=Math.max(maxZ,p.z);
+     }
+     if(minX===Infinity||minX>half||maxX<-half||minZ>half||maxZ<-half)continue;
+     tileFeaturesSeen.add(signature);
+     if(entry.kind==='buildings'){currentMap.buildings.push({poly:polygon,height:Number(feature.properties?.render_height)||Number(feature.properties?.height)||9});tileLoadSummary.buildings++;}
+     else{currentMap.water.push(polygon);tileLoadSummary.water++;}
+     newlyBlocked.push(polygon);count++;
+    }
+   }
+  }
+  if(count){
+   // Incremental polygon rasterization avoids rebuilding the entire city each
+   // time a new vector tile arrives.
+   for(const poly of newlyBlocked){
+    let minx=Infinity,maxx=-Infinity,minz=Infinity,maxz=-Infinity;
+    for(const p of poly){minx=Math.min(minx,p.x);maxx=Math.max(maxx,p.x);minz=Math.min(minz,p.z);maxz=Math.max(maxz,p.z);}
+    const x0=clamp(Math.floor((minx+HALF)/CELL),0,N-1),x1=clamp(Math.ceil((maxx+HALF)/CELL),0,N-1);
+    const z0=clamp(Math.floor((minz+HALF)/CELL),0,N-1),z1=clamp(Math.ceil((maxz+HALF)/CELL),0,N-1);
+    for(let iz=z0;iz<=z1;iz++)for(let ix=x0;ix<=x1;ix++){
+     const key=iz*N+ix;
+     if(!grid[key]&&pointInPolygon(gridWorld(key),poly))grid[key]=1;
+    }
+   }
+   flow=flowField(grid,base||{x:0,z:0});
+   if(enemies){
+    enemies.setSpawnSites(flow,grid);
+    for(let i=0;i<enemies.count;i++){
+     const cell=gridIndex(enemies.x[i],enemies.z[i]);
+     if(cell<0||grid[cell])enemies.spawn(i);
+    }
+   }
+   if(!geoMode)drawMap(currentMap);
+   $('#obstacles').textContent=currentMap.buildings.length+' / '+currentMap.water.length;
+   $('#worldType').textContent=currentMap.kind==='tiles'?'LIVE TILES':'BGT + TILES';
+   const info=$('#mapStatus');
+   info.textContent='LIVE MAP · '+tileLoadSummary.buildings.toLocaleString('nl-NL')+
+     ' gebouwen · '+tileLoadSummary.water+' waterobjecten · botsingen uit geladen kaarttegels';
+  }
+ }catch(error){console.warn('Gebouwen uit kaarttegels overnemen mislukt:',error);}
+ finally{tileCollectBusy=false;}
+}
+function openedMapObstacle(point){
+ if(!geoMap?.isStyleLoaded())return false;
+ const layers=geoMap.getStyle()?.layers?.filter(l=>{
+  const src=l['source-layer']||'',id=l.id.toLowerCase();
+  return (src==='building'||src==='building_part'||src==='water'||id.includes('building'))&&
+   (l.type==='fill'||l.type==='fill-extrusion');
+ }).map(l=>l.id)||[];
+ if(!layers.length)return false;
+ try{return geoMap.queryRenderedFeatures(point,{layers}).length>0;}
+ catch(e){return false;}
+}
+function gameFeatures(){
+ const features=[];
+ if(!currentMap)return {type:'FeatureCollection',features};
+ const add=(x,z,kind,extra={})=>{
+  const p=toGeo(x,z,currentMap.center);
+  features.push({type:'Feature',properties:{kind,icon:'lo-'+kind,...extra},
+   geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
+ };
+ for(const b of buildings){
+  add(b.x,b.z,b.type,{level:b.level||1,label:names[b.type]?.toUpperCase()+' '+(b.level||1)||b.type,selected:b===selectedBuilding});
+  if(b.rally)add(b.rally.x,b.rally.z,'rally',{label:'RALLY'});
+ }
+ if(general)add(general.position.x,general.position.z,'general',{label:'COMMANDER'});
+ if(truck&&crew.trucks)add(truck.position.x,truck.position.z,'truck');
+ if(enemies){
+  const every=Math.max(1,Math.floor(enemies.count/450));
+  for(let i=0;i<enemies.count;i+=every)add(enemies.x[i],enemies.z[i],'zombie');
+ }
+ for(const mesh of workerMeshes)add(mesh.position.x,mesh.position.z,'worker');
+ for(const mesh of combatVehicles)add(mesh.position.x,mesh.position.z,'vehicle',{label:mesh.userData.vehicle?.type?.toUpperCase()||''});
+ for(const mesh of escortMeshes){
+  const st=mesh.userData.guard;
+  add(mesh.position.x,mesh.position.z,st?.entrenched?'entrenched':'guard',
+   {selected:mesh===selectedGuard,label:mesh===selectedGuard?(UNIT_CATALOG[st.type]?.name||'INFANTRY'):''});
+ }
+ if(geoPosition){
+  const p=geoPosition;features.push({type:'Feature',properties:{kind:'gps',icon:'lo-gps',label:'YOU'},
+   geometry:{type:'Point',coordinates:[p.lon,p.lat]}});
  }
  return {type:'FeatureCollection',features};
 }
+// Top-down tactical military silhouettes drawn as original pixel-safe icons.
+// OpenFreeMap stays responsible for every city building and road.
+function militaryIcon(kind){
+ const canvas=document.createElement('canvas');canvas.width=96;canvas.height=96;
+ const ctx=canvas.getContext('2d');ctx.clearRect(0,0,96,96);
+ const hostile=kind==='zombie',gold=['hq','rally','general'].includes(kind),
+  soldier=['guard','entrenched','worker','general'].includes(kind),
+  vehicle=['truck','vehicle'].includes(kind),
+  building=['hq','bunker','turret','tower','barracks','factory','research','armory','mine'].includes(kind);
+ const stroke='#17262c',base=gold?'#e3c86a':kind==='gps'?'#61d1ff':kind==='rally'?'#fbd85c':
+   soldier?'#65afa7':vehicle?'#9dba77':hostile?'#6db46c':'#72897e';
+ ctx.translate(48,49);ctx.lineJoin='round';ctx.lineCap='round';
+ ctx.shadowColor='rgba(2,18,20,.65)';ctx.shadowBlur=9;ctx.shadowOffsetY=3;
+ const rect=(x,y,w,h,color,r=3)=>{
+  ctx.fillStyle=color;ctx.strokeStyle=stroke;ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();ctx.stroke();
+ };
+ const circle=(x,y,r,color)=>{
+  ctx.beginPath();ctx.fillStyle=color;ctx.strokeStyle=stroke;ctx.lineWidth=3;ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
+ };
+ if(kind==='rally'){
+  circle(0,0,20,'#284c46');rect(-3,-22,5,40,'#f3dc87',1);
+  ctx.fillStyle='#f7c849';ctx.beginPath();ctx.moveTo(2,-20);ctx.lineTo(23,-11);ctx.lineTo(2,-2);ctx.closePath();ctx.fill();
+ }else if(kind==='gps'){
+  circle(0,0,20,'#56deff');circle(0,0,9,'#fff');circle(0,0,3,'#0a2839');
+ }else if(soldier){
+  if(kind==='entrenched'){
+   rect(-29,-25,15,14,'#b6a375');rect(-8,-27,15,14,'#b6a375');rect(14,-25,15,14,'#b6a375');
+   rect(-28,-12,12,23,'#b6a375');rect(16,-12,12,23,'#b6a375');
+  }
+  rect(-12,1,24,23,base,5);circle(0,-11,11,kind==='general'?'#c8c7ac':'#b2d1ad');
+  rect(-21,5,9,18,'#4b7768',3);rect(12,5,9,18,'#4b7768',3);
+  rect(-9,22,7,9,'#2b4641',1);rect(2,22,7,9,'#2b4641',1);
+  if(kind!=='worker'){rect(7,-2,6,31,'#243b3c',1);rect(6,16,17,4,'#253734',1);}
+  else{rect(13,-2,5,28,'#c4b78f',1);rect(9,-9,13,5,'#c4b78f',1);}
+ }else if(vehicle){
+  rect(-26,-31,10,62,'#253534',2);rect(16,-31,10,62,'#253534',2);
+  rect(-19,-32,38,64,base,4);
+  rect(-16,-22,32,18,'#43594e',2);rect(-12,2,24,23,'#536d55',2);
+  if(kind==='vehicle'){circle(0,-3,9,'#344941');rect(-3,-28,6,30,'#253b3d',1);}
+  else{rect(-16,-7,32,12,'#7d9274',1);}
+ }else if(building){
+  rect(-28,-28,56,56,'#344942',7);
+  rect(-23,-23,46,46,base,4);
+  ctx.fillStyle='#2d4641';ctx.fillRect(-17,-18,34,36);
+  if(kind==='turret'){circle(0,0,16,'#879880');rect(-4,-28,8,29,'#253a3e',2);}
+  else if(kind==='hq'){rect(-16,-16,32,32,'#6b897e',3);circle(0,-2,10,'#f9e6a1');}
+  else if(kind==='barracks'){for(const x of [-12,4])for(const y of [-11,5])rect(x,y,9,9,'#9ba989',1);}
+  else if(kind==='factory'){rect(-17,-16,34,29,'#657d6d',2);rect(-13,-8,26,15,'#1d3030',1);}
+  else if(kind==='bunker'){rect(-19,-9,38,18,'#b2a785',2);}
+  else if(kind==='mine'){ctx.strokeStyle='#e3c17a';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-12,12);ctx.lineTo(12,-12);ctx.moveTo(-9,-11);ctx.lineTo(11,10);ctx.stroke();}
+  else if(kind==='tower'){circle(0,0,14,'#94c9c5');circle(0,0,5,'#264444');}
+  else if(kind==='armory'){rect(-15,-9,30,17,'#bec49e');rect(-3,-17,7,32,'#293f40',1);}
+  else if(kind==='research'){circle(0,0,14,'#a2dcd6');rect(-16,-3,32,6,'#334c48',1);}
+ }else{
+  circle(0,0,14,base);circle(0,-1,5,'#b8ddb0');
+ }
+ ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+ return ctx.getImageData(0,0,96,96);
+}
+let lastTileScan=0;
 function updateMapMarkers(){
  if(!geoMap||!geoMap.isStyleLoaded())return;
- const src=geoMap.getSource('gameunits');if(src)src.setData(gameFeatures());
+ const src=geoMap.getSource('gameunits');
+ if(src)src.setData(gameFeatures());
+ const sectorSource=geoMap.getSource('outpost-active-sector');
+ if(sectorSource&&currentMap){
+  const ring=[[-HALF,-HALF],[HALF,-HALF],[HALF,HALF],[-HALF,HALF],[-HALF,-HALF]]
+    .map(([x,z])=>{const p=toGeo(x,z,currentMap.center);return [p.lon,p.lat];});
+  sectorSource.setData({type:'FeatureCollection',features:[{
+   type:'Feature',properties:{},geometry:{type:'Polygon',coordinates:[ring]}
+  }]});
+ }
+ const lineSource=geoMap.getSource('outpost-rally-lines');
+ if(lineSource&&currentMap){
+  const features=[];
+  for(const b of buildings){
+   if(!b.rally)continue;
+   const a=toGeo(b.x,b.z,currentMap.center),p=toGeo(b.rally.x,b.rally.z,currentMap.center);
+   features.push({type:'Feature',properties:{},geometry:{type:'LineString',coordinates:[[a.lon,a.lat],[p.lon,p.lat]]}});
+  }
+  lineSource.setData({type:'FeatureCollection',features});
+ }
+}
+function tacticalGameLayers(){
+ if(!geoMap||geoMap.getSource('gameunits'))return;
+ const kinds=['hq','barracks','armory','research','turret','tower','bunker','mine','factory',
+ 'worker','guard','entrenched','general','rally','vehicle','truck','gps'];
+ for(const kind of kinds){
+  const name='lo-'+kind;
+  if(!geoMap.hasImage(name))geoMap.addImage(name,militaryIcon(kind),{pixelRatio:2});
+ }
+ geoMap.addSource('outpost-active-sector',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ geoMap.addLayer({id:'outpost-sector-fill',type:'fill',source:'outpost-active-sector',
+  paint:{'fill-color':'#b5d69c','fill-opacity':.035}});
+ geoMap.addLayer({id:'outpost-sector-boundary',type:'line',source:'outpost-active-sector',
+  paint:{'line-color':'#c7df90','line-width':2.5,'line-dasharray':[2,2],'line-opacity':.8}});
+ geoMap.addSource('outpost-rally-lines',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ geoMap.addLayer({id:'outpost-rally-lines',type:'line',source:'outpost-rally-lines',
+  paint:{'line-color':'#ebce6a','line-width':2,'line-dasharray':[2,2],'line-opacity':.85}});
+ geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
+ geoMap.addLayer({id:'outpost-zombies',type:'circle',source:'gameunits',
+  filter:['==',['get','kind'],'zombie'],
+  paint:{'circle-radius':['interpolate',['linear'],['zoom'],12,1,15,2.3,18,3.8],
+   'circle-color':'#4da867','circle-stroke-color':'#11271e','circle-stroke-width':.7,'circle-opacity':.92}});
+ geoMap.addLayer({id:'outpost-selected',type:'circle',source:'gameunits',
+  filter:['==',['get','selected'],true],
+  paint:{'circle-radius':29,'circle-color':'rgba(0,0,0,0)','circle-stroke-color':'#f8e4a0',
+   'circle-stroke-width':3,'circle-opacity':.75}});
+ geoMap.addLayer({id:'outpost-tactical-units',type:'symbol',source:'gameunits',
+  filter:['!=',['get','kind'],'zombie'],
+  layout:{'icon-image':['image',['get','icon']],
+   'icon-size':['interpolate',['linear'],['zoom'],12,.47,15,.75,17,1.05,19,1.25],
+   'icon-allow-overlap':true,'icon-ignore-placement':true,
+   'text-field':['coalesce',['get','label'],''],'text-size':10,'text-offset':[0,2.1],
+   'text-optional':true,'text-allow-overlap':false},
+  paint:{'text-color':'#14383b','text-halo-color':'#f6efd9','text-halo-width':1.8}});
+ updateMapMarkers();
+}
+function focusMapOnSector(center=currentMap?.center){
+ if(!geoMap||!center)return;
+ geoMap.easeTo({center:[center.lon,center.lat],zoom:SIZE===3200?14.2:SIZE===1600?15:16,
+  pitch:55,bearing:-20,duration:600});
 }
 function initGeoMap(){
- if(geoMap||typeof maplibregl==='undefined'){if(typeof maplibregl==='undefined')toast('Kaartbibliotheek kon niet laden. Controleer internet.');return;}
+ if(geoMap)return;
+ if(typeof maplibregl==='undefined'){
+  geoMode=false;$('#viewport').classList.remove('map-mode');
+  newWorld(demoMap());
+  toast('OpenFreeMap kon niet laden; offline fictieve 3D-demo gestart.');
+  return;
+ }
  geoMap=new maplibregl.Map({
   container:'geoMap',style:'https://tiles.openfreemap.org/styles/liberty',
   center:[currentMap?.center.lon||5.3878,currentMap?.center.lat||52.1562],
-  zoom:16,attributionControl:true
+  zoom:15.5,pitch:55,bearing:-20,antialias:true,attributionControl:true
  });
- geoMap.addControl(new maplibregl.NavigationControl(),'top-right');
+ geoMap.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-right');
  geoMap.on('load',()=>{
-  geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
-  geoMap.addLayer({id:'gameunits-ring',type:'circle',source:'gameunits',paint:{
-   'circle-radius':['match',['get','kind'],'hq',10,'general',8,'gps',10,'zombie',2.5,'turret',5,'worker',4,'guard',4,'entrenched',6,'vehicle',7,'rally',6,'truck',7,6],
-   'circle-color':['match',['get','kind'],'hq','#ffe08a','gps','#39f9a8','general','#ffffff','zombie','#68c56a','worker','#f7dc91','guard','#5ae8e7','entrenched','#d6bf78','vehicle','#aea87c','rally','#ffd75b','truck','#f5b458','turret','#50e6ff','bunker','#d19aff','mine','#ffb25a','#63bedd'],
-   'circle-stroke-width':2,'circle-stroke-color':'#071923'
-  }});
-  updateMapMarkers();
-  geoMap.on('click',event=>{
-   const xy=toWorld(event.lngLat.lat,event.lngLat.lng,currentMap.center);
-   if(Math.abs(xy.x)>HALF||Math.abs(xy.z)>HALF){toast('Buiten deze sector. Kies een grotere sector of laad een gebied rondom deze plek.');return;}
-   handleGroundCommand(xy.x,xy.z);
-  });
+  tacticalGameLayers();
+  collectLiveTileObstacles();
+  // Vector tiles can finish after the style's load event.
+  setTimeout(collectLiveTileObstacles,1700);
+  showMessage('De echte kaart is het speelveld. Klik op HEADQUARTERS en plaats je eerste basis.');
  });
- geoMap.on('error',e=>console.warn('Map tiles:',e.error?.message||e));
+ geoMap.on('idle',()=>{
+  const now=Date.now();
+  if(now-lastTileScan>3000){lastTileScan=now;collectLiveTileObstacles();}
+ });
+ geoMap.on('moveend',()=>{
+  if(currentMap?.kind==='tiles'||currentMap?.kind==='bgt')
+   setTimeout(collectLiveTileObstacles,450);
+ });
+ geoMap.on('click',event=>{
+  if(!currentMap)return;
+  const xy=toWorld(event.lngLat.lat,event.lngLat.lng,currentMap.center);
+  if(Math.abs(xy.x)>HALF||Math.abs(xy.z)>HALF){
+   toast('Buiten de huidige speelwereld. Kies NEW WORLD HERE om hier te bouwen.');
+   return;
+  }
+  const selecting=nearbyGuard(xy.x,xy.z,9)||buildingAt(xy.x,xy.z);
+  if(!selecting&&!rallyModeBuilding&&guardOrderMode!=='move'&&selected!=='inspect'&&openedMapObstacle(event.point)){
+   toast('Hier staat een echt gebouw of water. Plaats je basis op vrij terrein.');return;
+  }
+  handleGroundCommand(xy.x,xy.z);
+ });
+ geoMap.on('error',error=>{
+  console.warn('OpenFreeMap tile issue',error.error?.message||error);
+  $('#mapStatus').textContent='Kaartserver reageert niet op alle tegels. Probeer opnieuw of gebruik de 3D-testweergave.';
+ });
 }
 $('#mapModeBtn').onclick=()=>{
  geoMode=!geoMode;
  if(geoMode){
+  if(currentMap?.kind==='demo'){
+   const target=geoMap?.getCenter();
+   newWorld(mapTileWorld(target?{lat:target.lat,lon:target.lng}:currentMap.center,Math.max(1600,SIZE)));
+  }
+  $('#viewport').classList.add('map-mode');
+  $('#mapModeBtn').textContent='◈ EXPERIMENTAL 3D VIEW';
   initGeoMap();
-  $('#viewport').classList.add('map-mode');$('#mapModeBtn').textContent='◈ TERUG NAAR 3D';
   if(geoMap){geoMap.resize();updateMapMarkers();}
-  toast('Kies een gebouwtype en klik op de kaart om het te plaatsen.');
-  showMessage('Echte kaartmodus. Gebruik GPS om jouw locatie te tonen.');
+  toast('TACTICAL MAP: bouw, selecteer en geef orders op de echte kaart.');
  }else{
-  $('#viewport').classList.remove('map-mode');$('#mapModeBtn').textContent='▤ GPS MAP VIEW';
-  showMessage('3D-wereld ingeschakeld.');
+  $('#viewport').classList.remove('map-mode');
+  $('#mapModeBtn').textContent='▤ BACK TO TACTICAL MAP';
+  if(currentMap)drawMap(currentMap);
+  showMessage('Experimentele Three.js-renderer. De OpenFreeMap-stad blijft leidend voor de tactische kaart.');
  }
 };
+$('#mapNewWorldBtn').onclick=()=>{
+ const center=geoMap?.getCenter();
+ if(center){$('#latInput').value=center.lat.toFixed(5);$('#lonInput').value=center.lng.toFixed(5);}
+ $('#sectorSize').value=String(SIZE);
+ updateSectorHint();$('#osmDialog').classList.remove('hidden');
+};
+$('#newTileWorldBtn').onclick=()=>{
+ const lat=Number($('#latInput').value),lon=Number($('#lonInput').value);
+ const size=Number($('#sectorSize').value)||800;
+ if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>85||Math.abs(lon)>180){toast('Ongeldige coördinaten');return;}
+ if(!confirm('Nieuwe wereld starten op deze kaartlocatie? De huidige wereld wordt afzonderlijk bewaard.'))return;
+ newWorld(mapTileWorld({lat,lon},size));
+ $('#osmDialog').classList.add('hidden');
+ geoMode=true;$('#viewport').classList.add('map-mode');$('#mapModeBtn').textContent='◈ EXPERIMENTAL 3D VIEW';
+ initGeoMap();focusMapOnSector({lat,lon});updateMapMarkers();
+ toast('LIVE '+sectorLabel(size)+'-wereld actief: plaats zelf je Headquarters!');
+};
 const sectorHints={
- 800:'Small: snelle import met maximale lokale terreinprecisie (4 m collision grid).',
- 1600:'Medium: 4× het oppervlak, gemiddeld meer gebouwen en 5 m collision grid.',
- 3200:'Massive: 16× het oppervlak van Small. Langere downloads, meer geheugen, 8 m collision grid en vereenvoudigde 3D-weergave.'
+ 800:'Small: 800 × 800 meter speelwereld; de echte kaart blijft onbeperkt verkenbaar.',
+ 1600:'Medium: 1,6 × 1,6 km speelwereld. Goede balans tussen gebied en botsingsdetails.',
+ 3200:'Massive: 3,2 × 3,2 km speelwereld. Botsingsdata vult aan terwijl je tegels verkent.'
 };
 function updateSectorHint(){
  const size=Number($('#sectorSize').value)||800;
@@ -1548,6 +1859,7 @@ $('#gpsBtn').onclick=()=>{
 };
 $('#menuToggle').onclick=()=>$('#buildPanel').classList.toggle('open');
 window.addEventListener('beforeunload',save);
-newWorld(demoMap());$('#loader').style.display='none';updateCamera();requestAnimationFrame(animate);setInterval(save,15000);
+newWorld(mapTileWorld());$('#viewport').classList.add('map-mode');$('#loader').style.display='none';
+updateCamera();initGeoMap();requestAnimationFrame(animate);setInterval(save,15000);
 
 </script><script>setTimeout(()=>{if(!window.__outpostBooted){const l=document.getElementById('loader');l.innerHTML='<strong>3D-module kon niet laden</strong><span>Open de website met internettoegang. Three.js wordt van een externe CDN geladen.</span>'; }},12000);</script></body></html>
