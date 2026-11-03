@@ -36,9 +36,9 @@
 <body>
 <div id="app">
  <main id="viewport"><div id="render"></div><div id="geoMap"></div><div id="mapStatus">TACTICAL 3D · stad + militairen + zombies op dezelfde kaart</div><div id="loader"><div class="loader-icon">◈</div><strong>LAST OUTPOST</strong><span>3D-simulatie initialiseren…</span></div><canvas id="minimap" width="160" height="160"></canvas><div id="attribution">Demo-wereld is fictief · Echte data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div><div id="mapbadge" class="mapbadge">DEMO MAP · 800 × 800 M</div></main>
- <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // 3D TACTICAL WORLD 0.9</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
+ <header class="topbar"><div class="brand"><div class="brandmark">⬡</div><div><strong>LAST<span>OUTPOST</span></strong><small>WORLD COMMAND // STREAMING HORDES 1.0</small></div></div><div class="resourcebar"><div class="resource"><span>▰ SCRAP</span><b id="scrap">1200</b></div><div class="resource"><span>⬡ ENERGY</span><b id="energy">250</b></div><div class="resource"><span>◈ ALLOY</span><b id="alloy">160</b></div><div class="resource"><span>✚ BASE HP</span><b id="hp">100%</b></div></div><button id="menuToggle" class="mobileToggle">☰</button></header>
  <aside class="panel left" id="buildPanel"><div class="sectionlabel">● SECTOR COMMAND</div><h2>Deploy structures</h2><p class="muted tiny">Kies eerst je HQ en klik op de echte kaart. Selecteer gebouwen voor productie, upgrades en rally points.</p><div id="buildList" class="buildlist"><button data-build="hq" class="build active"><i>⬡</i><span><b>HEADQUARTERS</b><small>Gratis eerste hoofdkwartier</small></span><em>H</em></button><button data-build="inspect" class="build"><i>◎</i><span><b>Inspect / Select</b><small>Klik op gebouwen voor acties</small></span><em>0</em></button><button data-build="barracks" class="build"><i>♟</i><span><b>INFANTRY BARRACKS</b><small>190 scrap · 25 energy</small></span><em>6</em></button><button data-build="armory" class="build"><i>⚙</i><span><b>ARMORY / UPGRADES</b><small>260 scrap · 35 energy</small></span><em>7</em></button><button data-build="research" class="build"><i>⌬</i><span><b>RESEARCH CENTER</b><small>330 scrap · 55 energy</small></span><em>8</em></button><button data-build="turret" class="build"><i>⌁</i><span><b>Auto turret</b><small>120 scrap · 15 energy</small></span><em>1</em></button><button data-build="tower" class="build"><i>⌖</i><span><b>Control tower</b><small>180 scrap · 30 energy</small></span><em>2</em></button><button data-build="bunker" class="build"><i>⬡</i><span><b>Command bunker</b><small>320 scrap · 45 energy</small></span><em>3</em></button><button data-build="mine" class="build"><i>⛏</i><span><b>Scrap extractor</b><small>140 scrap · 20 energy</small></span><em>4</em></button><button data-build="factory" class="build"><i>▥</i><span><b>Vehicle factory</b><small>240 scrap · 35 energy</small></span><em>5</em></button></div><div id="baseSetup" class="note"><b>START JOUW EIGEN BASIS</b><span>De sector is leeg. Kies HEADQUARTERS en plaats het op een toegankelijke locatie. De zombies zwerven voorlopig rond.</span></div><div class="sectionlabel space">● GEB0UWEN & EENHEDEN</div><div id="inspectPanel" class="inspect-panel"><b id="inspectTitle">Nog geen gebouw geselecteerd</b><span id="inspectDetails">Klik op een gebouw op de kaart om te upgraden of units te trainen.</span><div class="actions"><button class="action" id="inspectUpgrade">↑ UPGRADE GEBOUW</button><button class="action" id="inspectRepair">✚ REPAREER HQ</button></div></div><div class="sectionlabel space">● INFANTRY COMMAND</div><div id="soldierPanel" class="inspect-panel"><b id="soldierTitle">Geen soldaat geselecteerd</b><span id="soldierDetails">Train infanterie via een Command Bunker. Klik daarna op een soldaat op de kaart.</span><div class="actions"><button id="soldierEntrench" class="action">⛨ ENTRENCH · 45 SCRAP</button><button id="soldierMove" class="action">⌖ MOVE TO POSITION</button><button id="soldierFollow" class="action">↺ FOLLOW GENERAL</button></div></div><div class="sectionlabel space">● BUILDING PRODUCTION</div><div id="factoryPanel" class="inspect-panel"><b id="factoryTitle">Selecteer Barracks of Factory</b><span id="factoryDetails">Level 1: twee infanterietypen. Upgrade gebouwen voor meer units.</span><div id="factoryUnitChoices" class="actions"></div><div class="actions"><button id="rallyBtn" class="action">⚑ SET RALLY POINT</button><button id="cancelQueueBtn" class="action">⌫ CANCEL QUEUE</button><button id="weaponUpgradeBtn" class="action">⬆ WEAPON TECH</button><button id="armorUpgradeBtn" class="action">⬆ ARMOR TECH</button></div></div><div class="sectionlabel space">● QUICK RECRUIT</div><div class="actions"><button id="buyWorker" class="action">＋ WERKER · 80 SCRAP</button><button id="buyGuard" class="action">＋ RIFLEMAN · 90 SCRAP</button><button id="buyTruck" class="action">＋ TRUCK · 240 SCRAP</button></div><div id="population" class="tiny muted">Workers 0 · Soldiers 0 · Trucks 0</div><div class="sectionlabel space">● OPERATIONS</div><div class="actions"><button id="marchBtn" class="action primary">▶ START PATROL</button><button id="upgradeConvoyBtn" class="action">＋ ESCORTE UPGRADE</button><button id="mapModelsBtn" class="action primary">◉ 3D UNITS: ON</button><button id="mapModeBtn" class="action">◈ EXPERIMENTAL 3D VIEW</button><button id="mapNewWorldBtn" class="action">⊕ NEW WORLD HERE</button><button id="gpsBtn" class="action">⌖ USE MY GPS</button><button id="osmBtn" class="action">▤ LAAD PDOK BGT SECTOR</button><button id="demoBtn" class="action">⤺ OFFLINE 3D DEMO</button><button id="resetBtn" class="action subtle">↺ RESET HUIDIGE WERELD</button><button id="resetAllBtn" class="action subtle">⌫ WIS ALLE TESTWERELDEN</button></div><div class="note"><b>Wandelmechaniek (test)</b><span>GPS binnen 60 meter van een bouwlocatie geeft 25% korting. Deze test deelt je locatie niet met andere spelers. Nieuw: op de echte GPS-kaart gebouwen plaatsen of selecteren.</span></div></aside>
- <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>LIVE FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">500</b></div><div><small>RENDER MODE</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">500</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>50</span><span>5.000</span></div><p class="tiny muted">De 3D-kaart tekent maximaal 850 zombies tegelijk (mobiel 260). De rest blijft in de simulatie. Zoom uit voor tactische iconen.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
+ <aside class="panel right" id="telemetry"><div class="sectionlabel">● LIVE SIMULATION</div><h2>Sector telemetry</h2><div class="metrics"><div><small>LIVE FPS</small><b id="fps">--</b></div><div><small>SIMULATION</small><b id="simms">-- ms</b></div><div><small>ACTIVE HOSTILES</small><b id="units">2.000</b></div><div><small>RENDER MODE</small><b id="draws">--</b></div></div><div class="divider"></div><div class="sectionlabel">PERFORMANCE BENCHMARK</div><div class="bench"><div class="rangeLabel"><b>Zombie units</b><strong id="unitLabel">2.000</strong></div><input id="unitRange" type="range" min="0" max="5" step="1" value="2"><div class="scalelabels"><span>400</span><span>10.000</span></div><p class="tiny muted">De horde wordt per kaartgebied gestreamd terwijl je beweegt. Tot 2.200 kleine zombies tegelijk in 3D (mobiel 600), zonder zichtbare spawnrand.</p></div><div class="divider"></div><div class="sectionlabel">WAR STATUS</div><div class="statline"><span>Eliminated</span><b id="kills">0</b></div><div class="statline"><span>Base breaches</span><b id="breaches">0</b></div><div class="statline"><span>Turrets deployed</span><b id="turrets">0</b></div><div class="statline"><span>Command network</span><b id="outposts">1</b></div><div class="statline"><span>Truck shipments</span><b id="deliveries">0</b></div><div class="statline"><span>General convoy</span><b id="convoy">READY</b></div><div class="divider"></div><div class="sectionlabel">GAME WORLD</div><div class="statline"><span>Environment</span><b id="worldType">DEMO</b></div><div class="statline"><span>Street nodes</span><b id="nodes">--</b></div><div class="statline"><span>Buildings / barriers</span><b id="obstacles">--</b></div><div class="statline"><span>Truck route</span><b id="routeStatus">--</b></div><div class="note mobile-note">Voorlopig lokaal opgeslagen. Online vriendenwerelden en PvP komen pas met de server.</div></aside>
  <div class="bottombar"><div class="controls"><span><b>DRAG</b> rotate/pan</span><span><b>SCROLL</b> zoom</span><span><b>CLICK</b> build / select</span><span><b>1–5</b> select</span></div><div id="message"><span class="pulse"></span><span id="messageText">Sector online. Verdedig je basis.</span></div><button id="pauseBtn">Ⅱ PAUSE</button></div><div id="toast" role="status" aria-live="polite"></div><div id="osmDialog" class="dialog hidden"><div class="dialog-card"><div class="sectionlabel">● REAL WORLD IMPORT</div><h2>Nieuwe wereld / kaartgegevens</h2><p>De interactieve 3D-stadskaart is nu de game. Kies de grootte en begin een nieuwe wereld rond de kaartlocatie, zonder PDOK-download. Voor de experimentele terreinimport kun je PDOK BGT apart laden.</p><label>Kaartformaat<select id="sectorSize"><option value="800">Small · 800 × 800 m (0,64 km²)</option><option value="1600">Medium · 1,6 × 1,6 km (2,56 km²)</option><option value="3200">Massive · 3,2 × 3,2 km (10,24 km²)</option></select></label><p id="sectorSizeHint" class="tiny muted">Small: snelste keuze om turrets, zombies en gebouwen te testen.</p><label>Breedtegraad<input id="latInput" type="number" step="0.00001" value="52.1562"></label><label>Lengtegraad<input id="lonInput" type="number" step="0.00001" value="5.3878"></label><div class="dialog-actions"><button id="locationBtn" class="action">⌖ COÖRDINATEN VIA GPS</button><button id="cancelOsm" class="action">ANNULEREN</button><button id="newTileWorldBtn" class="action primary">▶ NIEUWE WERELD OP KAART</button><button id="confirmOsm" class="action">EXPERIMENTELE PDOK IMPORT</button></div><p class="tiny muted">De kaart zelf werkt via OpenFreeMap. Gebouw- en waterobstakels worden voor de simulatie afgeleid uit geladen kaarttegels. Niet-geladen gebieden hebben mogelijk onvolledige botsingsdata. Een nieuwe wereld bewaart de vorige sector afzonderlijk.</p></div></div>
 </div><script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
@@ -178,7 +178,12 @@ function roadPath(nodes,start,end){if(!nodes.length)return[];
 }
 
 class Enemies {
- constructor(max=6000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.dir=new Float32Array(max);this.turn=new Float32Array(max);this.alert=new Float32Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];this.herdBuckets=new Map();this.nextHerdUpdate=0;}
+ constructor(max=12000){this.max=max;this.count=0;this.x=new Float32Array(max);this.z=new Float32Array(max);this.hp=new Float32Array(max);this.speed=new Float32Array(max);this.state=new Uint8Array(max);this.dir=new Float32Array(max);this.turn=new Float32Array(max);this.alert=new Float32Array(max);this.kills=0;this.breaches=0;this.rnd=randomSeeded(911);this.spawnSites=[];this.herdBuckets=new Map();this.nextHerdUpdate=0;
+  // Chunk streamer: the fixed simulation pool follows the map instead of
+  // forming a visible square of zombies around the original spawn point.
+  this.streaming=currentMap?.kind==='tiles';this.chunkMeters=240;this.chunkRadius=5;
+  this.streamOwners=new Array(max).fill(null);this.streamCache=new Map();
+  this.lastStreamX=NaN;this.lastStreamZ=NaN;this.streamCells=0;}
  setSpawnSites(flow,blocked){
  this.spawnSites=[];
  for(let z=1;z<N-1;z++)for(let x=1;x<N-1;x++){
@@ -189,8 +194,103 @@ class Enemies {
   if(!blocked[index])this.spawnSites.push(gridWorld(index));
  }
 }
- spawn(i){const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};this.x[i]=p.x;this.z[i]=p.z;this.hp[i]=35+this.rnd()*25;this.speed[i]=1.2+this.rnd()*1.8;this.dir[i]=this.rnd()*Math.PI*2;this.turn[i]=this.rnd()*4;this.alert[i]=0;this.state[i]=0;}
- resize(n){n=clamp(n|0,0,this.max);for(let i=this.count;i<n;i++)this.spawn(i);this.count=n;}
+ streamHash(cx,cz,slot=0){
+  let h=Math.imul(cx|0,73856093)^Math.imul(cz|0,19349663)^Math.imul(slot|0,83492791)^0x51f3a12b;
+  h=Math.imul(h^(h>>>16),0x45d9f3b);h=Math.imul(h^(h>>>16),0x45d9f3b);
+  return (h^(h>>>16))>>>0;
+ }
+ spawnInChunk(i,key,slot=0){
+  const parts=key.split(','),cx=Number(parts[0]),cz=Number(parts[1]);
+  const rand=randomSeeded(this.streamHash(cx,cz,slot)||1);
+  let x=(cx+.15+rand()*.7)*this.chunkMeters,
+      z=(cz+.15+rand()*.7)*this.chunkMeters;
+  for(let attempt=0;attempt<24;attempt++){
+   const tx=(cx+.08+rand()*.84)*this.chunkMeters;
+   const tz=(cz+.08+rand()*.84)*this.chunkMeters;
+   if(!zombieTerrainBlocked(tx,tz)){x=tx;z=tz;break;}
+  }
+  this.x[i]=x;this.z[i]=z;
+  this.hp[i]=35+rand()*25;this.speed[i]=1.2+rand()*1.8;
+  this.dir[i]=rand()*Math.PI*2;this.turn[i]=rand()*4;
+  this.alert[i]=0;this.state[i]=0;this.streamOwners[i]=key;
+ }
+ saveStreamEntity(i,key){
+  if(!key)return;
+  // Cache recently unloaded chunks so returning to an area preserves the
+  // positions of its local wanderers during this browser session.
+  const parts=key.split(','),cx=Number(parts[0]),cz=Number(parts[1]);
+  if(Math.abs(this.x[i]-(cx+.5)*this.chunkMeters)>this.chunkMeters*1.6||
+     Math.abs(this.z[i]-(cz+.5)*this.chunkMeters)>this.chunkMeters*1.6)return;
+  let saved=this.streamCache.get(key);
+  if(!saved){saved=[];this.streamCache.set(key,saved);}
+  if(saved.length<50)saved.push([this.x[i],this.z[i],this.hp[i],this.speed[i],
+   this.dir[i],this.turn[i],this.alert[i]]);
+  // Bound the cache even after travelling across many cities.
+  while(this.streamCache.size>260)this.streamCache.delete(this.streamCache.keys().next().value);
+ }
+ streamAround(x,z,force=false){
+  if(!this.streaming||!Number.isFinite(x)||!Number.isFinite(z)||!this.count)return;
+  const mx=Math.floor(x/this.chunkMeters),mz=Math.floor(z/this.chunkMeters);
+  if(!force&&mx===this.lastStreamX&&mz===this.lastStreamZ)return;
+  this.lastStreamX=mx;this.lastStreamZ=mz;
+  const keys=[];
+  for(let dz=-this.chunkRadius;dz<=this.chunkRadius;dz++)
+   for(let dx=-this.chunkRadius;dx<=this.chunkRadius;dx++)
+    keys.push({key:(mx+dx)+','+(mz+dz),hash:this.streamHash(mx+dx,mz+dz)});
+  // Static coordinate hashes keep per-chunk density stable while panning.
+  keys.sort((a,b)=>a.hash-b.hash);
+  const each=Math.floor(this.count/keys.length),extra=this.count%keys.length;
+  const quotas=new Map(keys.map((v,i)=>[v.key,each+(i<extra?1:0)]));
+  const keep=new Map(keys.map(v=>[v.key,[]])),free=[];
+  for(let i=0;i<this.count;i++){
+   const key=this.streamOwners[i],bin=keep.get(key);
+   if(bin&&bin.length<quotas.get(key))bin.push(i);
+   else{if(key)this.saveStreamEntity(i,key);this.streamOwners[i]=null;free.push(i);}
+  }
+  let cursor=0;
+  for(const {key} of keys){
+   const bin=keep.get(key),target=quotas.get(key);
+   const cached=this.streamCache.get(key);
+   while(bin.length<target&&cursor<free.length){
+    const idx=free[cursor++],slot=bin.length;
+    const recovered=cached?.pop();
+    if(recovered&&!zombieTerrainBlocked(recovered[0],recovered[1])){
+     [this.x[idx],this.z[idx],this.hp[idx],this.speed[idx],
+      this.dir[idx],this.turn[idx],this.alert[idx]]=recovered;
+     this.state[idx]=this.alert[idx]>0?1:0;this.streamOwners[idx]=key;
+    }else this.spawnInChunk(idx,key,slot);
+    bin.push(idx);
+   }
+   if(cached&&!cached.length)this.streamCache.delete(key);
+  }
+  this.streamCells=keys.length;
+ }
+ spawn(i){
+  if(this.streaming&&this.streamOwners[i]){
+   this.spawnInChunk(i,this.streamOwners[i],Math.floor(this.rnd()*1000000));
+   return;
+  }
+  const p=this.spawnSites[Math.floor(this.rnd()*this.spawnSites.length)]||{x:380,z:380};
+  this.x[i]=p.x;this.z[i]=p.z;this.hp[i]=35+this.rnd()*25;
+  this.speed[i]=1.2+this.rnd()*1.8;this.dir[i]=this.rnd()*Math.PI*2;
+  this.turn[i]=this.rnd()*4;this.alert[i]=0;this.state[i]=0;
+ }
+ resize(n){
+  n=clamp(n|0,0,this.max);
+  if(this.streaming){
+   if(n<this.count)for(let i=n;i<this.count;i++){
+    if(this.streamOwners[i])this.saveStreamEntity(i,this.streamOwners[i]);
+    this.streamOwners[i]=null;
+   }
+   this.count=n;
+   const pos=geoMap?.getCenter(),center=currentMap?.center;
+   const p=pos&&center?toWorld(pos.lat,pos.lng,center):{x:0,z:0};
+   this.streamAround(p.x,p.z,true);
+  }else{
+   for(let i=this.count;i<n;i++)this.spawn(i);
+   this.count=n;
+  }
+ }
  damage(i,amount){if(this.hp[i]<=0)return false;this.hp[i]-=amount;this.alert[i]=12;this.state[i]=1;if(this.hp[i]<=0){this.kills++;if(zombieCorpses.length<18)zombieFallEffect(this.x[i],this.z[i],this.dir[i]);this.spawn(i);return true;}return false;}
  tick(dt,flow,target){
   let hits=0;const active=!!target;
@@ -252,8 +352,8 @@ class Enemies {
      velocity*=1.6;
      if(active&&nearest===target&&dist<18){hits++;this.breaches++;this.spawn(i);continue;}
      // Use global HQ flow when direct pursuit would enter a building/water.
-     const ni=gridIndex(this.x[i]+dx*CELL*1.1,this.z[i]+dz*CELL*1.1);
-     if(ni<0||grid[ni]){
+     const px=this.x[i]+dx*CELL*1.1,pz=this.z[i]+dz*CELL*1.1;
+     if(zombieTerrainBlocked(px,pz)){
       const gi=gridIndex(this.x[i],this.z[i]),flowNext=nextFlowStep(gi,flow);
       if(active&&flowNext>=0&&flowNext!==gi){
        const p=gridWorld(flowNext),len=Math.hypot(p.x-this.x[i],p.z-this.z[i])||1;
@@ -269,7 +369,7 @@ class Enemies {
     }
    }
    const nx=this.x[i]+dx*velocity*dt,nz=this.z[i]+dz*velocity*dt,ci=gridIndex(nx,nz);
-   if(ci>=0&&!grid[ci]){this.x[i]=nx;this.z[i]=nz;}
+   if(!zombieTerrainBlocked(nx,nz)){this.x[i]=nx;this.z[i]=nz;}
    else{this.dir[i]+=Math.PI*(.4+this.rnd());this.turn[i]=.3;}
   }
   return hits;
@@ -299,13 +399,13 @@ const tmp=new THREE.Vector3(),dummy=new THREE.Object3D();
 const terrainRoot=new THREE.Group(),mapDetailsRoot=new THREE.Group(),buildingRoot=new THREE.Group(),unitRoot=new THREE.Group(),effectRoot=new THREE.Group();scene.add(terrainRoot,mapDetailsRoot,buildingRoot,unitRoot,effectRoot);
 let currentMap,grid,flow,graph,enemies,zombieMesh,zombieHeads,truck,truckMesh,truckRoute=[],truckProgress=0,truckDir=1,truckHealth=100,truckShipment=0;
 let general,escortMeshes=[],generalProgress=0,walking=false,gpsActive=false,gpsWatch=null,gpsUpdated=0,liveGPS=false,patrolPath=[],patrolLen=0;
-let resources={scrap:1600,energy:450,alloy:220,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=500,base=null,initialMine=null;
+let resources={scrap:1600,energy:450,alloy:220,hp:100},buildings=[],gamePaused=false,simTime=0,unitCount=2000,base=null,initialMine=null;
 let selectedBuilding=null,selectedGuard=null,guardOrderMode=null,rallyModeBuilding=null,restoredGuardStates=[],milTech={weapons:0,armor:0},combatVehicles=[],restoredVehicles=[],workerMeshes=[],workerRoute=[],workerProgress=[],truckFleet=[],crew={workers:0,guards:0,trucks:0},nextProduction=0;
 let selected='hq',displayFPS=0,frames=0,frameSum=0,simMS=0,last=performance.now(),lastHUD=0;
 let camTarget=new THREE.Vector3(0,0,0),azimuth=0.65,zoom=370,camPitch=0.88,toastTimer;
 let visibleTracers=[],buildingMarkers=[],earthPulse=0;
 let deliveries=0,scorePulse=0,commandDiscounts=0,convoyLevel=1;
-const unitSteps=[50,150,500,1000,2000,5000];
+const unitSteps=[400,1000,2000,4000,6000,10000];
 const blue=new THREE.MeshStandardMaterial({color:0x1ba5b5,metalness:.55,roughness:.37}),blueBright=new THREE.MeshStandardMaterial({color:0x5be7f0,metalness:.25,roughness:.25,emissive:0x0f5b60,emissiveIntensity:.45}),metal=new THREE.MeshStandardMaterial({color:0x304753,metalness:.7,roughness:.35}),dark=new THREE.MeshStandardMaterial({color:0x132c39,metalness:.42,roughness:.65}),orange=new THREE.MeshStandardMaterial({color:0xffb453,metalness:.25,roughness:.4,emissive:0x4e270c,emissiveIntensity:.3}),red=new THREE.MeshStandardMaterial({color:0xff5366,roughness:.6,emissive:0x86222d,emissiveIntensity:.3}),green=new THREE.MeshStandardMaterial({color:0x78e9a7,roughness:.5,emissive:0x103921,emissiveIntensity:.4});
 const costs={barracks:{scrap:190,energy:25},armory:{scrap:260,energy:35},research:{scrap:330,energy:55},hq:{scrap:0,energy:0},turret:{scrap:120,energy:15},tower:{scrap:180,energy:30},bunker:{scrap:320,energy:45},mine:{scrap:140,energy:20},factory:{scrap:240,energy:35}};
 const names={barracks:'Infantry Barracks',armory:'Armory',research:'Research Center',inspect:'Select / Inspect',hq:'Headquarters',turret:'Auto turret',tower:'Control tower',bunker:'Command bunker',mine:'Scrap extractor',factory:'Vehicle factory'};
@@ -614,7 +714,7 @@ const zombieBodyMat=new THREE.MeshStandardMaterial({color:0x5a9960,roughness:1})
 const zombieHeadMat=new THREE.MeshStandardMaterial({color:0x90c77b,roughness:1});
 const zombiePantsMat=new THREE.MeshStandardMaterial({color:0x4a5540,roughness:1});
 function makeDangerMesh(){
- const max=6000;
+ const max=12000;
  const definitions=[
   [new THREE.BoxGeometry(1.65,2.45,.92),zombieBodyMat],       // torso
   [new THREE.IcosahedronGeometry(.82,1),zombieHeadMat],       // head
@@ -745,7 +845,7 @@ function clearAllTestWorlds(){
 }
 
 function newWorld(map){
- save();if(tactical3DLayer?.reset)tactical3DLayer.reset();tileFeaturesSeen.clear();tileLoadSummary={buildings:0,water:0};configureSector(map.sizeMeters||800);currentMap=map;clearGroup(terrainRoot);clearGroup(mapDetailsRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
+ save();if(tactical3DLayer?.reset)tactical3DLayer.reset();tileFeaturesSeen.clear();streamedObstacleBuckets.clear();streamedObstacleCount=0;tileLoadSummary={buildings:0,water:0};configureSector(map.sizeMeters||800);currentMap=map;clearGroup(terrainRoot);clearGroup(mapDetailsRoot);clearGroup(buildingRoot);clearGroup(unitRoot);clearGroup(effectRoot);
  visibleTracers=[];buildings=[];selectedBuilding=null;selectedGuard=null;guardOrderMode=null;rallyModeBuilding=null;restoredGuardStates=[];restoredVehicles=[];combatVehicles=[];initialMine=null;base=null;truck=null;truckMesh=null;truckRoute=[];workerMeshes=[];workerProgress=[];escortMeshes=[];
  const ground=new THREE.Mesh(new THREE.PlaneGeometry(SIZE,SIZE),new THREE.MeshStandardMaterial({color:0x1c393b,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.7;terrainRoot.add(ground);
  const lines=new THREE.GridHelper(SIZE,50,0x376a70,0x20424b);lines.material.transparent=true;lines.material.opacity=.27;lines.position.y=-.49;terrainRoot.add(lines);
@@ -1351,6 +1451,11 @@ function renderMinimap(){const c=$('#minimap'),ctx=c.getContext('2d');const w=c.
  for(const b of buildings)if(b.rally){ctx.fillStyle='#e5de94';ctx.beginPath();ctx.arc(px(b.rally.x),pz(b.rally.z),2.3,0,Math.PI*2);ctx.fill();}
 }
 function animate(time){requestAnimationFrame(animate);let dt=Math.min(.05,(time-last)/1000||.016);last=time;
+ if(geoMode&&enemies?.streaming&&geoMap&&time-lastZombieStreamCheck>650){
+  lastZombieStreamCheck=time;
+  const center=geoMap.getCenter(),p=toWorld(center.lat,center.lng,currentMap.center);
+  enemies.streamAround(p.x,p.z);
+ }
  if(!gamePaused&&enemies){simulation(dt);}if(enemies&&!geoMode)renderEnemies();
  if(geoMode&&geoMap&&tactical3DVisible()&&time-tactical3DLastRepaint>34){
   tactical3DLastRepaint=time;
@@ -1378,7 +1483,7 @@ window.addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);u
 const toggleBuild=type=>{selected=type;$$('[data-build]').forEach(b=>b.classList.toggle('active',b.dataset.build===type));toast('Bouwmodus: '+names[type]);};
 $$('[data-build]').forEach(b=>b.onclick=()=>toggleBuild(b.dataset.build));
 window.addEventListener('keydown',e=>{if(e.target.matches('input'))return;if('12345'.includes(e.key))toggleBuild(['turret','tower','bunker','mine','factory'][Number(e.key)-1]);if(e.key==='0')toggleBuild('inspect');if('678'.includes(e.key))toggleBuild(['barracks','armory','research'][Number(e.key)-6]);if(e.key.toLowerCase()==='e'&&selectedGuard)entrenchGuard(selectedGuard);if(e.key.toLowerCase()==='r'&&selectedGuard)$('#soldierFollow').click();if(e.key.toLowerCase()==='h')toggleBuild('hq');if(e.key==='Escape')$('#osmDialog').classList.add('hidden');});
-$('#unitRange').addEventListener('input',e=>{unitCount=unitSteps[+e.target.value];$('#unitLabel').textContent=unitCount.toLocaleString('nl-NL');enemies.resize(unitCount);toast('Stresstest: '+unitCount.toLocaleString('nl-NL')+' 3D-zombies actief.');});
+$('#unitRange').addEventListener('input',e=>{unitCount=unitSteps[+e.target.value];$('#unitLabel').textContent=unitCount.toLocaleString('nl-NL');enemies.resize(unitCount);toast('Horde: '+unitCount.toLocaleString('nl-NL')+' zombies over '+(enemies.streamCells||1)+' dynamische kaartgebieden.');});
 $('#upgradeConvoyBtn').onclick=()=>{if(convoyLevel>=4){toast('Konvooi is maximaal uitgebreid (9 escorte-units).');return;}const sc=convoyLevel*220,al=convoyLevel*30;if(resources.scrap<sc||resources.alloy<al){toast('Konvooi-upgrade vereist '+sc+' scrap en '+al+' alloy.');return;}resources.scrap-=sc;resources.alloy-=al;convoyLevel++;escortMeshes.push(makeInfantryVariant('rifle'),makeInfantryVariant('rifle'));crew.guards+=2;save();toast('Konvooi level '+convoyLevel+': '+escortMeshes.length+' escorte-units, meer vuurkracht!');updateHUD();};
 $('#marchBtn').onclick=()=>{if(liveGPS){toast('GPS actief. De escorte volgt je werkelijke locatie.');return;}walking=!walking;$('#marchBtn').textContent=walking?'■ STOP PATROL':'▶ START PATROL';toast(walking?'Generaal op patrouille. Escorte actief en bewapend.':'Patrouille beëindigd.');};
 $('#pauseBtn').onclick=()=>{gamePaused=!gamePaused;$('#pauseBtn').textContent=gamePaused?'▶ RESUME':'Ⅱ PAUSE';};
@@ -1398,7 +1503,7 @@ $('#osmBtn').onclick=()=>{
 };$('#cancelOsm').onclick=()=>$('#osmDialog').classList.add('hidden');
 // GPS MAP + Dutch BGT sector import
 let geoMap=null,geoMode=true,geoPosition=null,sectorFeatures=[];
-let tactical3DEnabled=true,tactical3DReady=false,tactical3DLayer=null,tactical3DLastRepaint=0,tactical3DFrames=0,tactical3DFPS=0,tactical3DFPSLast=0;
+let tactical3DEnabled=true,tactical3DReady=false,tactical3DLayer=null,tactical3DLastRepaint=0,tactical3DFrames=0,tactical3DFPS=0,tactical3DFPSLast=0,lastZombieStreamCheck=0;
 let tileFeaturesSeen=new Set(),tileLoadSummary={buildings:0,water:0},tileCollectBusy=false;
 // Synchronize collision shapes from the same vector tiles that render the
 // lighter 3D city. Only currently loaded tiles are queryable, so we enrich the
@@ -1455,11 +1560,17 @@ function collectLiveTileObstacles(){
       minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);
       minZ=Math.min(minZ,p.z);maxZ=Math.max(maxZ,p.z);
      }
-     if(minX===Infinity||minX>half||maxX<-half||minZ>half||maxZ<-half)continue;
+     if(minX===Infinity)continue;
+     const inSector=!(minX>half||maxX<-half||minZ>half||maxZ<-half);
+     if(!inSector&&currentMap.kind!=='tiles')continue;
      tileFeaturesSeen.add(signature);
-     if(entry.kind==='buildings'){currentMap.buildings.push({poly:polygon,height:Number(feature.properties?.render_height)||Number(feature.properties?.height)||9});tileLoadSummary.buildings++;}
-     else{currentMap.water.push(polygon);tileLoadSummary.water++;}
-     newlyBlocked.push(polygon);count++;
+     if(currentMap.kind==='tiles')addStreamedObstacle(polygon);
+     if(inSector){
+      if(entry.kind==='buildings'){currentMap.buildings.push({poly:polygon,height:Number(feature.properties?.render_height)||Number(feature.properties?.height)||9});tileLoadSummary.buildings++;}
+      else{currentMap.water.push(polygon);tileLoadSummary.water++;}
+      newlyBlocked.push(polygon);
+     }
+     count++;
     }
    }
   }
@@ -1481,18 +1592,56 @@ function collectLiveTileObstacles(){
     enemies.setSpawnSites(flow,grid);
     for(let i=0;i<enemies.count;i++){
      const cell=gridIndex(enemies.x[i],enemies.z[i]);
-     if(cell<0||grid[cell])enemies.spawn(i);
+     if(zombieTerrainBlocked(enemies.x[i],enemies.z[i]))enemies.spawn(i);
     }
    }
    if(!geoMode)drawMap(currentMap);
    $('#obstacles').textContent=currentMap.buildings.length+' / '+currentMap.water.length;
    $('#worldType').textContent=currentMap.kind==='tiles'?'LIVE TILES':'BGT + TILES';
    const info=$('#mapStatus');
-   info.textContent='LIVE MAP · '+tileLoadSummary.buildings.toLocaleString('nl-NL')+
-     ' gebouwen · '+tileLoadSummary.water+' waterobjecten · botsingen uit geladen kaarttegels';
+   info.textContent='LIVE MAP · '+tileLoadSummary.buildings.toLocaleString('nl-NL')+' gebouwen · '+tileLoadSummary.water+' waterobjecten · '+(enemies?.streamCells||0)+' zombiegebieden actief';
   }
  }catch(error){console.warn('Gebouwen uit kaarttegels overnemen mislukt:',error);}
  finally{tileCollectBusy=false;}
+}
+// Spatial hash for map-tile obstacles beyond the player's fixed build sector.
+// World streaming can roam kilometres from the HQ without an invisible wall.
+const ZOMBIE_OBSTACLE_CELL=120;
+let streamedObstacleBuckets=new Map(),streamedObstacleCount=0;
+function addStreamedObstacle(poly){
+ if(!poly||poly.length<3)return;
+ let x0=Infinity,x1=-Infinity,z0=Infinity,z1=-Infinity;
+ for(const p of poly){
+  x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);
+  z0=Math.min(z0,p.z);z1=Math.max(z1,p.z);
+ }
+ if(!Number.isFinite(x0))return;
+ // Reject pathologically large invalid polygons that would fill the index.
+ if((x1-x0)>4000||(z1-z0)>4000)return;
+ if(streamedObstacleCount>16000||streamedObstacleBuckets.size>1400){
+  streamedObstacleBuckets.clear();streamedObstacleCount=0;
+  tileFeaturesSeen.clear(); // Allow still-visible map tiles to repopulate index.
+ }
+ const minX=Math.floor(x0/ZOMBIE_OBSTACLE_CELL),maxX=Math.floor(x1/ZOMBIE_OBSTACLE_CELL);
+ const minZ=Math.floor(z0/ZOMBIE_OBSTACLE_CELL),maxZ=Math.floor(z1/ZOMBIE_OBSTACLE_CELL);
+ const obstacle={poly,x0,x1,z0,z1};
+ for(let iz=minZ;iz<=maxZ;iz++)for(let ix=minX;ix<=maxX;ix++){
+  const key=ix+','+iz;
+  let list=streamedObstacleBuckets.get(key);
+  if(!list){list=[];streamedObstacleBuckets.set(key,list);}
+  list.push(obstacle);
+ }
+ streamedObstacleCount++;
+}
+function zombieTerrainBlocked(x,z){
+ const gi=gridIndex(x,z);
+ if(gi>=0&&grid?.[gi])return true;
+ if(currentMap?.kind!=='tiles')return gi<0;
+ const key=Math.floor(x/ZOMBIE_OBSTACLE_CELL)+','+Math.floor(z/ZOMBIE_OBSTACLE_CELL);
+ for(const b of streamedObstacleBuckets.get(key)||[]){
+  if(x>=b.x0&&x<=b.x1&&z>=b.z0&&z<=b.z1&&pointInPolygon({x,z},b.poly))return true;
+ }
+ return false; // Unknown map tiles are provisional until loaded by MapLibre.
 }
 function openedMapObstacle(point){
  if(!geoMap?.isStyleLoaded())return false;
@@ -1521,7 +1670,7 @@ function gameFeatures(){
  if(general)add(general.position.x,general.position.z,'general',{label:'COMMANDER'},general);
  if(truck&&crew.trucks)add(truck.position.x,truck.position.z,'truck',{},truck);
  if(enemies){
-  const every=Math.max(1,Math.floor(enemies.count/450));
+  const every=Math.max(1,Math.floor(enemies.count/(window.innerWidth<760?700:1900)));
   for(let i=0;i<enemies.count;i+=every)add(enemies.x[i],enemies.z[i],'zombie');
  }
  for(const mesh of workerMeshes)add(mesh.position.x,mesh.position.z,'worker',{},mesh);
@@ -1600,7 +1749,7 @@ function militaryIcon(kind){
 // LAST OUTPOST v0.9: a synchronized THREE.js scene inside MapLibre's WebGL
 // canvas. City buildings remain vector tiles; military meshes use the exact
 // same camera and depth buffer. No second floating HTML/WebGL overlay.
-const TACTICAL_MODEL_LIMITS={structures:72,infantry:115,vehicles:35,zombies:850};
+const TACTICAL_MODEL_LIMITS={structures:72,infantry:115,vehicles:35,zombies:2200};
 const TACTICAL_3D_MIN_ZOOM=15.35;
 function tactical3DVisible(){
  return !!(geoMode&&tactical3DEnabled&&tactical3DReady&&geoMap&&
@@ -1697,6 +1846,8 @@ function createTactical3DLayer(){
    const radius=Math.min(1050,Math.max(180,1500*Math.pow(2,15.4-zoom)));
    const within=p=>p&&Math.abs(p.x-location.x)<radius&&Math.abs(p.z-location.z)<radius;
    const characterScale=zoom<16?2.25:zoom<17?1.55:1.18;
+   // Zombie silhouettes match human scale against real city buildings.
+   const zombieScale=zoom<16?.44:zoom<17?.34:.29;
    const add=(src,scl)=>{if(within(src?.position))this.syncModel(src,live,scl);};
    const bases=buildings.filter(b=>b.mesh&&within(b.mesh.position));
    bases.sort((a,b)=>{
@@ -1721,7 +1872,7 @@ function createTactical3DLayer(){
    for(const [source,clone] of this.models)if(!live.has(source)){
     this.root.remove(clone);disposeTacticalHierarchy(clone);this.models.delete(source);
    }
-   this.syncZombies(location,radius,characterScale);
+   this.syncZombies(location,radius,zombieScale);
   },
   syncZombies(center,radius,unitScale){
    if(!enemies||!zombieParts.length)return;
@@ -1735,9 +1886,9 @@ function createTactical3DLayer(){
    }
    const list=[];
    const count=enemies.count;
-   const maxZombies=window.innerWidth<760?260:TACTICAL_MODEL_LIMITS.zombies;
-   // All 5000 may exist in simulation; render max 850 3D zombies in view.
-   const stride=Math.max(1,Math.ceil(count/3000));
+   const maxZombies=window.innerWidth<760?600:TACTICAL_MODEL_LIMITS.zombies;
+   // Simulate up to 10k local wanderers; render nearby zombies with six instanced parts.
+   const stride=Math.max(1,Math.ceil(count/7500));
    for(let i=0;i<count;i+=stride){
     if(Math.abs(enemies.x[i]-center.x)>radius||Math.abs(enemies.z[i]-center.z)>radius)continue;
     list.push(i);if(list.length>=maxZombies)break;
@@ -1884,7 +2035,7 @@ function tacticalGameLayers(){
  geoMap.addSource('gameunits',{type:'geojson',data:gameFeatures()});
  geoMap.addLayer({id:'outpost-zombies',type:'circle',source:'gameunits',
   filter:['==',['get','kind'],'zombie'],
-  paint:{'circle-radius':['interpolate',['linear'],['zoom'],12,1,15,2.3,18,3.8],
+  paint:{'circle-radius':['interpolate',['linear'],['zoom'],12,.7,15,1.4,18,2.4],
    'circle-color':'#4da867','circle-stroke-color':'#11271e','circle-stroke-width':.7,'circle-opacity':.92}});
  geoMap.addLayer({id:'outpost-selected',type:'circle',source:'gameunits',
   filter:['==',['get','selected'],true],
@@ -1934,6 +2085,11 @@ function initGeoMap(){
  geoMap.on('moveend',()=>{
   if(currentMap?.kind==='tiles'||currentMap?.kind==='bgt')
    setTimeout(collectLiveTileObstacles,450);
+  if(enemies?.streaming&&currentMap){
+   const ctr=geoMap.getCenter(),p=toWorld(ctr.lat,ctr.lng,currentMap.center);
+   enemies.streamAround(p.x,p.z);
+   updateMapMarkers();
+  }
  });
  geoMap.on('click',event=>{
   if(!currentMap)return;
@@ -2123,6 +2279,9 @@ window.__lastOutpostDiagnostics=()=>({
  map3DReady:tactical3DReady,
  map3DFailed:!!tactical3DLayer?.failed,
  map3DModels:tactical3DLayer?.models?.size||0,
+ zombieStreaming:!!enemies?.streaming,
+ zombieStreamCells:enemies?.streamCells||0,
+ zombiePopulation:enemies?.count||0,
  zombieMeshes:tactical3DLayer?.zombieMeshes?.length||0,
  drawnZombies:tactical3DLayer?.visibleZombies||0,
  selectedMode:geoMode?'TACTICAL MAP':'LEGACY 3D'
