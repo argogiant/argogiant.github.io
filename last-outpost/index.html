@@ -444,7 +444,7 @@ function makeEscort(){
  if(base)g.position.set(base.x+Math.random()*10,0,base.z+8);
  return g;
 }
-function polygonGeometry(points){const path=new THREE.Shape();points.forEach((p,i)=>i?path.lineTo(p.x,-p.z):path.moveTo(p.x,-p.z));path.closePath();return path;}
+
 // One material/mesh per ground layer instead of thousands of draw calls.
 // Large sectors render nearby 3D details; the full imported geometry remains
 // available to collision/pathfinding and map navigation.
